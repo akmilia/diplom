@@ -1,0 +1,42 @@
+﻿<Page  x:Class="diplom.subjects"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:diplom"
+        xmlns:components="clr-namespace:diplom.Components" 
+        mc:Ignorable="d"
+        Title="Занятия" MinHeight="700" MinWidth="1240" Background="White" >
+    <Grid >  
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="0.1*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <components:Header Grid.Row="0"></components:Header>
+        <TextBlock Text="Занятия" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="20" Grid.Row="1"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="25 25 0  0" Grid.Row="2">
+            <Button Content="Добавить новое занятие"  Click="Button_Click"  Style="{StaticResource RoundedButtonStyle}"/>
+            <ComboBox SelectionChanged="TypeComboBox_SelectionChanged"  x:Name="TypeComboBox" Width="200" DisplayMemberPath="Type1" />
+        </StackPanel>
+          
+        <DataGrid ItemsSource="{Binding SubjectItems}" Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" 
+                  MouseDoubleClick="DataGrid_MouseDoubleClick"   Name="table"  Margin="25">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding subject_id}"  Width="Auto" />
+                <DataGridTextColumn Header="Название" Binding="{Binding subject_name}" FontWeight="Bold" Width="*" />
+                <DataGridTextColumn Header="Описание" Binding="{Binding description}" Width="*" />
+                <DataGridTextColumn Header="ID Типа" Binding="{Binding type_id}" Width="Auto" />
+                <DataGridTextColumn Header="Тип" Binding="{Binding type_name}" Width="*" />
+            </DataGrid.Columns>
+            <DataGrid.InputBindings>
+                <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.OpenSubjectCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+            </DataGrid.InputBindings>
+        </DataGrid>
+
+
+    </Grid>
+</Page>
