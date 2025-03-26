@@ -6,7 +6,7 @@ public partial class Attendance
 
     public int Idschedule { get; set; }
 
-    public DateOnly Date { get; set; }
+    public DateTime Date { get; set; }
 
     public virtual ICollection<BilNebil> BilNebils { get; set; } = new List<BilNebil>();
 

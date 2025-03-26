@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:diplom"
         xmlns:components="clr-namespace:diplom.Components" 
     mc:Ignorable="d"
-    Title="Занятия" MinHeight="700" MinWidth="1240" Background="White">
+    Title="Занятия" MinHeight="700" MinWidth="1240" Background="White" Loaded="Schedule_Loaded">
     <Grid>
 
         <Grid.RowDefinitions>
@@ -26,7 +26,6 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
@@ -34,19 +33,201 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="Понедельник" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center"/>
-            <TextBlock Text="Вторник" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center"/>
-            <TextBlock Text="Среда" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Center"/>
-            <TextBlock Text="Четверг" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Center"/>
-            <TextBlock Text="Пятница" Grid.Column="5" Grid.Row="0" HorizontalAlignment="Center"/>
-            <TextBlock Text="Суббота" Grid.Column="6" Grid.Row="0" HorizontalAlignment="Center"/>
+            <TextBlock Text="Понедельник" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center"/>
+            <TextBlock Text="Вторник" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center"/>
+            <TextBlock Text="Среда" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center"/>
+            <TextBlock Text="Четверг" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Center"/>
+            <TextBlock Text="Пятница" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Center"/>
+            <TextBlock Text="Суббота" Grid.Column="5" Grid.Row="0" HorizontalAlignment="Center"/>
 
-            <ListBox Grid.Column="1" Grid.Row="1" Name="MondayListBox" Width="180" Height="400"/>
-            <ListBox Grid.Column="2" Grid.Row="1" Name="TuesdayListBox" Width="180" Height="400"/>
-            <ListBox Grid.Column="3" Grid.Row="1" Name="WednesdayListBox" Width="180" Height="400"/>
-            <ListBox Grid.Column="4" Grid.Row="1" Name="ThursdayListBox" Width="180" Height="400"/>
-            <ListBox Grid.Column="5" Grid.Row="1" Name="FridayListBox" Width="180" Height="400"/>
-            <ListBox Grid.Column="6" Grid.Row="1" Name="SaturdayListBox" Width="180" Height="400"/>
+            <!--<ListBox Grid.Column="1" Grid.Row="1" Name="MondayListBox" Width="200" Height="450"/>
+              <ListBox Grid.Column="1" Grid.Row="1" Name="TuesdayListBox" Width="200" Height="450"/>
+              <ListBox Grid.Column="2" Grid.Row="1" Name="WednesdayListBox" Width="200" Height="450"/>
+              <ListBox Grid.Column="3" Grid.Row="1" Name="ThursdayListBox" Width="200" Height="450"/>
+              <ListBox Grid.Column="4" Grid.Row="1" Name="FridayListBox" Width="200" Height="450"/>
+              <ListBox Grid.Column="5" Grid.Row="1" Name="SaturdayListBox" Width="200" Height="450"/> -->
+            <ListBox x:Name="MondayListBox" Grid.Column="0" Grid.Row="1" Width="200" Height="450">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Expander>
+                            <Expander.Header>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Time}" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Subject}"/>
+                                    <TextBlock Text="{Binding Teacher}"/>
+                                    <TextBlock Text="{Binding Cabinet}"/>
+                                </StackPanel>
+                            </Expander.Header>
+                            <StackPanel>
+                                <TextBlock Text="Даты:" FontWeight="Bold" Margin="0,5"/>
+                                <ItemsControl ItemsSource="{Binding Dates}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Content="{Binding StringFormat='{}{0:dd.MM.yyyy}'}" 
+                                            Click="Button_Click_1"
+                                            Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Expander}}"
+                                            Margin="2"
+                                            Style="{StaticResource RoundedButtonStyle}"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Expander>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ListBox x:Name="TuesdayListBox" Grid.Column="1" Grid.Row="1" Width="200" Height="450">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Expander>
+                            <Expander.Header>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Time}" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Subject}"/>
+                                    <TextBlock Text="{Binding Teacher}"/>
+                                    <TextBlock Text="{Binding Cabinet}"/>
+                                </StackPanel>
+                            </Expander.Header>
+                            <StackPanel>
+                                <TextBlock Text="Даты:" FontWeight="Bold" Margin="0,5"/>
+                                <ItemsControl ItemsSource="{Binding Dates}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Content="{Binding StringFormat='{}{0:dd.MM.yyyy}'}" 
+                      Click="Button_Click_1"
+                      Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Expander}}"
+                      Margin="2"
+                      Style="{StaticResource RoundedButtonStyle}"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Expander>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ListBox x:Name="WednesdayListBox" Grid.Column="2" Grid.Row="1" Width="200" Height="450">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Expander>
+                            <Expander.Header>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Time}" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Subject}"/>
+                                    <TextBlock Text="{Binding Teacher}"/>
+                                    <TextBlock Text="{Binding Cabinet}"/>
+                                </StackPanel>
+                            </Expander.Header>
+                            <StackPanel>
+                                <TextBlock Text="Даты:" FontWeight="Bold" Margin="0,5"/>
+                                <ItemsControl ItemsSource="{Binding Dates}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Content="{Binding StringFormat='{}{0:dd.MM.yyyy}'}" 
+                      Click="Button_Click_1"
+                      Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Expander}}"
+                      Margin="2"
+                      Style="{StaticResource RoundedButtonStyle}"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Expander>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ListBox x:Name="ThursdayListBox" Grid.Column="3" Grid.Row="1" Width="200" Height="450">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Expander>
+                            <Expander.Header>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Time}" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Subject}"/>
+                                    <TextBlock Text="{Binding Teacher}"/>
+                                    <TextBlock Text="{Binding Cabinet}"/>
+                                </StackPanel>
+                            </Expander.Header>
+                            <StackPanel>
+                                <TextBlock Text="Даты:" FontWeight="Bold" Margin="0,5"/>
+                                <ItemsControl ItemsSource="{Binding Dates}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Content="{Binding StringFormat='{}{0:dd.MM.yyyy}'}" 
+                      Click="Button_Click_1"
+                      Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Expander}}"
+                      Margin="2"
+                      Style="{StaticResource RoundedButtonStyle}"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Expander>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ListBox x:Name="FridayListBox" Grid.Column="4" Grid.Row="1" Width="200" Height="450">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Expander>
+                            <Expander.Header>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Time}" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Subject}"/>
+                                    <TextBlock Text="{Binding Teacher}"/>
+                                    <TextBlock Text="{Binding Cabinet}"/>
+                                </StackPanel>
+                            </Expander.Header>
+                            <StackPanel>
+                                <TextBlock Text="Даты:" FontWeight="Bold" Margin="0,5"/>
+                                <ItemsControl ItemsSource="{Binding Dates}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Content="{Binding StringFormat='{}{0:dd.MM.yyyy}'}" 
+                      Click="Button_Click_1"
+                      Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Expander}}"
+                      Margin="2"
+                      Style="{StaticResource RoundedButtonStyle}"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Expander>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ListBox x:Name="SaturdayListBox" Grid.Column="5" Grid.Row="1" Width="200" Height="450">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Expander>
+                            <Expander.Header>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Time}" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Subject}"/>
+                                    <TextBlock Text="{Binding Teacher}"/>
+                                    <TextBlock Text="{Binding Cabinet}"/>
+                                </StackPanel>
+                            </Expander.Header>
+                            <StackPanel>
+                                <TextBlock Text="Даты:" FontWeight="Bold" Margin="0,5"/>
+                                <ItemsControl ItemsSource="{Binding Dates}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Content="{Binding StringFormat='{}{0:dd.MM.yyyy}'}" 
+                      Click="Button_Click_1"
+                      Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Expander}}"
+                      Margin="2"
+                      Style="{StaticResource RoundedButtonStyle}"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Expander>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+
+            </ListBox>
+
         </Grid>
     </Grid>
 </Page>

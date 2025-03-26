@@ -59,28 +59,28 @@ namespace diplom
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                var userToUpdate = db.Users.FirstOrDefault(u => u.Idusers == curUser.idusers);
-                if (userToUpdate != null)
-                {
-                    userToUpdate.Login = curUser.login;
-                    userToUpdate.Password = curUser.password;
-                    userToUpdate.Surname =
-                    userToUpdate.Name =
-                    userToUpdate.Paternity =
-                    userToUpdate.RolesIdroles; 
-                    userToUpdate.Birthdate = curUser.datebirth;
+            //try
+            //{
+            //    var userToUpdate = db.Users.FirstOrDefault(u => u.Idusers == curUser.idusers);
+            //    if (userToUpdate != null)
+            //    {
+            //        userToUpdate.Login = curUser.login;
+            //        userToUpdate.Password = curUser.password;
+            //        userToUpdate.Surname =
+            //        userToUpdate.Name =
+            //        userToUpdate.Paternity =
+            //        userToUpdate.RolesIdroles; 
+            //        userToUpdate.Birthdate = curUser.datebirth;
 
-                    db.SaveChanges();
-                    MessageBox.Show("Пользователь успешно обновлен.");
-                    this.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка при обновлении пользователя: {ex.Message}");
-            }
+            //        db.SaveChanges();
+            //        MessageBox.Show("Пользователь успешно обновлен.");
+            //        this.Close();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show($"Ошибка при обновлении пользователя: {ex.Message}");
+            //}
         }
     }
 }
