@@ -14,45 +14,53 @@ namespace diplom
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBoxButton btn = MessageBoxButton.OK;
-            MessageBoxImage ico = MessageBoxImage.Information;
-            string caption = "Дата сохранения";
-            string LoginA = log.Text;
-            string PasswordA = pas.Password;
+        {    
 
-            if (string.IsNullOrWhiteSpace(LoginA) || string.IsNullOrWhiteSpace(PasswordA))
+            try
             {
-                MessageBox.Show("Все поля обязательны для ввода.");
-                log.Text = "";
-                pas.Password = "";
-                return;
+                MessageBoxButton btn = MessageBoxButton.OK;
+                MessageBoxImage ico = MessageBoxImage.Information;
+
+                string LoginA = log.Text;
+                string PasswordA = pas.Password;
+
+                if (string.IsNullOrWhiteSpace(log.Text) || string.IsNullOrWhiteSpace(pas.Password))
+                {
+                    MessageBox.Show("Все поля обязательны для ввода.");
+                    log.Text = "";
+                    pas.Password = "";
+                    return;
+                }
+                if (!Regex.IsMatch(LoginA, "^[A-za-z]{5,15}$"))
+                {
+                    MessageBox.Show("Пожалуйста,введите логин повторно!", "Уведомление", btn, ico);
+                    log.Text = "";
+                    return;
+                }
+
+                if (!Regex.IsMatch(PasswordA, "^(?=.*[a-z])(?=.*\\d)[a-zA-Z\\d]{5,15}$"))
+                {
+                    MessageBox.Show("Пожалуйста, введите пароль правильно!", "Уведомление", btn, ico);
+                    pas.Password = "";
+                    return;
+                }
+
+
+                bool isAuthenticated = AuthenticateUser(LoginA, PasswordA);
+
+                if (isAuthenticated)
+                {
+                    NavigationWindow window = (NavigationWindow)Application.Current.MainWindow;
+                    window.Navigate(new Uri("admin.xaml", UriKind.Relative));
+                }
+                else
+                {
+                    MessageBox.Show("Неверные логин или пароль.");
+                }
             }
-            if (!Regex.IsMatch(LoginA, "^[A-za-z]{5,15}$"))
+            catch
             {
-                MessageBox.Show("Пожалуйста,введите логин повторно!", caption, btn, ico);
-                log.Text = "";
-                return;
-            }
-
-            if (!Regex.IsMatch(PasswordA, "^(?=.*[a-z])(?=.*\\d)[a-zA-Z\\d]{5,15}$"))
-            {
-                MessageBox.Show("Пожалуйста, введите пароль правильно!", caption, btn, ico);
-                pas.Password = "";
-                return;
-            }
-
-
-            bool isAuthenticated = AuthenticateUser(LoginA, PasswordA);
-
-            if (isAuthenticated)
-            {
-                NavigationWindow window = (NavigationWindow)Application.Current.MainWindow;
-                window.Navigate(new Uri("admin.xaml", UriKind.Relative));
-            }
-            else
-            {
-                MessageBox.Show("Неверные логин или пароль.");
+                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
             }
         }
 

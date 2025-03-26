@@ -1,4 +1,4 @@
-﻿<Page x:Class="diplom.subject"
+﻿<Window x:Class="diplom.subject"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,9 +6,10 @@
         xmlns:local="clr-namespace:diplom"  
         xmlns:components="clr-namespace:diplom.Components" 
         mc:Ignorable="d"
-        Title="Занятие" MinHeight="700" MinWidth="1240" Background="White">
+        Title="Занятие" MinHeight="450" MinWidth="700" Background="White" Closing="Window_Closing">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -17,39 +18,34 @@
         <components:HeaderSimple Grid.Row="0"></components:HeaderSimple>
         <TextBlock Text="Занятие" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="20" Grid.Row="1"/>
 
-        <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Width="600">
-            <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                        <StackPanel Orientation="Horizontal" Margin="10">
-                            <TextBlock Text="ID: " FontWeight="Black" Width="100"/>
-                            <TextBox x:Name="Id" Width="500" IsEnabled="False"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10">
-                            <TextBlock Text="Имя занятия: " FontWeight="Black" Width="100"/>
-                            <TextBox x:Name="name" Width="500"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10">
-                            <TextBlock Text="Описание: " FontWeight="Black" Width="100"/>
-                            <TextBox x:Name="description" Width="500"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10">
-                            <TextBlock Text="ID type: " FontWeight="Black" Width="100"/>
-                            <TextBox x:Name="IdType" Width="500" IsEnabled="False"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10">
-                            <TextBlock Text="Тип: " FontWeight="Black" Width="100"/>
-                            <TextBox x:Name="type" Width="500" IsEnabled="False" />
-                        </StackPanel>
-                    </StackPanel>
+        <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20" Width="600">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <TextBlock Text="ID: " FontWeight="Black" Width="150"/>
+                    <TextBox x:Name="Id" Width="420" IsEnabled="False"/>
                 </StackPanel>
-            </Border>
-
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Width="600" Margin="0 10 ">
-                <Button Content="Удалить" Width="300" Click="Button_Click" Style="{StaticResource RoundedButtonStyle}" HorizontalAlignment="Left"/>
-                <Button Content="Сохранить" Width="300" Click="Button_Click_1" Background="LightGray" Style="{StaticResource RoundedButtonStyle}" HorizontalAlignment="Right"/>
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <TextBlock Text="Имя занятия: " FontWeight="Black" Width="150"/>
+                    <TextBox x:Name="name" Width="420"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <TextBlock Text="Описание: " FontWeight="Black" Width="150"/>
+                    <TextBox x:Name="description" Width="420"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <TextBlock Text="ID type: " FontWeight="Black" Width="150"/>
+                    <TextBox x:Name="IdType" Width="420" IsEnabled="False"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <TextBlock Text="Тип: " FontWeight="Black" Width="150"/>
+                    <TextBox x:Name="type" Width="420" IsEnabled="False"/>
+                </StackPanel>
             </StackPanel>
+        </Border>
 
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 10" Width="600">
+            <Button Content="Удалить" Width="300" Click="Button_Click" Style="{StaticResource RoundedButtonStyle}"/>
+            <Button Content="Сохранить" Width="300" Click="Button_Click_1" Background="LightGray" Style="{StaticResource RoundedButtonStyle}"/>
         </StackPanel>
     </Grid>
-</Page>
+</Window>

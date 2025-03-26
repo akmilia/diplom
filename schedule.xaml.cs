@@ -22,7 +22,7 @@ namespace diplom
             try
             {
                 var schedules = db.schedulesShow
-                                .AsEnumerable() // This executes the SQL query
+                                .AsEnumerable() 
                                 .ToList();
 
 

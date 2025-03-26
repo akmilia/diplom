@@ -21,7 +21,7 @@
                 <TextBox x:Name="log" Grid.Row="1" Style="{StaticResource TBAutoriz}"/>
                 <Label Content="Пароль:" Grid.Row="2" Style="{StaticResource LabelAutoriz}"/>
                 <PasswordBox x:Name="pas" Grid.Row="2" Style="{StaticResource PasAutoriz}"/>
-                <Button Grid.Row="3" Content="Войти" Width="140" Height="40" Margin="110,20,10,0" FontSize="20" 
+                <Button Grid.Row="3" Content="Войти" Width="140" Height="40" HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="20" 
                     FontWeight="Bold"  Background="Gray" Opacity="0.85" Click="Button_Click"/>
             </Grid>
         </Grid>

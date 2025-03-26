@@ -1,6 +1,7 @@
 ﻿using diplom.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
+using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -31,9 +32,9 @@ namespace diplom
                 TypeComboBox.ItemsSource = types;
                 TypeComboBox.DisplayMemberPath = "Type1";
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show($"Error loading types: {ex.Message}");
+                MessageBox.Show("Не получилось загрузить типы");
             }
         }
 
@@ -42,56 +43,76 @@ namespace diplom
             try
             {
                 SubjectItems.Clear();
-                subjectsFromView = db.SubjectShowItems.FromSqlRaw("select * from  subjectsshow").ToList();
+                subjectsFromView = db.SubjectShowItems.FromSqlRaw("select * from subjectsshow").ToList();
 
                 foreach (var subject in subjectsFromView)
                 {
                     SubjectItems.Add(subject);
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show($"Error loading subjects: {ex.Message}");
+                MessageBox.Show("Не получилось загрузить занятия");
             }
         }
 
         private void DataGrid_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-
-            subjectsshow path = table.SelectedItem as subjectsshow;
-            if (path != null)
+            try
             {
-                subject subjectPage = new subject(path.subject_id);
-                NavigationService.Navigate(subjectPage);
+                subjectsshow path = table.SelectedItem as subjectsshow;
+                subject Subject = new subject(path.subject_id);
+                Subject.Show(); 
+            }
+            catch
+            {
+                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
             }
 
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationWindow window = (NavigationWindow)Application.Current.MainWindow;
-            window.Navigate(new Uri("add_subject.xaml", UriKind.Relative));
-
+        {    
+            try
+            {
+                add_subject add_Subject = new add_subject();
+                add_Subject.Closed += (s, args) => LoadSubjects();
+                add_Subject.Show(); 
+            }
+            catch
+            {
+                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
+            }
+          
         }
 
         private void TypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (TypeComboBox.SelectedItem != null)
+        {   
+
+            try
             {
-
-                Models.Type selType = TypeComboBox.SelectedItem as Models.Type;
-
-                if (selType.Id == 0)
+                if (TypeComboBox.SelectedItem != null)
                 {
-                    table.ItemsSource = subjectsFromView;
-                }
-                else
-                {
-                    table.ItemsSource = subjectsFromView.Where(s => s.type_id == selType.Id).ToList();
-                }
 
-                table.Items.Refresh();
+                    Models.Type selType = TypeComboBox.SelectedItem as Models.Type;
+
+                    if (selType.Id == 0)
+                    {
+                        table.ItemsSource = subjectsFromView;
+                    }
+                    else
+                    {
+                        table.ItemsSource = subjectsFromView.Where(s => s.type_id == selType.Id).ToList();
+                    }
+
+                    table.Items.Refresh();
+                }
             }
+            catch
+            {
+                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
+            }
+
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using diplom.Models;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -7,14 +8,45 @@ using System.Windows.Navigation;
 namespace diplom
 {
 
-    public partial class subject : Page
+    public partial class subject : Window, IDataErrorInfo
     {
-        public DiplomSchoolContext db = new DiplomSchoolContext();
+      
+        public string Error => null; // Не используется в простом случае
+
+        public string this[string columnName]
+        {
+            get
+            {
+                string error = string.Empty;
+                switch (columnName)
+                {
+                    case "Name":
+                        if (string.IsNullOrEmpty(name.Text))
+                        {
+                            error = "Имя занятия обязательно для заполнения.";
+                        }
+                        else if (name.Text.Length > 255)
+                        {
+                            error = "Имя занятия не должно превышать 255 символов.";
+                        }
+                        break;
+                    case "Description":
+                        if (string.IsNullOrEmpty(description.Text))
+                        {
+                            error = "Описание обязательно для заполнения.";
+                        }
+                        break;
+                }
+                return error;
+            }
+        }
+         public DiplomSchoolContext db = new DiplomSchoolContext();
         subjectsshow constS = new subjectsshow();
         public int constID;
         public subject(int ID)
         {
             InitializeComponent();
+            WindowStartupLocation = WindowStartupLocation.CenterScreen; 
 
             constID = ID;
             NewData();
@@ -75,9 +107,7 @@ namespace diplom
                         db.Subjects.Remove(subjectToDelete);
                         db.SaveChanges();
                         MessageBox.Show("Занятие успешно удалено.");
-
-                        NavigationWindow window = (NavigationWindow)Application.Current.MainWindow;
-                        window.Navigate(new Uri("subjects.xaml", UriKind.Relative));
+                        this.Close();
                     }
                     else
                     {
@@ -94,6 +124,16 @@ namespace diplom
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            name.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            description.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+
+         
+            if (string.IsNullOrEmpty(this["Name"]) == false || string.IsNullOrEmpty(this["Description"]) == false)
+            {
+                MessageBox.Show("Пожалуйста, исправьте ошибки в форме.");
+                return; 
+            }
+
             try
             {
                 var subjectToUpdate = db.Subjects.Find(constS.subject_id);

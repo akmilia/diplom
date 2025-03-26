@@ -34,7 +34,7 @@ public partial class DiplomSchoolContext : DbContext
 
     public virtual DbSet<diplom.Models.Type> Types { get; set; }
 
-    public virtual DbSet<TypesSubject> TypesSubjects { get; set; }
+    public virtual DbSet<types_subjects> TypesSubjects { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -205,12 +205,12 @@ public partial class DiplomSchoolContext : DbContext
                 .HasColumnName("type");
         });
 
-        modelBuilder.Entity<TypesSubject>()
-             .HasKey(ts => new { ts.TypesId, ts.SubjectsIdsubjects });
+        modelBuilder.Entity<types_subjects>()
+             .HasKey(ts => new { ts.types_id, ts.subjects_idsubjects });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => new { e.Idusers, e.Login, e.RolesIdroles }).HasName("users_pkey");
+            entity.HasKey(e => new { e.Idusers}).HasName("users_pkey");
 
             entity.ToTable("users");
 

@@ -39,22 +39,30 @@ namespace diplom
         }
         private void RoleComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if (RoleComboBox.SelectedItem != null)
+            try
             {
-
-                Role selType = RoleComboBox.SelectedItem as Role;
-
-                if (selType.Idroles == 0)
+                if (RoleComboBox.SelectedItem != null)
                 {
-                    table.ItemsSource = userFromView;
-                }
-                else
-                {
-                    table.ItemsSource = userFromView.Where(s => s.idroles == selType.Idroles).ToList();
-                }
 
-                table.Items.Refresh();
+                    Role selType = RoleComboBox.SelectedItem as Role;
+
+                    if (selType.Idroles == 0)
+                    {
+                        table.ItemsSource = userFromView;
+                    }
+                    else
+                    {
+                        table.ItemsSource = userFromView.Where(s => s.idroles == selType.Idroles).ToList();
+                    }
+
+                    table.Items.Refresh();
+                }
+            } 
+            catch
+            {
+                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
             }
+
         }
 
         private void LoadUsers()
@@ -62,12 +70,12 @@ namespace diplom
             try
             {
                 table.Items.Clear();
-                userFromView = [.. db.userShowItems.FromSqlRaw("select * from  usersshow")];
+                userFromView = [.. db.userShowItems.FromSqlRaw("select * from usersshow")];
                 table.ItemsSource = userFromView;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading subjects: {ex.Message}");
+                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
             }
         }
 
@@ -76,28 +84,39 @@ namespace diplom
 
             var usersh = table.SelectedItem as usersshow;
 
-            try
-            {
-                if (MessageBox.Show("Вы уверены, что хотите удалить пользователя?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            try 
+            {     
+
+                if (usersh != null)
                 {
-
-                    var userToDelete = db.Users.Find(usersh.idusers);
-
-                    if (userToDelete != null)
-                    {
-
-                        db.Users.Remove(userToDelete);
-                        db.SaveChangesAsync();
-
-                        MessageBox.Show("Пользователь успешно удален.");
-
-                        LoadUsers();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Пользователь не найден.");
-                    }
+                    user userPage = new user(usersh);
+                    userPage.Closed += (s, args) => LoadUsers();
+                    userPage.Show();
                 }
+                else
+                {
+                    MessageBox.Show("Пользователь не найден.");
+                }
+              
+                //if (MessageBox.Show("Вы уверены, что хотите удалить пользователя?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                //{
+
+                //    var userToDelete = db.Users.Find(usersh.idusers);
+
+                //    if (userToDelete != null)
+                //    {
+
+                //        db.Users.Remove(userToDelete);
+                //        db.SaveChanges();
+
+                //        MessageBox.Show("Пользователь успешно удален.");
+                //        table.Items.Refresh();
+                //    }
+                //    else
+                //    {
+                //        MessageBox.Show("Пользователь не найден.");
+                //    }
+                //}
             }
             catch (Exception ex)
             {
@@ -107,8 +126,9 @@ namespace diplom
 
         private void toAdd_Click(object sender, RoutedEventArgs e)
         {
-            NavigationWindow window = (NavigationWindow)Application.Current.MainWindow;
-            window.Navigate(new Uri("add_user.xaml", UriKind.Relative));
+            add_user add_User = new add_user();
+            add_User.Closed += (s, args) => LoadUsers();
+            add_User.Show();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -160,21 +180,29 @@ namespace diplom
         }
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            string searchText = SearchTextBox.Text.Trim().ToLower();
-
-            if (string.IsNullOrEmpty(searchText))
+        {  
+            try
             {
-                table.ItemsSource = UsersItems;
-            }
-            else
-            {
-                var filteredUsers = userFromView
-                    .Where(u => u.full_name.ToLower().Contains(searchText))
-                    .ToList();
+                string searchText = SearchTextBox.Text.Trim().ToLower();
 
-                table.ItemsSource = filteredUsers;
+                if (string.IsNullOrEmpty(searchText))
+                {
+                    table.ItemsSource = UsersItems;
+                }
+                else
+                {
+                    var filteredUsers = userFromView
+                        .Where(u => u.full_name.ToLower().Contains(searchText))
+                        .ToList();
+
+                    table.ItemsSource = filteredUsers;
+                }
+            } 
+            catch
+            {
+                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
             }
+           
         }
     }
 }

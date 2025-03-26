@@ -1,4 +1,4 @@
-﻿<Page x:Class="diplom.add_subject"
+﻿<Window x:Class="diplom.add_subject"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,8 +6,13 @@
         xmlns:local="clr-namespace:diplom"
         xmlns:components="clr-namespace:diplom.Components" 
         mc:Ignorable="d"
-         Title="Новое занятие" MinHeight="700" MinWidth="1240" Background="White">
+         Title="Новое занятие" MinHeight="450" MinWidth="700" Background="White" Closing="Window_Closing">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="57*"/>
+            <ColumnDefinition Width="135*"/>
+            <ColumnDefinition Width="508*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -15,32 +20,48 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <components:HeaderSimple Grid.Row="0"></components:HeaderSimple>
+        <components:HeaderSimple Grid.Row="0" Grid.ColumnSpan="3"></components:HeaderSimple>
 
-        <TextBlock Text="Добавить новое занятие" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="20" Grid.Row="1"/>
+        <TextBlock Text="Добавить новое занятие" FontSize="24" FontWeight="Bold" HorizontalAlignment="Left" Margin="13,20,0,20" Grid.Row="1" Grid.Column="2"/>
 
-        <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20" Width="600">
+        <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="50,0,0,0" Width="600" Grid.ColumnSpan="3">
             <StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="10">
                     <TextBlock Text="Название занятия:" FontWeight="Black" Width="150"/>
-                    <TextBox x:Name="SubjectNameTextBox" Width="450"/>
+                    <TextBox x:Name="SubjectNameTextBox" Width="420"
+                             Text="{Binding SubjectName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+                        <TextBox.ToolTip>
+                            <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}" />
+                        </TextBox.ToolTip>
+                    </TextBox>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="10">
                     <TextBlock Text="Описание:" FontWeight="Black" Width="150"/>
-                    <TextBox x:Name="DescriptionTextBox" Width="450" TextWrapping="Wrap" AcceptsReturn="True" Height="80"/>
+                    <TextBox x:Name="DescriptionTextBox" Width="420" TextWrapping="Wrap" AcceptsReturn="True" Height="80"
+                             Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+                        <TextBox.ToolTip>
+                            <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}" />
+                        </TextBox.ToolTip>
+                    </TextBox>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="10">
                     <TextBlock Text="Тип занятия:" FontWeight="Black" Width="150"/>
-                    <ComboBox x:Name="TypeComboBox" Width="450" DisplayMemberPath="Type1" SelectedValuePath="Id"/>
+                    <ComboBox x:Name="TypeComboBox" Width="420" DisplayMemberPath="Type1" SelectedValuePath="Id"
+                              ItemsSource="{Binding Types}"
+                              SelectedItem="{Binding SelectedType, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+                        <ComboBox.ToolTip>
+                            <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}" />
+                        </ComboBox.ToolTip>
+                    </ComboBox>
                 </StackPanel>
             </StackPanel>
         </Border>
 
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 10" Width="600">
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left" Margin="50,10,0,10" Width="600" Grid.ColumnSpan="3">
             <Button Content="Отмена" Width="300"  Click="Button_Click" Style="{StaticResource RoundedButtonStyle}"/>
             <Button Content="Сохранить" Width="300" Click="SaveButton_Click" Background="LightGray"  Style="{StaticResource RoundedButtonStyle}"/>
         </StackPanel>
     </Grid>
-</Page>
+</Window>

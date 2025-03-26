@@ -2,17 +2,79 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
+using System.Collections.Generic;
+using System.Linq;
+using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace diplom
 {
 
-    public partial class add_subject : Page
+    public partial class add_subject : Window, INotifyPropertyChanged, IDataErrorInfo
     {
+        private string _subjectName;
+        private string _description;
+        private diplom.Models.Type _selectedType;
+        private List<diplom.Models.Type> _types;
+        public string SubjectName
+        {
+            get { return _subjectName; }
+            set
+            {
+                if (_subjectName != value)
+                {
+                    _subjectName = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string Description
+        {
+            get { return _description; }
+            set
+            {
+                if (_description != value)
+                {
+                    _description = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public diplom.Models.Type SelectedType
+        {
+            get { return _selectedType; }
+            set
+            {
+                if (_selectedType != value)
+                {
+                    _selectedType = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public List<diplom.Models.Type> Types
+        {
+            get { return _types; }
+            set
+            {
+                _types = value;
+                OnPropertyChanged();
+            }
+        } 
         public DiplomSchoolContext db = new DiplomSchoolContext();
         public add_subject()
         {
             InitializeComponent();
             LoadTypes();
+            DataContext = this; 
+
+            WindowStartupLocation = WindowStartupLocation.CenterScreen; 
         }
         private void LoadTypes()
         {
@@ -20,62 +82,60 @@ namespace diplom
             {
                 List<diplom.Models.Type> types = db.Types.Where(u => u.Id != 0).ToList();
 
-
                 TypeComboBox.ItemsSource = types;
                 TypeComboBox.DisplayMemberPath = "Type1";
+                TypeComboBox.SelectedValuePath = "Id"; 
             }
-            catch (Exception ex)
+            catch 
             {
-                MessageBox.Show($"Error loading types: {ex.Message}");
+                MessageBox.Show("Не получилось загрузить типы");
             }
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (string.IsNullOrEmpty(this["SubjectName"]) && string.IsNullOrEmpty(this["Description"]) && SelectedType != null)
             {
-
-                if (string.IsNullOrWhiteSpace(SubjectNameTextBox.Text))
-                {
-                    MessageBox.Show("Please enter a subject name.");
-                    return;
-                }
-
-                var test = db.Subjects.OrderByDescending(s => s.Idsubjects).FirstOrDefault();
-
-                if (TypeComboBox.SelectedItem is diplom.Models.Type selectedType)
+                try
                 {
 
-                    Subject newSubject = new Subject
+                    var lastSubject = db.Subjects.OrderByDescending(s => s.Idsubjects).FirstOrDefault();
+                    int newSubjectId = lastSubject != null ? lastSubject.Idsubjects + 1 : 1;
+
+                    if (TypeComboBox.SelectedItem is diplom.Models.Type selectedType)
                     {
-                        Idsubjects = test.Idsubjects + 1,
-                        Name = SubjectNameTextBox.Text,
-                        Description = DescriptionTextBox.Text,
 
-                    };
+                        Subject newSubject = new Subject
+                        {
 
-                    db.Subjects.Add(newSubject);
-                    db.SaveChanges();
-                    TypesSubject typesSubject = new TypesSubject
+                            Idsubjects = newSubjectId,
+                            Name = SubjectNameTextBox.Text,
+                            Description = DescriptionTextBox.Text,
+                        };
+
+                        types_subjects typesSubject = new types_subjects
+                        {
+                            types_id = selectedType.Id,
+                            subjects_idsubjects = newSubjectId
+
+                        };
+
+                        db.Subjects.Add(newSubject);
+                        db.TypesSubjects.Add(typesSubject);
+                        db.SaveChanges();
+
+                        MessageBox.Show("Предмет добавлен успешно");
+                        this.Close();
+                    }
+                    else
                     {
-                        TypesId = selectedType.Id,
-                        SubjectsIdsubjects = test.Idsubjects + 1,
-                    };
-
-                    db.TypesSubjects.Add(typesSubject);
-                    db.SaveChanges();
-
-                    MessageBox.Show("Subject added successfully!");
-
+                        MessageBox.Show("Тип не выбран");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Please select a subject type.");
+                    MessageBox.Show($"Произошла ошибка: {ex.Message}");
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error saving subject: {ex.Message}");
             }
         }
 
@@ -91,8 +151,56 @@ namespace diplom
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            NavigationWindow window = (NavigationWindow)Application.Current.MainWindow;
-            window.Navigate(new Uri("subjects.xaml", UriKind.Relative));
+            this.Close();
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                string error = string.Empty;
+                switch (columnName)
+                {
+                    case "SubjectName":
+                        if (string.IsNullOrEmpty(SubjectName))
+                        {
+                            error = "Название занятия обязательно для заполнения.";
+                        }
+                        else if (SubjectName.Length > 45)
+                        {
+                            error = "Название занятия не должно превышать 45 символов.";
+                        }
+                        break;
+                    case "Description":
+                        if (string.IsNullOrEmpty(Description))
+                        {
+                            error = "Описание обязательно для заполнения.";
+                        }
+                        else if (Description.Length > 150)
+                        {
+                            error = "Описание не должно превышать 150 символов.";
+                        }
+                        break;
+                    case "SelectedType":
+                        if (SelectedType == null)
+                        {
+                            error = "Тип занятия обязателен для выбора.";
+                        }
+                        break;
+                }
+                return error;
+            }
+        }
+
+        public string Error
+        {
+            get { return null; } // Can be implemented to aggregate errors, if needed
         }
     }
 }

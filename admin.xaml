@@ -15,7 +15,6 @@
         </Grid.RowDefinitions>
         <components:Header Grid.Row="0"></components:Header>
         <StackPanel Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="20">
-            <!-- Greeting -->
             <TextBlock x:Name="GreetingTextBlock" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20" />
 
             <TextBlock Text="Новая школа - это платформа для эффективного обучения. Эта страница проходная."
