@@ -1,4 +1,6 @@
 ﻿using diplom.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -21,7 +23,7 @@ namespace diplom
         public class ScheduleAttendanceItem
         {   
             public int IdSchedule { get; set; }
-            public int IdAttendance { get; set; }
+            //public int IdAttendance { get; set; }
             public string Time { get; set; }
             public string Subject { get; set; }
             public string Teacher { get; set; }
@@ -33,7 +35,8 @@ namespace diplom
         {
             try
             {
-                var schedules = db.attendanceShow.ToList();
+                var schedules = db.schedulesShow.ToList();
+                //var schedules = db.attendanceShow.ToList();
 
                 var monday = GetDaySchedule(schedules, "Понедельник");
                 var tuesday = GetDaySchedule(schedules, "Вторник");
@@ -107,14 +110,14 @@ namespace diplom
 
         }
 
-        private List<ScheduleAttendanceItem> GetDaySchedule(List<schedule_with_attendance> schedules, string dayOfWeek)
+        private List<ScheduleAttendanceItem> GetDaySchedule(List<scheduleshow> schedules, string dayOfWeek)
         {
             return schedules
                 .Where(s => s.day_of_week == dayOfWeek)
                 .Select(s => new ScheduleAttendanceItem
                 {
                     IdSchedule = s.idschedule,
-                    IdAttendance = s.idattendance,
+                    //IdAttendance = s.idattendance,
                     Time = s.time.ToString("HH:mm"),
                     Subject = s.subject_name,
                     Teacher = s.teacher,
@@ -129,20 +132,42 @@ namespace diplom
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if (sender is Button button && button.DataContext is DateTime selectedDate)
+            if (!(sender is Button button) || !(button.DataContext is DateTime selectedDate))
+                return;
+
+            var scheduleItem = button.Tag as ScheduleAttendanceItem;
+            if (scheduleItem == null)
             {
-                var scheduleItem = button.Tag as ScheduleAttendanceItem;
-
-                if (scheduleItem != null)
-                {
-
-                    //MessageBox.Show($"Выбрана дата: {selectedDate:dd.MM.yyyy}\n" +
-                    //                $"Занятие: {scheduleItem.Subject}\n" +
-                    //                $"Время: {scheduleItem.Time}\n" +
-                    //                $"Преподаватель: {scheduleItem.Teacher}"); 
-                    schedule_details schedule_Details = new schedule_details(scheduleItem.IdAttendance); 
-                }
+                MessageBox.Show("Ошибка: информация о занятии не найдена");
+                return;
             }
+
+            try
+            {
+                // Нормализуем дату (убираем время)
+                var searchDate = selectedDate.Date;
+
+                // Для PostgreSQL используем прямое сравнение дат
+                var attendance = db.Attendances
+                    .AsNoTracking()
+                    .FirstOrDefault(a => a.Idschedule == scheduleItem.IdSchedule &&
+                                        a.Date.Date == searchDate);
+
+                if (attendance == null)
+                {
+                    MessageBox.Show($"Занятие '{scheduleItem.Subject}' на {searchDate:dd.MM.yyyy} не найдено");
+                    return;
+                }
+
+                var detailsWindow = new schedule_details(attendance.Idattendance);
+                detailsWindow.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при открытии занятия:\n{ex.Message}");
+                Debug.WriteLine($"Error opening attendance: {ex}");
+            } 
         }
+    
     }
 }

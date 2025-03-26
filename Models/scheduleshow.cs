@@ -6,7 +6,7 @@ namespace diplom.Models
     {
         [Key]
         public int idschedule { get; set; }
-        public DateTimeOffset time { get; set; }
+        public TimeSpan time { get; set; }
         public string subject_name { get; set; }
         public string teacher { get; set; }
         public int cabinet { get; set; }

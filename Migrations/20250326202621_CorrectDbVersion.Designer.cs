@@ -12,8 +12,8 @@ using diplom;
 namespace diplom.Migrations
 {
     [DbContext(typeof(DiplomSchoolContext))]
-    [Migration("20250326013713_newShows")]
-    partial class newShows
+    [Migration("20250326202621_CorrectDbVersion")]
+    partial class CorrectDbVersion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,8 +34,8 @@ namespace diplom.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Idattendance"));
 
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date")
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("date");
 
                     b.Property<int>("Idschedule")
@@ -171,8 +171,8 @@ namespace diplom.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("subjects_idsubjects");
 
-                    b.Property<DateTimeOffset>("Time")
-                        .HasColumnType("time with time zone")
+                    b.Property<TimeSpan>("Time")
+                        .HasColumnType("time without time zone")
                         .HasColumnName("time");
 
                     b.Property<int>("UsersIdusers")
@@ -298,6 +298,63 @@ namespace diplom.Migrations
                     b.ToTable("users", (string)null);
                 });
 
+            modelBuilder.Entity("diplom.Models.schedule_with_attendance", b =>
+                {
+                    b.Property<int>("idattendance")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("cabinet")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("day_number")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("day_of_week")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("event_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("formatted_date")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("group_name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("idschedule")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("month_name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("month_number")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("subject_name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("teacher")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<TimeSpan>("time")
+                        .HasColumnType("interval");
+
+                    b.Property<int>("year")
+                        .HasColumnType("integer");
+
+                    b.HasKey("idattendance");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("schedule_with_attendance", (string)null);
+                });
+
             modelBuilder.Entity("diplom.Models.scheduleshow", b =>
                 {
                     b.Property<int>("idschedule")
@@ -322,8 +379,8 @@ namespace diplom.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTimeOffset>("time")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<TimeSpan>("time")
+                        .HasColumnType("interval");
 
                     b.HasKey("idschedule");
 

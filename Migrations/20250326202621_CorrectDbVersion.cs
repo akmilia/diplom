@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace diplom.Migrations
 {
     /// <inheritdoc />
-    public partial class newShows : Migration
+    public partial class CorrectDbVersion : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -50,6 +51,22 @@ namespace diplom.Migrations
                 name: "TypesSubjects",
                 newName: "types_subjects");
 
+            migrationBuilder.AlterColumn<TimeSpan>(
+                name: "time",
+                table: "schedule",
+                type: "time without time zone",
+                nullable: false,
+                oldClrType: typeof(DateTimeOffset),
+                oldType: "time with time zone");
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "date",
+                table: "attendance",
+                type: "timestamp without time zone",
+                nullable: false,
+                oldClrType: typeof(DateOnly),
+                oldType: "date");
+
             migrationBuilder.AddPrimaryKey(
                 name: "users_pkey",
                 table: "users",
@@ -75,6 +92,22 @@ namespace diplom.Migrations
             migrationBuilder.RenameTable(
                 name: "types_subjects",
                 newName: "TypesSubjects");
+
+            migrationBuilder.AlterColumn<DateTimeOffset>(
+                name: "time",
+                table: "schedule",
+                type: "time with time zone",
+                nullable: false,
+                oldClrType: typeof(TimeSpan),
+                oldType: "time without time zone");
+
+            migrationBuilder.AlterColumn<DateOnly>(
+                name: "date",
+                table: "attendance",
+                type: "date",
+                nullable: false,
+                oldClrType: typeof(DateTime),
+                oldType: "timestamp without time zone");
 
             migrationBuilder.AddColumn<int>(
                 name: "SubjectsIdsubjectsNavigationIdsubjects",

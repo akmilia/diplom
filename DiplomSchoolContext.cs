@@ -53,7 +53,7 @@ public partial class DiplomSchoolContext : DbContext
             entity.ToTable("attendance");
 
             entity.Property(e => e.Idattendance).HasColumnName("idattendance");
-            entity.Property(e => e.Date).HasColumnName("date");
+            entity.Property(e => e.Date).HasColumnType("timestamp without time zone").HasColumnName("date");
             entity.Property(e => e.Idschedule).HasColumnName("idschedule");
 
             entity.HasOne(d => d.IdscheduleNavigation).WithMany(p => p.Attendances)
@@ -66,7 +66,8 @@ public partial class DiplomSchoolContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<schedule_with_attendance>().ToView("schedule_with_attendance");
-        base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(modelBuilder); 
+
 
         modelBuilder.Entity<BilNebil>(entity =>
         {
@@ -159,7 +160,7 @@ public partial class DiplomSchoolContext : DbContext
             entity.Property(e => e.GroupsIdgroup).HasColumnName("groups_idgroup");
             entity.Property(e => e.SubjectsIdsubjects).HasColumnName("subjects_idsubjects");
             entity.Property(e => e.Time)
-                .HasColumnType("time with time zone")
+                .HasColumnType("time without time zone")
                 .HasColumnName("time");
             entity.Property(e => e.UsersIdusers).HasColumnName("users_idusers");
 
@@ -255,6 +256,10 @@ public partial class DiplomSchoolContext : DbContext
 
 
     }
-
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder.Properties<DateTime>()
+            .HaveColumnType("timestamp without time zone");
+    }
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

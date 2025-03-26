@@ -4,7 +4,7 @@ public partial class Schedule
 {
     public int Idschedule { get; set; }
 
-    public DateTimeOffset Time { get; set; }
+    public TimeSpan Time { get; set; }
 
     public int SubjectsIdsubjects { get; set; }
 

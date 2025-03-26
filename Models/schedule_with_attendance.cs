@@ -17,7 +17,7 @@ namespace diplom.Models
         public TimeSpan time { get; set; }
         public string subject_name { get; set; }
         public string teacher { get; set; }
-        public string cabinet { get; set; }
+        public int cabinet { get; set; }
         public string group_name { get; set; }
         public string day_of_week { get; set; }
         public DateTime event_date { get; set; }
