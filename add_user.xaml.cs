@@ -21,7 +21,6 @@ namespace diplom
         private Role _selectedRole;
         private List<Role> _roles;
 
-     
         public string Surname
         {
             get { return _surname; }

@@ -111,23 +111,35 @@ namespace diplom
         }
 
         private List<ScheduleAttendanceItem> GetDaySchedule(List<scheduleshow> schedules, string dayOfWeek)
-        {
-            return schedules
-                .Where(s => s.day_of_week == dayOfWeek)
-                .Select(s => new ScheduleAttendanceItem
-                {
-                    IdSchedule = s.idschedule,
-                    //IdAttendance = s.idattendance,
-                    Time = s.time.ToString("HH:mm"),
-                    Subject = s.subject_name,
-                    Teacher = s.teacher,
-                    Cabinet = s.cabinet.ToString(),
-                    Dates = db.Attendances
-                        .Where(a => a.Idschedule == s.idschedule)
-                        .Select(a => a.Date) 
-                        .ToList()
-                })
-                .ToList();
+        {   
+
+            try
+            {
+
+                return schedules
+              .Where(s => s.day_of_week.Equals(dayOfWeek, StringComparison.OrdinalIgnoreCase))
+               .OrderBy(s => s.time)
+              .Select(s => new ScheduleAttendanceItem
+              {
+                  IdSchedule = s.idschedule,
+                  Time = s.time.ToString(@"hh\:mm"),
+                  Subject = s.subject_name,
+                  Teacher = s.teacher,
+                  Cabinet = s.cabinet.ToString(),
+                  Dates = db.Attendances
+                      .Where(a => a.Idschedule == s.idschedule)
+                      .OrderBy(a => a.Date) 
+                      .Select(a => a.Date)
+                      .ToList()
+              })
+              .ToList();
+            } 
+            catch (Exception ex)
+            {
+                MessageBox.Show($"error {ex}");
+                return null; 
+            }
+          
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -144,10 +156,8 @@ namespace diplom
 
             try
             {
-                // Нормализуем дату (убираем время)
                 var searchDate = selectedDate.Date;
 
-                // Для PostgreSQL используем прямое сравнение дат
                 var attendance = db.Attendances
                     .AsNoTracking()
                     .FirstOrDefault(a => a.Idschedule == scheduleItem.IdSchedule &&

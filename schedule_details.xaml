@@ -7,8 +7,7 @@
         xmlns:components="clr-namespace:diplom.Components" 
         mc:Ignorable="d"
         Title="Посещаемость" MinHeight="450" MinWidth="700" Closing="Window_Closing" Background="White">
-        <Grid>
-
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -17,6 +16,21 @@
         </Grid.RowDefinitions>
         <components:HeaderSimple Grid.Row="0"></components:HeaderSimple>
         <TextBlock Text="Посещаемость" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="20" Grid.Row="1"/>
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+            <TextBlock Text="Занятие : " Name="Attend" FontSize="18" Width="250" Margin="20" />
+            <TextBlock Text="Группа : " Name="Group" FontSize="18" Width="250" Margin="20"/>
+        </StackPanel>
 
+        <Grid  Grid.Row="3">
+            <DataGrid Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Name="table" Margin="25" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding IdUser}"  Width="Auto" />
+                    <DataGridTextColumn Header="ФИО" Binding="{Binding FIO}" Width="Auto" />
+                    <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+        </Grid>
+     
     </Grid>
 </Window>

@@ -28,7 +28,7 @@
         </StackPanel> 
         
 
-        <DataGrid ItemsSource="{Binding UsersItems}" Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" 
+        <DataGrid Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" 
              MouseDoubleClick="table_MouseDoubleClick"   Name="table" Margin="25" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding idusers}"  Width="Auto" />
