@@ -1,10 +1,8 @@
 ﻿using diplom.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
-using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
 namespace diplom
 {
 
@@ -62,7 +60,7 @@ namespace diplom
             {
                 subjectsshow path = table.SelectedItem as subjectsshow;
                 subject Subject = new subject(path.subject_id);
-                Subject.Show(); 
+                Subject.Show();
             }
             catch
             {
@@ -72,22 +70,22 @@ namespace diplom
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
-        {    
+        {
             try
             {
                 add_subject add_Subject = new add_subject();
                 add_Subject.Closed += (s, args) => LoadSubjects();
-                add_Subject.Show(); 
+                add_Subject.Show();
             }
             catch
             {
                 MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
             }
-          
+
         }
 
         private void TypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {   
+        {
 
             try
             {

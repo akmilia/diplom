@@ -3,14 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
 
 namespace diplom
 {
 
     public partial class subject : Window, IDataErrorInfo
     {
-      
+
         public string Error => null; // Не используется в простом случае
 
         public string this[string columnName]
@@ -40,13 +39,13 @@ namespace diplom
                 return error;
             }
         }
-         public DiplomSchoolContext db = new DiplomSchoolContext();
-        subjectsshow constS = new subjectsshow();
+        public DiplomSchoolContext db = new DiplomSchoolContext();
+        private subjectsshow constS = new subjectsshow();
         public int constID;
         public subject(int ID)
         {
             InitializeComponent();
-            WindowStartupLocation = WindowStartupLocation.CenterScreen; 
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
             constID = ID;
             NewData();
@@ -127,11 +126,11 @@ namespace diplom
             name.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
             description.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
 
-         
+
             if (string.IsNullOrEmpty(this["Name"]) == false || string.IsNullOrEmpty(this["Description"]) == false)
             {
                 MessageBox.Show("Пожалуйста, исправьте ошибки в форме.");
-                return; 
+                return;
             }
 
             try

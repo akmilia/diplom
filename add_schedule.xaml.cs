@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using diplom.Models;
 using System.Windows;
-using System.Windows.Controls;
-using diplom.Models;
-using Microsoft.EntityFrameworkCore;
 namespace diplom
 {
     public partial class add_schedule : Window
     {
-        DiplomSchoolContext db = new();
+        private DiplomSchoolContext db = new();
         private static readonly Dictionary<string, int> DayOfWeekMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
         {
             {"понедельник", 1},
@@ -20,8 +12,7 @@ namespace diplom
             {"среда", 3},
             {"четверг", 4},
             {"пятница", 5},
-            {"суббота", 6},
-            {"воскресенье", 7}
+            {"суббота", 6}
         };
         public class DayOfWeekItem
         {
@@ -86,14 +77,14 @@ namespace diplom
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-           
+
             try
             {
                 if (!ValidateInputs())
                     return;
                 var startTime = StartTimePicker.Value.Value.TimeOfDay;
                 //var dayOfWeekNumber = DayOfWeekToNumber(DayOfWeekComboBox.SelectedItem.ToString()); 
-                var dayOfWeekNumber = (int)DayOfWeekComboBox.SelectedValue; 
+                var dayOfWeekNumber = (int)DayOfWeekComboBox.SelectedValue;
                 var cabinetId = (int)CabinetComboBox.SelectedValue;
                 var teacherId = (int)TeacherComboBox.SelectedValue;
 
@@ -135,7 +126,7 @@ namespace diplom
             return true;
         }
 
-        
+
         private bool CheckScheduleConflict(int dayOfWeek, int cabinetId, TimeSpan startTime)
         {
             return db.Schedules.Any(s =>

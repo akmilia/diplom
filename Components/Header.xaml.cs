@@ -20,25 +20,25 @@ namespace diplom.Components
             }
         }
         private void Button_Click(object sender, RoutedEventArgs e)
-        {  
+        {
             try
             {
                 NavigationWindow window = (NavigationWindow)Application.Current.MainWindow;
                 window.Navigate(new Uri("schedule.xaml", UriKind.Relative));
-            } 
+            }
             catch
             {
-                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее"); 
+                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
             }
-           
+
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
-        {   
+        {
             try
             {
-            NavigationWindow window = (NavigationWindow)Application.Current.MainWindow;
-            window.Navigate(new Uri("subjects.xaml", UriKind.Relative)); 
+                NavigationWindow window = (NavigationWindow)Application.Current.MainWindow;
+                window.Navigate(new Uri("subjects.xaml", UriKind.Relative));
             }
             catch
             {
@@ -48,7 +48,7 @@ namespace diplom.Components
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
-        {   
+        {
             try
             {
                 NavigationWindow window = (NavigationWindow)Application.Current.MainWindow;
@@ -61,17 +61,17 @@ namespace diplom.Components
         }
 
         private void ImageClick(object sender, RoutedEventArgs e)
-        {   
+        {
             try
             {
                 NavigationWindow window = (NavigationWindow)Application.Current.MainWindow;
                 window.Navigate(new Uri("admin.xaml", UriKind.Relative));
-            } 
+            }
             catch
             {
                 MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
             }
-            
+
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)

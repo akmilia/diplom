@@ -1,13 +1,8 @@
 ﻿using diplom.Models;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Navigation;
-using System.Collections.Generic;
-using System.Linq;
-using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Xml.Linq;
+using System.Windows;
+using System.Windows.Controls;
 namespace diplom
 {
     public partial class add_user : Window, INotifyPropertyChanged, IDataErrorInfo
@@ -15,7 +10,7 @@ namespace diplom
         private string _surname;
         private string _nameN;
         private string _paternity;
-     
+
         private string _login;
         private string _password;
         private Role _selectedRole;
@@ -110,12 +105,12 @@ namespace diplom
             }
         }
 
-        DiplomSchoolContext db = new();
+        private DiplomSchoolContext db = new();
         public add_user()
         {
             InitializeComponent();
             DataContext = this;
-            WindowStartupLocation = WindowStartupLocation.CenterScreen; 
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
             LoadRoles();
             Loaded += Add_subject_Loaded;
@@ -142,10 +137,10 @@ namespace diplom
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
-        {   
+        {
 
-                surname.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
-                NameU.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            surname.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            NameU.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
 
             if (string.IsNullOrEmpty(this["Surname"]) && string.IsNullOrEmpty(this["NameN"]) && string.IsNullOrEmpty(this["Login"]) && string.IsNullOrEmpty(this["Password"]) && SelectedRole != null)
             {
@@ -185,7 +180,7 @@ namespace diplom
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            this.Close(); 
+            this.Close();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -231,7 +226,7 @@ namespace diplom
                             error = "Поле не должно превышать 150 символов.";
                         }
                         break;
-                  
+
                     case "SelectedRole":
                         if (SelectedRole == null)
                         {
@@ -245,7 +240,7 @@ namespace diplom
 
         public string Error
         {
-            get { return null; } 
+            get { return null; }
         }
 
         private object GetValue(string propertyName)
@@ -257,7 +252,7 @@ namespace diplom
                 case "Paternity": return Paternity;
                 case "Login": return Login;
                 case "Password": return Password;
-             
+
                 default: return null;
             }
         }

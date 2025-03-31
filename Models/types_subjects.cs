@@ -5,7 +5,7 @@ namespace diplom.Models;
 
 [Table("types_subjects")]
 public partial class types_subjects
-{  
+{
 
     [Key]
     [Column(Order = 0)]

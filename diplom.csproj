@@ -8,12 +8,17 @@
     <UseWPF>true</UseWPF>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <AnalysisLevel>latest-all</AnalysisLevel>
+    <ApplicationIcon>диплом-лого.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Components\krest.png" />
     <None Remove="Components\profile.png" />
     <None Remove="Images\girl.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="диплом-лого.ico" />
   </ItemGroup>
 
   <ItemGroup>

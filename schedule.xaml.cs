@@ -1,19 +1,17 @@
 ﻿using diplom.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
+using OfficeOpenXml;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.IO;
-using OfficeOpenXml;
-using System.Windows.Forms; 
-using Microsoft.Win32;
-using System.Text.RegularExpressions;
 
 namespace diplom
 {
     public partial class schedule : Page
     {
-        DiplomSchoolContext db = new DiplomSchoolContext();
+        private DiplomSchoolContext db = new DiplomSchoolContext();
         public schedule()
         {
             InitializeComponent();
@@ -27,7 +25,7 @@ namespace diplom
         }
 
         public class ScheduleAttendanceItem
-        {   
+        {
             public int IdSchedule { get; set; }
             public string Time { get; set; }
             public string Subject { get; set; }
@@ -58,11 +56,11 @@ namespace diplom
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка загрузки расписания: {ex.Message}");
-            } 
+            }
         }
 
         private List<ScheduleAttendanceItem> GetDaySchedule(List<scheduleshow> schedules, string dayOfWeek)
-        {   
+        {
 
             try
             {
@@ -79,18 +77,18 @@ namespace diplom
                   Cabinet = s.cabinet.ToString(),
                   Dates = db.Attendances
                       .Where(a => a.Idschedule == s.idschedule)
-                      .OrderBy(a => a.Date) 
+                      .OrderBy(a => a.Date)
                       .Select(a => a.Date)
                       .ToList()
               })
               .ToList();
-            } 
+            }
             catch (Exception ex)
             {
                 MessageBox.Show($"error {ex}");
-                return null; 
+                return null;
             }
-          
+
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -127,13 +125,13 @@ namespace diplom
             {
                 MessageBox.Show($"Ошибка при открытии занятия:\n{ex.Message}");
                 Debug.WriteLine($"Error opening attendance: {ex}");
-            } 
+            }
         }
 
         private void ExportToExcel_Click(object sender, RoutedEventArgs e)
         {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial; 
-                                                            
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
             try
             {
                 var selectedGroup = GroupComboBox.SelectedItem as Models.Group;

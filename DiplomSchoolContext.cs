@@ -18,7 +18,7 @@ public partial class DiplomSchoolContext : DbContext
     public DbSet<scheduleshow> schedulesShow { get; set; }
 
     public DbSet<schedule_with_attendance> attendanceShow { get; set; }
-    
+
     public virtual DbSet<Attendance> Attendances { get; set; }
 
     public virtual DbSet<BilNebil> BilNebils { get; set; }
@@ -66,7 +66,7 @@ public partial class DiplomSchoolContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<schedule_with_attendance>().ToView("schedule_with_attendance");
-        base.OnModelCreating(modelBuilder); 
+        base.OnModelCreating(modelBuilder);
 
 
         modelBuilder.Entity<BilNebil>(entity =>
@@ -217,7 +217,7 @@ public partial class DiplomSchoolContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => new { e.Idusers}).HasName("users_pkey");
+            entity.HasKey(e => new { e.Idusers }).HasName("users_pkey");
 
             entity.ToTable("users");
 

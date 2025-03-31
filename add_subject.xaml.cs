@@ -1,14 +1,7 @@
 ﻿using diplom.Models;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Navigation;
-using Microsoft.EntityFrameworkCore;
-using Npgsql;
-using System.Collections.Generic;
-using System.Linq;
-using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace diplom
 {
@@ -86,9 +79,9 @@ namespace diplom
         {
             InitializeComponent();
             LoadTypes();
-            DataContext = this; 
+            DataContext = this;
 
-            WindowStartupLocation = WindowStartupLocation.CenterScreen; 
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
         private void LoadTypes()
         {
@@ -98,9 +91,9 @@ namespace diplom
 
                 TypeComboBox.ItemsSource = types;
                 TypeComboBox.DisplayMemberPath = "Type1";
-                TypeComboBox.SelectedValuePath = "Id"; 
+                TypeComboBox.SelectedValuePath = "Id";
             }
-            catch 
+            catch
             {
                 MessageBox.Show("Не получилось загрузить типы");
             }
@@ -136,9 +129,9 @@ namespace diplom
                         };
 
                         Group group = new Group
-                        { 
-                           Name = GroupNameTextBox.Text
-                        }; 
+                        {
+                            Name = GroupNameTextBox.Text
+                        };
 
                         db.Subjects.Add(newSubject);
                         db.TypesSubjects.Add(typesSubject);

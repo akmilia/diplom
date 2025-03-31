@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using diplom.Models;
 using System.Windows;
-using diplom.Models; 
-using System.Windows.Controls;
 
 
 namespace diplom
 {
-    
+
     public partial class user : Window
     {
 
         public DiplomSchoolContext db = new DiplomSchoolContext();
         public usersshow curUser;
-    
+
         public user(usersshow u)
         {
             InitializeComponent();
@@ -41,7 +35,7 @@ namespace diplom
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             try
-            {  
+            {
                 var userToDelete = db.Users.FirstOrDefault(u => u.Idusers == curUser.idusers);
                 if (userToDelete != null)
                 {
@@ -51,7 +45,7 @@ namespace diplom
                     this.Close();
                 }
             }
-            catch 
+            catch
             {
                 MessageBox.Show("Возникла неизвестная ошибка. Пожалуйста, попробуйте позднее");
             }

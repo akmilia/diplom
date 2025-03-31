@@ -57,12 +57,12 @@ namespace diplom
                 {
                     MessageBox.Show("Неверные логин или пароль.");
                 }
-        }
+            }
             catch
             {
                 MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
             }
-}
+        }
 
         private bool AuthenticateUser(string login, string password)
         {

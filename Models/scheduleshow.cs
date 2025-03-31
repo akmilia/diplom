@@ -11,7 +11,7 @@ namespace diplom.Models
         public string teacher { get; set; }
         public int cabinet { get; set; }
         public string group_nam { get; set; }
-        public string day_of_week { get; set; } 
+        public string day_of_week { get; set; }
 
     }
 }

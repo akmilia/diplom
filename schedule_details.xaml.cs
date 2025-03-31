@@ -1,16 +1,9 @@
-﻿using diplom.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.ObjectModel;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 
 
 namespace diplom
-{   
+{
     public partial class schedule_details : Window
     {
         public DiplomSchoolContext db = new DiplomSchoolContext();
@@ -25,7 +18,7 @@ namespace diplom
         public schedule_details(int id)
         {
             InitializeComponent();
-            WindowStartupLocation = WindowStartupLocation.CenterScreen; 
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
             attendanceData = GetAttendanceData(id);
             table.ItemsSource = attendanceData;
@@ -70,7 +63,7 @@ namespace diplom
             }
         }
         private List<AttendanceViewModel> GetAttendanceData(int attendanceId)
-        { 
+        {
             try
             {
                 // Получаем id расписания из attendance
@@ -101,11 +94,11 @@ namespace diplom
                             };
 
                 return query.ToList();
-            } 
+            }
             catch
             {
                 MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
-                return null; 
+                return null;
             }
         }
 

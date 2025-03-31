@@ -7,7 +7,6 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Navigation;
 
 namespace diplom
 {
@@ -57,7 +56,7 @@ namespace diplom
 
                     table.Items.Refresh();
                 }
-            } 
+            }
             catch
             {
                 MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
@@ -84,8 +83,8 @@ namespace diplom
 
             var usersh = table.SelectedItem as usersshow;
 
-            try 
-            {     
+            try
+            {
 
                 if (usersh != null)
                 {
@@ -97,7 +96,7 @@ namespace diplom
                 {
                     MessageBox.Show("Пользователь не найден.");
                 }
-              
+
             }
             catch (Exception ex)
             {
@@ -161,7 +160,7 @@ namespace diplom
         }
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {  
+        {
             try
             {
                 string searchText = SearchTextBox.Text.Trim().ToLower();
@@ -178,12 +177,12 @@ namespace diplom
 
                     table.ItemsSource = filteredUsers;
                 }
-            } 
+            }
             catch
             {
                 MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
             }
-           
+
         }
     }
 }
