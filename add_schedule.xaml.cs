@@ -13,7 +13,7 @@ namespace diplom
     public partial class add_schedule : Window
     {
         DiplomSchoolContext db = new();
-        public Dictionary<string, int> dayMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, int> DayOfWeekMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
         {
             {"понедельник", 1},
             {"вторник", 2},
@@ -23,48 +23,54 @@ namespace diplom
             {"суббота", 6},
             {"воскресенье", 7}
         };
+        public class DayOfWeekItem
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
         public add_schedule()
         {
             InitializeComponent();
             DataContext = this;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
-            LoadCabinets();
-            LoadTeachers();
-            LoadSubject();
-            LoadGroups();
+            LoadData();
         }
 
-        private void LoadCabinets()
+        private void LoadData()
         {
-            CabinetComboBox.ItemsSource = db.Cabinets.ToList();
-            CabinetComboBox.DisplayMemberPath = "Description";
-            CabinetComboBox.SelectedValuePath = "Idcabinet";
-        }
+            try
+            {
+                CabinetComboBox.ItemsSource = db.Cabinets.ToList();
+                CabinetComboBox.DisplayMemberPath = "Description";
+                CabinetComboBox.SelectedValuePath = "Idcabinet";
 
-        private void LoadTeachers()
-        {
-            TeacherComboBox.ItemsSource = db.Users
-               .Where(u => u.RolesIdroles == 2) 
+                TeacherComboBox.ItemsSource = db.Users
+                    .Where(u => u.RolesIdroles == 2)
+                    .ToList();
+                TeacherComboBox.DisplayMemberPath = "Surname";
+                TeacherComboBox.SelectedValuePath = "Idusers";
+
+                SubjectComboBox.ItemsSource = db.Subjects.ToList();
+                SubjectComboBox.DisplayMemberPath = "Name";
+                SubjectComboBox.SelectedValuePath = "Idsubjects";
+
+                GroupComboBox.ItemsSource = db.Groups.ToList();
+                GroupComboBox.DisplayMemberPath = "Name";
+                GroupComboBox.SelectedValuePath = "Idgroups";
+
+                var dayOfWeekItems = DayOfWeekMap
+               .Select(kvp => new DayOfWeekItem { Id = kvp.Value, Name = kvp.Key })
                .ToList();
-            TeacherComboBox.DisplayMemberPath = "Surname";
-            TeacherComboBox.SelectedValuePath = "Idusers";
-        }
 
-        private void LoadSubject()
-        {
-           
-            SubjectComboBox.ItemsSource = db.Subjects.ToList();
-            SubjectComboBox.DisplayMemberPath = "Name";
-            SubjectComboBox.SelectedValuePath = "Idsubjects";
-        }
-
-        private void LoadGroups()
-        {
-          
-            GroupComboBox.ItemsSource = db.Groups.ToList();
-            GroupComboBox.DisplayMemberPath = "Name";
-            GroupComboBox.SelectedValuePath = "Idgroups";
+                DayOfWeekComboBox.ItemsSource = dayOfWeekItems;
+                DayOfWeekComboBox.DisplayMemberPath = "Name";
+                DayOfWeekComboBox.SelectedValuePath = "Id";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
 
@@ -80,68 +86,79 @@ namespace diplom
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+           
             try
             {
-                // Проверка заполнения всех полей
-                if (CabinetComboBox.SelectedItem == null ||
-                    TeacherComboBox.SelectedItem == null ||
-                    SubjectComboBox.SelectedItem == null ||
-                    GroupComboBox.SelectedItem == null ||
-                    DayOfWeekComboBox.SelectedItem == null ||
-                    StartTimePicker.Value == null ||
-                    StartDatePicker.SelectedDate == null ||
-                    EndDatePicker.SelectedDate == null)
-                {
-                    MessageBox.Show("Заполните все обязательные поля!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (!ValidateInputs())
                     return;
-                }
-
-                // Проверка на конфликты расписания
                 var startTime = StartTimePicker.Value.Value.TimeOfDay;
-                int dayOfWeek = DayOfWeektoNumber(DayOfWeekComboBox.SelectedItem.ToString());
+                //var dayOfWeekNumber = DayOfWeekToNumber(DayOfWeekComboBox.SelectedItem.ToString()); 
+                var dayOfWeekNumber = (int)DayOfWeekComboBox.SelectedValue; 
                 var cabinetId = (int)CabinetComboBox.SelectedValue;
-                var teacherId = (int)TeacherComboBox.SelectedValue; 
+                var teacherId = (int)TeacherComboBox.SelectedValue;
 
-
-                bool hasConflict = db.Schedules.Any(s => 
-                    s.DayOfWeek == dayOfWeek &&
-                    s.CabinetsIdcabinet == cabinetId &&
-                    s.Time == startTime);
-
-                if (hasConflict)
+                if (CheckScheduleConflict(dayOfWeekNumber, cabinetId, startTime))
                 {
-                    MessageBox.Show("Выбранное время занято для данного кабинета или преподавателя!", "Конфликт расписания", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("Выбранное время занято для данного кабинета или преподавателя!",
+                        "Конфликт расписания", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // Создание новой записи расписания
-                var newSchedule = new Schedule
-                {
-                    UsersIdusers = teacherId,
-                    Time = startTime,
-                     SubjectsIdsubjects = (int)SubjectComboBox.SelectedValue,
-                     CabinetsIdcabinet = cabinetId,
-                     GroupsIdgroup = (int)GroupComboBox.SelectedValue,
-                    DayOfWeek = dayOfWeek
-                };
+                var newSchedule = CreateNewSchedule(teacherId, startTime, dayOfWeekNumber);
                 db.Schedules.Add(newSchedule);
                 db.SaveChanges();
 
-                // Автоматическое создание записей посещений
-                CreateAttendanceRecords(newSchedule, DayOfWeekComboBox.SelectedItem.ToString());
+                CreateAttendanceRecords(newSchedule, dayOfWeekNumber);
 
                 MessageBox.Show("Расписание успешно добавлено!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                this.Close();
+                Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка при сохранении: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-        private void CreateAttendanceRecords(Schedule schedule, string dayOfWeek)
+        private bool ValidateInputs()
         {
-            DateTime currentDate = StartDatePicker.SelectedDate.Value; 
+            if (CabinetComboBox.SelectedItem == null ||
+                TeacherComboBox.SelectedItem == null ||
+                SubjectComboBox.SelectedItem == null ||
+                GroupComboBox.SelectedItem == null ||
+                DayOfWeekComboBox.SelectedItem == null ||
+                StartTimePicker.Value == null ||
+                StartDatePicker.SelectedDate == null ||
+                EndDatePicker.SelectedDate == null)
+            {
+                MessageBox.Show("Заполните все обязательные поля!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+            return true;
+        }
+
+        
+        private bool CheckScheduleConflict(int dayOfWeek, int cabinetId, TimeSpan startTime)
+        {
+            return db.Schedules.Any(s =>
+                s.DayOfWeek == dayOfWeek &&
+                s.CabinetsIdcabinet == cabinetId &&
+                s.Time == startTime);
+        }
+
+        private Schedule CreateNewSchedule(int teacherId, TimeSpan startTime, int dayOfWeekNumber)
+        {
+            return new Schedule
+            {
+                UsersIdusers = teacherId,
+                Time = startTime,
+                SubjectsIdsubjects = (int)SubjectComboBox.SelectedValue,
+                CabinetsIdcabinet = (int)CabinetComboBox.SelectedValue,
+                GroupsIdgroup = (int)GroupComboBox.SelectedValue,
+                DayOfWeek = dayOfWeekNumber
+            };
+        }
+        private void CreateAttendanceRecords(Schedule schedule, int dayOfWeekNumber)
+        {
+            var currentDate = StartDatePicker.SelectedDate.Value;
             var endDate = EndDatePicker.SelectedDate.Value;
             var groupId = schedule.GroupsIdgroup;
 
@@ -152,45 +169,38 @@ namespace diplom
 
             while (currentDate <= endDate)
             {
-                if (currentDate.DayOfWeek.ToString() == dayOfWeek)
+                if ((int)currentDate.DayOfWeek + 1 == dayOfWeekNumber) // +1 для соответствия вашей нумерации
                 {
-                    // Создаем запись посещения
                     var attendance = new Attendance
                     {
                         Idschedule = schedule.Idschedule,
-                        Date = currentDate,
+                        Date = currentDate
                     };
+
                     db.Attendances.Add(attendance);
-                    db.SaveChanges(); 
+                    db.SaveChanges();
+
                     foreach (var studentId in studentIds)
                     {
-                        var bilNebil = new BilNebil
+                        db.BilNebils.Add(new BilNebil
                         {
                             Idattendance = attendance.Idattendance,
                             Iduser = studentId,
                             Status = null
-                        };
-                        db.BilNebils.Add(bilNebil);
+                        });
                     }
                 }
                 currentDate = currentDate.AddDays(1);
             }
-
-            db.SaveChanges();
-
         }
-        public int DayOfWeektoNumber(string dayofweek)
+        private static int DayOfWeekToNumber(string dayOfWeek)
         {
-                if (dayMap.TryGetValue(dayofweek, out int dayNumber))
-                {
-                    return dayNumber;
-                }
-                else
-                {
-                    MessageBox.Show("Возникла ошибка с конвертацией дней недели");
-                    return -1;
-                }
-         
+            if (DayOfWeekMap.TryGetValue(dayOfWeek, out int dayNumber))
+            {
+                return dayNumber;
+            }
+
+            throw new ArgumentException($"Некорректный день недели: {dayOfWeek}");
         }
     }
 }
