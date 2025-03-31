@@ -47,6 +47,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -62,16 +63,22 @@
                  Margin="0,20,0,10"
                  Foreground="#FF333333"/>
 
-        <ScrollViewer Grid.Row="2"
+        <StackPanel  Margin="20" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <ComboBox x:Name="GroupComboBox" DisplayMemberPath="Name"  Width="550" Margin="5"/>
+            <Button Content="Экспорт в Excel" Click="ExportToExcel_Click"  Width="550" Margin="5"/>
+            <Button Content="Добавление нового занятия" Click="NewSchedule_Click"  Width="550" Margin="5"/>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="3"
                     VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled"
                     Padding="10"
-                    CanContentScroll="True">
+                    CanContentScroll="True"> 
+            
             <StackPanel Orientation="Horizontal"
                       HorizontalAlignment="Center"
                       VerticalAlignment="Top">
-
-            
+                
                 <Border Style="{StaticResource DayContainerStyle}">
                     <StackPanel>
                         <TextBlock Text="Понедельник" Style="{StaticResource DayHeaderStyle}"/>

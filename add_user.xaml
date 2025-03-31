@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:diplom"
          xmlns:components="clr-namespace:diplom.Components" 
     mc:Ignorable="d"
-     Title="Новый аккаунт" MinHeight="450" MinWidth="700" Background="White" Closing="Window_Closing">
+     Title="Новый аккаунт" Height="500" Width="700" Background="White" Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="53*"/>

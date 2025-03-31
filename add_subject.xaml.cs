@@ -17,6 +17,7 @@ namespace diplom
     {
         private string _subjectName;
         private string _description;
+        private string _groupName;
         private diplom.Models.Type _selectedType;
         private List<diplom.Models.Type> _types;
         public string SubjectName
@@ -66,7 +67,20 @@ namespace diplom
                 _types = value;
                 OnPropertyChanged();
             }
-        } 
+        }
+
+        public string GroupName
+        {
+            get { return _groupName; }
+            set
+            {
+                if (_groupName != value)
+                {
+                    _groupName = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         public DiplomSchoolContext db = new DiplomSchoolContext();
         public add_subject()
         {
@@ -94,7 +108,8 @@ namespace diplom
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(this["SubjectName"]) && string.IsNullOrEmpty(this["Description"]) && SelectedType != null)
+            if (string.IsNullOrEmpty(this["SubjectName"]) && string.IsNullOrEmpty(this["Description"]) && SelectedType != null &&
+                string.IsNullOrEmpty(this["GroupName"]))
             {
                 try
                 {
@@ -120,8 +135,14 @@ namespace diplom
 
                         };
 
+                        Group group = new Group
+                        { 
+                           Name = GroupNameTextBox.Text
+                        }; 
+
                         db.Subjects.Add(newSubject);
                         db.TypesSubjects.Add(typesSubject);
+                        db.Groups.Add(group);
                         db.SaveChanges();
 
                         MessageBox.Show("Предмет добавлен успешно");
@@ -185,6 +206,16 @@ namespace diplom
                         else if (Description.Length > 150)
                         {
                             error = "Описание не должно превышать 150 символов.";
+                        }
+                        break;
+                    case "GroupName":
+                        if (string.IsNullOrEmpty(GroupName))
+                        {
+                            error = "Название группы обязательно для заполнения.";
+                        }
+                        else if (GroupName.Length > 50)
+                        {
+                            error = "Название группы не должно превышать 50 символов.";
                         }
                         break;
                     case "SelectedType":

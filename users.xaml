@@ -26,7 +26,6 @@
             <TextBlock Text="Поиск по ФИО:" VerticalAlignment="Center" />
             <TextBox x:Name="SearchTextBox" Width="550" TextChanged="SearchTextBox_TextChanged"/>
         </StackPanel> 
-        
 
         <DataGrid Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" 
              MouseDoubleClick="table_MouseDoubleClick"   Name="table" Margin="25" >

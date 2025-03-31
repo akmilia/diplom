@@ -1,0 +1,80 @@
+﻿<Window x:Class="diplom.add_schedule"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:diplom"
+        xmlns:components="clr-namespace:diplom.Components" 
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+     Title="Новое занятие" Height="550" Width="700" Background="White" Closing="Window_Closing">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="53*"/>
+            <ColumnDefinition Width="647*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <components:HeaderSimple Grid.Row="0" Grid.ColumnSpan="2"></components:HeaderSimple>
+        <TextBlock Text="Добавить новое занятие" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,20" Grid.Row="1" Grid.ColumnSpan="2"/>
+
+        <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" Width="600" Grid.ColumnSpan="2">
+            <StackPanel Margin="10">
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Кабинет:" FontWeight="Bold" Width="150"/>
+                    <ComboBox x:Name="CabinetComboBox" Width="420"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Преподаватель:" FontWeight="Bold" Width="150"/>
+                    <ComboBox x:Name="TeacherComboBox" Width="420"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Предмет:" FontWeight="Bold" Width="150"/>
+                    <ComboBox x:Name="SubjectComboBox" Width="420"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Группа:" FontWeight="Bold" Width="150"/>
+                    <ComboBox x:Name="GroupComboBox" Width="420"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="День недели:" FontWeight="Bold" Width="150"/>
+                    <ComboBox x:Name="DayOfWeekComboBox" Width="420">
+                        <ComboBoxItem Content="Понедельник"/>
+                        <ComboBoxItem Content="Вторник"/>
+                        <ComboBoxItem Content="Среда"/>
+                        <ComboBoxItem Content="Четверг"/>
+                        <ComboBoxItem Content="Пятница"/>
+                        <ComboBoxItem Content="Суббота"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Время начала:" FontWeight="Bold" Width="150"/>
+                    <xctk:TimePicker x:Name="StartTimePicker" Width="420" Format="ShortTime"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Дата начала:" FontWeight="Bold" Width="150"/>
+                    <DatePicker x:Name="StartDatePicker" Width="420"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Дата окончания:" FontWeight="Bold" Width="150"/>
+                    <DatePicker x:Name="EndDatePicker" Width="420"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Button Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" Content="Сохранить" 
+                Width="300" Click="SaveButton_Click" Background="LightGray" Style="{StaticResource RoundedButtonStyle}"/>
+    </Grid>
+</Window>

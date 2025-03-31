@@ -107,7 +107,6 @@ namespace diplom
                 MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
                 return null; 
             }
-           
         }
 
     }

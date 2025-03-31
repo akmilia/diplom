@@ -3,6 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.IO;
+using OfficeOpenXml;
+using System.Windows.Forms; 
+using Microsoft.Win32;
+using System.Text.RegularExpressions;
 
 namespace diplom
 {
@@ -18,12 +23,12 @@ namespace diplom
         private void Schedule_Loaded(object sender, RoutedEventArgs e)
         {
             LoadSchedule();
+            GroupComboBox.ItemsSource = db.Groups.ToList();
         }
 
         public class ScheduleAttendanceItem
         {   
             public int IdSchedule { get; set; }
-            //public int IdAttendance { get; set; }
             public string Time { get; set; }
             public string Subject { get; set; }
             public string Teacher { get; set; }
@@ -36,8 +41,6 @@ namespace diplom
             try
             {
                 var schedules = db.schedulesShow.ToList();
-                //var schedules = db.attendanceShow.ToList();
-
                 var monday = GetDaySchedule(schedules, "Понедельник");
                 var tuesday = GetDaySchedule(schedules, "Вторник");
                 var wednesday = GetDaySchedule(schedules, "Среда");
@@ -56,58 +59,6 @@ namespace diplom
             {
                 MessageBox.Show($"Ошибка загрузки расписания: {ex.Message}");
             } 
-            //try
-            //{
-            //    var schedules = db.schedulesShow
-            //                    .AsEnumerable()
-            //                    .ToList();
-
-            //    var monday = ConvertToScheduleItems(schedules.Where(s => s.day_of_week == "Понедельник").ToList());
-            //    var tuesday = ConvertToScheduleItems(schedules.Where(s => s.day_of_week == "Вторник").ToList());
-            //    var wednesday = ConvertToScheduleItems(schedules.Where(s => s.day_of_week == "Среда").ToList());
-            //    var thursday = ConvertToScheduleItems(schedules.Where(s => s.day_of_week == "Четверг").ToList());
-            //    var friday = ConvertToScheduleItems(schedules.Where(s => s.day_of_week == "Пятница").ToList());
-            //    var saturday = ConvertToScheduleItems(schedules.Where(s => s.day_of_week == "Суббота").ToList());
-
-            //    MondayListBox.ItemsSource = monday;
-            //    TuesdayListBox.ItemsSource = tuesday;
-            //    WednesdayListBox.ItemsSource = wednesday;
-            //    ThursdayListBox.ItemsSource = thursday;
-            //    FridayListBox.ItemsSource = friday;
-            //    SaturdayListBox.ItemsSource = saturday;
-            //}
-            //catch
-            //{
-            //    MessageBox.Show("Произошла ошибка при загрузке расписания. Пожалуйста, попробуйте позднее.");
-            //}
-            //try
-            //{
-            //    var schedules = db.schedulesShow
-            //                    .AsEnumerable()
-            //                    .ToList();
-
-            //    var monday = schedules.Where(s => s.day_of_week == "Понедельник").ToList();
-            //    var tuesday = schedules.Where(s => s.day_of_week == "Вторник").ToList();
-            //    var wednesday = schedules.Where(s => s.day_of_week == "Среда").ToList();
-            //    var thursday = schedules.Where(s => s.day_of_week == "Четверг").ToList();
-            //    var friday = schedules.Where(s => s.day_of_week == "Пятница").ToList();
-            //    var saturday = schedules.Where(s => s.day_of_week == "Суббота").ToList();
-
-            //    MondayListBox.ItemsSource = monday.Select(s => $"{s.time.ToString("HH:mm")} - {s.subject_name} ({s.teacher}) ({s.cabinet})"); 
-            //    TuesdayListBox.ItemsSource = tuesday.Select(s => $"{s.time.ToString("HH:mm")} - {s.subject_name} ({s.teacher}) ({s.cabinet})");
-            //    WednesdayListBox.ItemsSource = wednesday.Select(s => $"{s.time.ToString("HH:mm")} - {s.subject_name} ({s.teacher}) ({s.cabinet})");
-            //    ThursdayListBox.ItemsSource = thursday.Select(s => $"{s.time.ToString("HH:mm")} - {s.subject_name} ({s.teacher}) ({s.cabinet})");
-            //    FridayListBox.ItemsSource = friday.Select(s => $"{s.time.ToString("HH:mm")} - {s.subject_name} ({s.teacher}) ({s.cabinet})");
-            //    SaturdayListBox.ItemsSource = saturday.Select(s => $"{s.time.ToString("HH:mm")} - {s.subject_name} ({s.teacher}) ({s.cabinet})");
-
-
-            //    //var Dates = db.Attendances.Select(u=> u.Idschedule == )
-            //}
-            //catch
-            //{
-            //    MessageBox.Show("Произошла ошибка при загрузке расписания. Пожалуйста, попробуйте позднее.");
-            //}
-
         }
 
         private List<ScheduleAttendanceItem> GetDaySchedule(List<scheduleshow> schedules, string dayOfWeek)
@@ -178,6 +129,117 @@ namespace diplom
                 Debug.WriteLine($"Error opening attendance: {ex}");
             } 
         }
-    
+
+        private void ExportToExcel_Click(object sender, RoutedEventArgs e)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial; 
+                                                            
+            try
+            {
+                var selectedGroup = GroupComboBox.SelectedItem as Models.Group;
+                if (selectedGroup == null)
+                {
+                    MessageBox.Show("Выберите группу для экспорта");
+                    return;
+                }
+                var groupName = selectedGroup.Name;
+
+                // Получаем все занятия для этой группы
+                var groupSchedules = db.Schedules
+                    .Include(s => s.GroupsIdgroupNavigation)
+                    .Where(s => s.GroupsIdgroupNavigation.Name == groupName)
+                    .ToList();
+
+                if (!groupSchedules.Any())
+                {
+                    MessageBox.Show("Не найдены занятия для выбранной группы");
+                    return;
+                }
+
+                // Получаем всех студентов группы
+                var groupStudents = db.GroupsUsers
+                    .Include(gu => gu.UsersIdusersNavigation)
+                    .Where(gu => gu.GroupsIdgroups == groupSchedules.First().GroupsIdgroup)
+                    .Select(gu => gu.UsersIdusersNavigation)
+                    .ToList();
+
+                // Получаем все даты занятий (первые 30)
+                var allDates = db.Attendances
+                    .Where(a => groupSchedules.Select(s => s.Idschedule).Contains(a.Idschedule))
+                    .Select(a => a.Date)
+                    .Distinct()
+                    .OrderBy(d => d)
+                    .Take(30)
+                    .ToList();
+
+                // Создаем диалог сохранения файла (WPF версия)
+                var saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "Excel files (*.xlsx)|*.xlsx",
+                    FileName = $"Посещаемость {groupName} {DateTime.Now:yyyy-MM-dd}.xlsx"
+                };
+
+                if (saveFileDialog.ShowDialog() == true) // В WPF используется bool? результат
+                {
+                    using (var package = new ExcelPackage())
+                    {
+                        var worksheet = package.Workbook.Worksheets.Add("Посещаемость");
+
+                        // Заголовки
+                        worksheet.Cells[1, 1].Value = "ID";
+                        worksheet.Cells[1, 2].Value = "Фамилия";
+                        worksheet.Cells[1, 3].Value = "Имя";
+                        worksheet.Cells[1, 4].Value = "Отчество";
+
+                        // Даты занятий
+                        for (int i = 0; i < allDates.Count; i++)
+                        {
+                            worksheet.Cells[1, i + 5].Value = allDates[i].ToString("dd.MM.yyyy");
+                        }
+
+                        // Данные студентов
+                        for (int row = 0; row < groupStudents.Count; row++)
+                        {
+                            var student = groupStudents[row];
+                            worksheet.Cells[row + 2, 1].Value = student.Idusers;
+                            worksheet.Cells[row + 2, 2].Value = student.Surname;
+                            worksheet.Cells[row + 2, 3].Value = student.Name;
+                            worksheet.Cells[row + 2, 4].Value = student.Paternity;
+
+                            // Статусы посещения
+                            for (int col = 0; col < allDates.Count; col++)
+                            {
+                                var date = allDates[col];
+                                var attendance = db.BilNebils
+                                    .Any(bn => bn.Iduser == student.Idusers &&
+                                              db.Attendances.Any(a => a.Idattendance == bn.Idattendance &&
+                                                                     a.Date.Date == date.Date &&
+                                                                     groupSchedules.Select(s => s.Idschedule).Contains(a.Idschedule)));
+
+                                worksheet.Cells[row + 2, col + 5].Value = attendance ? "Присутствовал" : "Отсутствовал";
+                            }
+                        }
+
+                        // Автонастройка ширины столбцов
+                        worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                        // Сохраняем файл
+                        package.SaveAs(new FileInfo(saveFileDialog.FileName));
+                        MessageBox.Show($"Файл успешно сохранен: {saveFileDialog.FileName}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при экспорте в Excel: {ex.Message}");
+            }
+        }
+
+        private void NewSchedule_Click(object sender, RoutedEventArgs e)
+        {
+            add_schedule add_sch = new add_schedule();
+            add_sch.Closed += (s, args) => LoadSchedule();
+            add_sch.Show();
+        }
     }
 }

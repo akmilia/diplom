@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:diplom"
         xmlns:components="clr-namespace:diplom.Components" 
         mc:Ignorable="d"
-         Title="Новое занятие" MinHeight="450" MinWidth="700" Background="White" Closing="Window_Closing">
+         Title="Новое занятие" Height="450" Width="700" Background="White" Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="57*"/>
@@ -55,6 +55,15 @@
                             <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}" />
                         </ComboBox.ToolTip>
                     </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <TextBlock Text="Название группы:" FontWeight="Black" Width="150"/>
+                    <TextBox x:Name="GroupNameTextBox" Width="420"
+                            Text="{Binding GroupName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+                        <TextBox.ToolTip>
+                            <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
+                        </TextBox.ToolTip>
+                    </TextBox>
                 </StackPanel>
             </StackPanel>
         </Border>

@@ -34,7 +34,7 @@ namespace diplom
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading roles: {ex.Message}");
+                MessageBox.Show("Возникла проблема с загрузкой ролей");
             }
         }
         private void RoleComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -98,25 +98,6 @@ namespace diplom
                     MessageBox.Show("Пользователь не найден.");
                 }
               
-                //if (MessageBox.Show("Вы уверены, что хотите удалить пользователя?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                //{
-
-                //    var userToDelete = db.Users.Find(usersh.idusers);
-
-                //    if (userToDelete != null)
-                //    {
-
-                //        db.Users.Remove(userToDelete);
-                //        db.SaveChanges();
-
-                //        MessageBox.Show("Пользователь успешно удален.");
-                //        table.Items.Refresh();
-                //    }
-                //    else
-                //    {
-                //        MessageBox.Show("Пользователь не найден.");
-                //    }
-                //}
             }
             catch (Exception ex)
             {

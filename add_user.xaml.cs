@@ -144,7 +144,6 @@ namespace diplom
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {   
 
-         
                 surname.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
                 NameU.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
 
