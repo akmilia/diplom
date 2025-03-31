@@ -69,7 +69,7 @@ namespace diplom
 
                 return schedules
               .Where(s => s.day_of_week.Equals(dayOfWeek, StringComparison.OrdinalIgnoreCase))
-               .OrderBy(s => s.time)
+              .OrderBy(s => s.time)
               .Select(s => new ScheduleAttendanceItem
               {
                   IdSchedule = s.idschedule,

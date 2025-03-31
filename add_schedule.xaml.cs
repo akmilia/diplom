@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,6 +13,16 @@ namespace diplom
     public partial class add_schedule : Window
     {
         DiplomSchoolContext db = new();
+        public Dictionary<string, int> dayMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        {
+            {"понедельник", 1},
+            {"вторник", 2},
+            {"среда", 3},
+            {"четверг", 4},
+            {"пятница", 5},
+            {"суббота", 6},
+            {"воскресенье", 7}
+        };
         public add_schedule()
         {
             InitializeComponent();
@@ -87,9 +98,10 @@ namespace diplom
 
                 // Проверка на конфликты расписания
                 var startTime = StartTimePicker.Value.Value.TimeOfDay;
-                var dayOfWeek = (int)DayOfWeekComboBox.SelectedItem;
+                int dayOfWeek = DayOfWeektoNumber(DayOfWeekComboBox.SelectedItem.ToString());
                 var cabinetId = (int)CabinetComboBox.SelectedValue;
-                var teacherId = (int)TeacherComboBox.SelectedValue;
+                var teacherId = (int)TeacherComboBox.SelectedValue; 
+
 
                 bool hasConflict = db.Schedules.Any(s => 
                     s.DayOfWeek == dayOfWeek &&
@@ -110,13 +122,13 @@ namespace diplom
                      SubjectsIdsubjects = (int)SubjectComboBox.SelectedValue,
                      CabinetsIdcabinet = cabinetId,
                      GroupsIdgroup = (int)GroupComboBox.SelectedValue,
-                     DayOfWeek  = dayOfWeek,
+                    DayOfWeek = dayOfWeek
                 };
                 db.Schedules.Add(newSchedule);
                 db.SaveChanges();
 
                 // Автоматическое создание записей посещений
-                CreateAttendanceRecords(newSchedule);
+                CreateAttendanceRecords(newSchedule, DayOfWeekComboBox.SelectedItem.ToString());
 
                 MessageBox.Show("Расписание успешно добавлено!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
                 this.Close();
@@ -127,27 +139,58 @@ namespace diplom
             }
         }
 
-        private void CreateAttendanceRecords(Schedule schedule)
+        private void CreateAttendanceRecords(Schedule schedule, string dayOfWeek)
         {
-            var currentDate = StartDatePicker.SelectedDate.Value; 
+            DateTime currentDate = StartDatePicker.SelectedDate.Value; 
             var endDate = EndDatePicker.SelectedDate.Value;
-        
+            var groupId = schedule.GroupsIdgroup;
+
+            var studentIds = db.GroupsUsers
+                .Where(gu => gu.GroupsIdgroups == groupId)
+                .Select(gu => gu.UsersIdusers)
+                .ToList();
+
             while (currentDate <= endDate)
             {
-               
+                if (currentDate.DayOfWeek.ToString() == dayOfWeek)
+                {
+                    // Создаем запись посещения
                     var attendance = new Attendance
                     {
                         Idschedule = schedule.Idschedule,
                         Date = currentDate,
                     };
-
                     db.Attendances.Add(attendance);
-               
-                currentDate = currentDate.AddDays(7);
+                    db.SaveChanges(); 
+                    foreach (var studentId in studentIds)
+                    {
+                        var bilNebil = new BilNebil
+                        {
+                            Idattendance = attendance.Idattendance,
+                            Iduser = studentId,
+                            Status = null
+                        };
+                        db.BilNebils.Add(bilNebil);
+                    }
+                }
+                currentDate = currentDate.AddDays(1);
             }
 
             db.SaveChanges();
-        }
 
+        }
+        public int DayOfWeektoNumber(string dayofweek)
+        {
+                if (dayMap.TryGetValue(dayofweek, out int dayNumber))
+                {
+                    return dayNumber;
+                }
+                else
+                {
+                    MessageBox.Show("Возникла ошибка с конвертацией дней недели");
+                    return -1;
+                }
+         
+        }
     }
 }

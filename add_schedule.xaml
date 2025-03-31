@@ -59,7 +59,8 @@
 
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Время начала:" FontWeight="Bold" Width="150"/>
-                    <xctk:TimePicker x:Name="StartTimePicker" Width="420" Format="ShortTime"/>
+                    <xctk:TimePicker x:Name="StartTimePicker" Width="420" Format="ShortTime" 
+                    TimeInterval="00:30:00" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="5">
