@@ -24,7 +24,7 @@
 
         <TextBlock Text="Добавить новое занятие" FontSize="24" FontWeight="Bold" HorizontalAlignment="Left" Margin="13,20,0,20" Grid.Row="1" Grid.Column="2"/>
 
-        <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="50,0,0,0" Width="600" Grid.ColumnSpan="3">
+        <Border Grid.Row="2" BorderBrush="Black" CornerRadius="10" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="600" Grid.ColumnSpan="3">
             <StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="10">
                     <TextBlock Text="Название занятия:" FontWeight="Black" Width="150"/>
@@ -68,9 +68,9 @@
             </StackPanel>
         </Border>
 
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left" Margin="50,10,0,10" Width="600" Grid.ColumnSpan="3">
-            <Button Content="Отмена" Width="300"  Click="Button_Click" Style="{StaticResource RoundedButtonStyle}"/>
-            <Button Content="Сохранить" Width="300" Click="SaveButton_Click" Background="LightGray"  Style="{StaticResource RoundedButtonStyle}"/>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left" Margin="50,10,0,10" Width="600" Height="30" Grid.ColumnSpan="3">
+            <Button Content="Отмена" Width="300"  Click="Button_Click"  Background="Transparent"/>
+            <Button Content="Сохранить" Width="300" Click="SaveButton_Click" />
         </StackPanel>
     </Grid>
 </Window>

@@ -21,7 +21,7 @@
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <StackPanel>
 
-                <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20" Width="600">
+                <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Center" VerticalAlignment="Top" Width="600">
                     <StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="10">
@@ -34,10 +34,6 @@
                             <TextBox x:Name="PasswordTextBox" Width="420" Text="{Binding Password}"/>
                         </StackPanel>
 
-                        <!--<StackPanel Orientation="Horizontal" Margin="10">
-                    <TextBlock Text="ФИО: " FontWeight="Bold" Width="150"/>
-                    <TextBox x:Name="FullNameTextBox" Width="420" Text="{Binding FullName}"/>
-                </StackPanel>-->
                         <StackPanel Orientation="Horizontal" Margin="10">
                             <TextBlock Text="Фамилия: " FontWeight="Bold" Width="150"/>
                             <TextBox x:Name="Surname" Width="420" Text="{Binding Surname}"/>
@@ -63,15 +59,14 @@
                         </StackPanel>
                     </StackPanel>
                 </Border>
-                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 10" Width="600">
-                    <Button Content="Удалить" Width="300" Click="Button_Click" Style="{StaticResource RoundedButtonStyle}"/>
-                    <Button Content="Сохранить" Width="300" Click="Button_Click_1" Background="LightGray" Style="{StaticResource RoundedButtonStyle}"/>
+                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left" Margin="50,10,0,10" Width="600" Height="30">
+                    <Button Content="Удалить" Width="300"  Click="Button_Click" Background="White"/>
+                    <Button Content="Сохранить" Width="300" Click="Button_Click_1" />
                 </StackPanel>
 
                 <Border  Grid.Row="4" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Top"  Width="600">
                     <StackPanel>
                         <TextBlock Text="Занятия пользователя" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
-                        <!-- Пример данных -->
                         <StackPanel Orientation="Horizontal" Margin="10">
                             <TextBlock Text="Занятие 1: " FontWeight="Bold" Width="150"/>
                             <TextBlock Text="Математика" Width="420"/>
@@ -82,7 +77,6 @@
                 <Border  Grid.Row="4" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Top"  Width="600">
                     <StackPanel>
                         <TextBlock Text="Статус оплаты занятий" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
-                        <!-- Пример данных -->
                         <StackPanel Orientation="Horizontal" Margin="10">
                             <TextBlock Text="Занятие 1: " FontWeight="Bold" Width="150"/>
                             <TextBlock Text="Оплачено" Width="420"/>

@@ -193,5 +193,10 @@ namespace diplom
 
             throw new ArgumentException($"Некорректный день недели: {dayOfWeek}");
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close(); 
+        }
     }
 }
