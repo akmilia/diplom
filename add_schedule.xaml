@@ -4,73 +4,80 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:diplom"
-        xmlns:components="clr-namespace:diplom.Components" 
+        xmlns:components="clr-namespace:diplom.Components"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-     Title="Новое занятие" Height="550" Width="700" Background="White" Closing="Window_Closing">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="53*"/>
-            <ColumnDefinition Width="647*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        Title="Новое занятие" Height="550" Width="700" Background="White" Closing="Window_Closing">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <!-- Занимает всё свободное пространство -->
+                <RowDefinition Height="100"/>
+                <!-- Фиксированная высота для кнопок -->
+            </Grid.RowDefinitions>
 
-        <components:HeaderSimple Grid.Row="0" Grid.ColumnSpan="2"></components:HeaderSimple>
-        <TextBlock Text="Добавить новое занятие" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,20" Grid.Row="1" Grid.ColumnSpan="2"/>
+            <components:HeaderSimple Grid.Row="0"></components:HeaderSimple>
+            <TextBlock Text="Добавить новое занятие" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,20" Grid.Row="1"/>
 
-        <Border Grid.Row="2" BorderBrush="Black" CornerRadius="10" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="600" Grid.ColumnSpan="2">
-            <StackPanel Margin="10">
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="Кабинет:" FontWeight="Bold" Width="150"/>
-                    <ComboBox x:Name="CabinetComboBox" Width="420"/>
-                </StackPanel>
+            <Border Grid.Row="2" BorderBrush="Black" CornerRadius="10" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="650">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <!-- Для названий -->
+                        <ColumnDefinition Width="*"/>
+                        <!-- Для полей ввода -->
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="Преподаватель:" FontWeight="Bold" Width="150"/>
-                    <ComboBox x:Name="TeacherComboBox" Width="420"/>
-                </StackPanel>
+                    <!-- Кабинет -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Кабинет:" FontWeight="Bold" Margin="5"/>
+                    <ComboBox Grid.Row="0" Grid.Column="1" x:Name="CabinetComboBox" Margin="5"/>
 
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="Предмет:" FontWeight="Bold" Width="150"/>
-                    <ComboBox x:Name="SubjectComboBox" Width="420"/>
-                </StackPanel>
+                    <!-- Преподаватель -->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Преподаватель:" FontWeight="Bold" Margin="5"/>
+                    <ComboBox Grid.Row="1" Grid.Column="1" x:Name="TeacherComboBox" Margin="5"/>
 
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="Группа:" FontWeight="Bold" Width="150"/>
-                    <ComboBox x:Name="GroupComboBox" Width="420"/>
-                </StackPanel>
+                    <!-- Предмет -->
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Предмет:" FontWeight="Bold" Margin="5"/>
+                    <ComboBox Grid.Row="2" Grid.Column="1" x:Name="SubjectComboBox" Margin="5"/>
 
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="День недели:" FontWeight="Bold" Width="150"/>
-                    <ComboBox x:Name="DayOfWeekComboBox" Width="420"/>
+                    <!-- Группа -->
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Группа:" FontWeight="Bold" Margin="5"/>
+                    <ComboBox Grid.Row="3" Grid.Column="1" x:Name="GroupComboBox" Margin="5"/>
 
-                </StackPanel>
+                    <!-- День недели -->
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="День недели:" FontWeight="Bold" Margin="5"/>
+                    <ComboBox Grid.Row="4" Grid.Column="1" x:Name="DayOfWeekComboBox" Margin="5"/>
 
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="Время начала:" FontWeight="Bold" Width="150"/>
-                    <xctk:TimePicker x:Name="StartTimePicker" Width="420" Format="ShortTime" 
-                    TimeInterval="00:30:00" />
-                </StackPanel>
+                    <!-- Время начала -->
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Время начала:" FontWeight="Bold" Margin="5"/>
+                    <xctk:TimePicker Grid.Row="5" Grid.Column="1" x:Name="StartTimePicker" Format="ShortTime" TimeInterval="00:30:00" Margin="5"/>
 
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="Дата начала:" FontWeight="Bold" Width="150"/>
-                    <DatePicker x:Name="StartDatePicker" Width="420"/>
-                </StackPanel>
+                    <!-- Дата начала -->
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Дата начала:" FontWeight="Bold" Margin="5"/>
+                    <DatePicker Grid.Row="6" Grid.Column="1" x:Name="StartDatePicker" Margin="5"/>
 
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="Дата окончания:" FontWeight="Bold" Width="150"/>
-                    <DatePicker x:Name="EndDatePicker" Width="420"/>
-                </StackPanel>
+                    <!-- Дата окончания -->
+                    <TextBlock Grid.Row="7" Grid.Column="0" Text="Дата окончания:" FontWeight="Bold" Margin="5"/>
+                    <DatePicker Grid.Row="7" Grid.Column="1" x:Name="EndDatePicker" Margin="5"/>
+                </Grid>
+            </Border>
+            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10" Width="600">
+                <Button Content="Отмена" Width="300" Click="Button_Click" Background="White"/>
+                <Button Content="Сохранить" Width="300" Click="SaveButton_Click"/>
             </StackPanel>
-        </Border>
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left" Margin="50,10,0,10" Width="600" Height="30" Grid.ColumnSpan="2">
-            <Button Content="Отмена" Width="300"  Click="Button_Click" Background="White"/>
-            <Button Content="Сохранить" Width="300" Click="SaveButton_Click" />
-        </StackPanel>
-    </Grid>
+        </Grid>
+    </ScrollViewer>
 </Window>

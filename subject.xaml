@@ -3,49 +3,62 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:diplom"  
-        xmlns:components="clr-namespace:diplom.Components" 
+        xmlns:local="clr-namespace:diplom"
+        xmlns:components="clr-namespace:diplom.Components"
         mc:Ignorable="d"
         Title="Занятие" MinHeight="450" MinWidth="700" Background="White" Closing="Window_Closing">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <components:HeaderSimple Grid.Row="0"></components:HeaderSimple>
-        <TextBlock Text="Занятие" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="20" Grid.Row="1"/>
+            <components:HeaderSimple Grid.Row="0"></components:HeaderSimple>
+            <TextBlock Text="Занятие" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 20 0 20" Grid.Row="1"/>
 
-        <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20" Width="600">
-            <StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="10">
-                    <TextBlock Text="ID: " FontWeight="Black" Width="150"/>
-                    <TextBox x:Name="Id" Width="420" IsEnabled="False"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="10">
-                    <TextBlock Text="Имя занятия: " FontWeight="Black" Width="150"/>
-                    <TextBox x:Name="name" Width="420"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="10">
-                    <TextBlock Text="Описание: " FontWeight="Black" Width="150"/>
-                    <TextBox x:Name="description" Width="420"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="10">
-                    <TextBlock Text="ID type: " FontWeight="Black" Width="150"/>
-                    <TextBox x:Name="IdType" Width="420" IsEnabled="False"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="10">
-                    <TextBlock Text="Тип: " FontWeight="Black" Width="150"/>
-                    <TextBox x:Name="type" Width="420" IsEnabled="False"/>
-                </StackPanel>
+            <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20" Width="650">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- ID -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="ID:" FontWeight="Black" Margin="5"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="Id" IsEnabled="False" Margin="5"/>
+
+                    <!-- Имя занятия -->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Имя занятия:" FontWeight="Black" Margin="5"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="name" Margin="5"/>
+
+                    <!-- Описание -->
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Описание:" FontWeight="Black" Margin="5"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="description" Margin="5"/>
+
+                    <!-- ID type -->
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="ID type:" FontWeight="Black" Margin="5"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="IdType" IsEnabled="False" Margin="5"/>
+
+                    <!-- Тип -->
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Тип:" FontWeight="Black" Margin="5"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" x:Name="type" IsEnabled="False" Margin="5"/>
+                </Grid>
+            </Border>
+
+            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 20 0 20" Width="600">
+                <Button Content="Удалить" Width="300" Click="Button_Click" Margin="5"/>
+                <Button Content="Сохранить" Width="300" Click="Button_Click_1" Background="LightGray" Margin="5"/>
             </StackPanel>
-        </Border>
-
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 10" Width="600">
-            <Button Content="Удалить" Width="300" Click="Button_Click"/>
-            <Button Content="Сохранить" Width="300" Click="Button_Click_1" Background="LightGray" />
-        </StackPanel>
-    </Grid>
+        </Grid>
+    </ScrollViewer>
 </Window>

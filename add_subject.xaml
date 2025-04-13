@@ -4,73 +4,77 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:diplom"
-        xmlns:components="clr-namespace:diplom.Components" 
+        xmlns:components="clr-namespace:diplom.Components"
         mc:Ignorable="d"
-         Title="Новое занятие" Height="450" Width="700" Background="White" Closing="Window_Closing">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="57*"/>
-            <ColumnDefinition Width="135*"/>
-            <ColumnDefinition Width="508*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        Title="Новое занятие" MinHeight="450" MinWidth="700" Background="White" Closing="Window_Closing">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <components:HeaderSimple Grid.Row="0" Grid.ColumnSpan="3"></components:HeaderSimple>
+            <components:HeaderSimple Grid.Row="0"></components:HeaderSimple>
+            <TextBlock Text="Добавить новое занятие" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,20" Grid.Row="1"/>
 
-        <TextBlock Text="Добавить новое занятие" FontSize="24" FontWeight="Bold" HorizontalAlignment="Left" Margin="13,20,0,20" Grid.Row="1" Grid.Column="2"/>
+            <Border Grid.Row="2" BorderBrush="Black" CornerRadius="10" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="650">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-        <Border Grid.Row="2" BorderBrush="Black" CornerRadius="10" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="600" Grid.ColumnSpan="3">
-            <StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="10">
-                    <TextBlock Text="Название занятия:" FontWeight="Black" Width="150"/>
-                    <TextBox x:Name="SubjectNameTextBox" Width="420"
+                    <!-- Название занятия -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Название занятия:" FontWeight="Black" Margin="5"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="SubjectNameTextBox" Margin="5"
                              Text="{Binding SubjectName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-                        <TextBox.ToolTip>
-                            <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}" />
-                        </TextBox.ToolTip>
-                    </TextBox>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" Margin="10">
-                    <TextBlock Text="Описание:" FontWeight="Black" Width="150"/>
-                    <TextBox x:Name="DescriptionTextBox" Width="420" TextWrapping="Wrap" AcceptsReturn="True" Height="80"
-                             Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-                        <TextBox.ToolTip>
-                            <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}" />
-                        </TextBox.ToolTip>
-                    </TextBox>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" Margin="10">
-                    <TextBlock Text="Тип занятия:" FontWeight="Black" Width="150"/>
-                    <ComboBox x:Name="TypeComboBox" Width="420" DisplayMemberPath="Type1" SelectedValuePath="Id"
-                              ItemsSource="{Binding Types}"
-                              SelectedItem="{Binding SelectedType, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-                        <ComboBox.ToolTip>
-                            <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}" />
-                        </ComboBox.ToolTip>
-                    </ComboBox>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="10">
-                    <TextBlock Text="Название группы:" FontWeight="Black" Width="150"/>
-                    <TextBox x:Name="GroupNameTextBox" Width="420"
-                            Text="{Binding GroupName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
                         <TextBox.ToolTip>
                             <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
                         </TextBox.ToolTip>
                     </TextBox>
-                </StackPanel>
-            </StackPanel>
-        </Border>
 
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left" Margin="50,10,0,10" Width="600" Height="30" Grid.ColumnSpan="3">
-            <Button Content="Отмена" Width="300"  Click="Button_Click"  Background="Transparent"/>
-            <Button Content="Сохранить" Width="300" Click="SaveButton_Click" />
-        </StackPanel>
-    </Grid>
+                    <!-- Описание -->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Описание:" FontWeight="Black" Margin="5"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="DescriptionTextBox" TextWrapping="Wrap" AcceptsReturn="True" Height="80" Margin="5"
+                             Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+                        <TextBox.ToolTip>
+                            <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
+                        </TextBox.ToolTip>
+                    </TextBox>
+
+                    <!-- Тип занятия -->
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Тип занятия:" FontWeight="Black" Margin="5"/>
+                    <ComboBox Grid.Row="2" Grid.Column="1" x:Name="TypeComboBox" DisplayMemberPath="Type1" SelectedValuePath="Id" Margin="5"
+                              ItemsSource="{Binding Types}"
+                              SelectedItem="{Binding SelectedType, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+                        <ComboBox.ToolTip>
+                            <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
+                        </ComboBox.ToolTip>
+                    </ComboBox>
+
+                    <!-- Название группы -->
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Название группы:" FontWeight="Black" Margin="5"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="GroupNameTextBox" Margin="5"
+                             Text="{Binding GroupName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+                        <TextBox.ToolTip>
+                            <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
+                        </TextBox.ToolTip>
+                    </TextBox>
+                </Grid>
+            </Border>
+
+            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10" Width="600">
+                <Button Content="Отмена" Width="300" Click="Button_Click" Background="Transparent"/>
+                <Button Content="Сохранить" Width="300" Click="SaveButton_Click"/>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
 </Window>

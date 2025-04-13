@@ -3,88 +3,97 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-         xmlns:local="clr-namespace:diplom"
-        xmlns:components="clr-namespace:diplom.Components" 
+        xmlns:local="clr-namespace:diplom"
+        xmlns:components="clr-namespace:diplom.Components"
         mc:Ignorable="d"
-        Title="Пользователь" Height="600" Width="700" Closing="Window_Closing" Background="White">
+        Title="Пользователь" MinHeight="600" MinWidth="700" Closing="Window_Closing" Background="White">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <components:HeaderSimple Grid.Row="0" ></components:HeaderSimple>
-        <TextBlock Text="Пользователь" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="20" Grid.Row="1"/>
+        <components:HeaderSimple Grid.Row="0"></components:HeaderSimple>
+        <TextBlock Text="Пользователь" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 20 0 20" Grid.Row="1"/>
+
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <StackPanel>
+                <!-- Основная информация о пользователе -->
+                <Border BorderBrush="Black" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Center" VerticalAlignment="Top" Width="650" Margin="0 10">
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Center" VerticalAlignment="Top" Width="600">
-                    <StackPanel>
+                        <!-- Логин -->
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Логин:" FontWeight="Bold" Margin="5"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="LoginTextBox" Margin="5" Text="{Binding Login}"/>
 
-                        <StackPanel Orientation="Horizontal" Margin="10">
-                            <TextBlock Text="Логин: " FontWeight="Bold" Width="150"/>
-                            <TextBox x:Name="LoginTextBox" Width="420" Text="{Binding Login}"/>
-                        </StackPanel>
+                        <!-- Пароль -->
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Пароль:" FontWeight="Bold" Margin="5"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="PasswordTextBox" Margin="5" Text="{Binding Password}"/>
 
-                        <StackPanel Orientation="Horizontal" Margin="10">
-                            <TextBlock Text="Пароль: " FontWeight="Bold" Width="150"/>
-                            <TextBox x:Name="PasswordTextBox" Width="420" Text="{Binding Password}"/>
-                        </StackPanel>
+                        <!-- Фамилия -->
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Фамилия:" FontWeight="Bold" Margin="5"/>
+                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="Surname" Margin="5" Text="{Binding Surname}"/>
 
-                        <StackPanel Orientation="Horizontal" Margin="10">
-                            <TextBlock Text="Фамилия: " FontWeight="Bold" Width="150"/>
-                            <TextBox x:Name="Surname" Width="420" Text="{Binding Surname}"/>
-                        </StackPanel>
+                        <!-- Имя -->
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Имя:" FontWeight="Bold" Margin="5"/>
+                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="NameN" Margin="5" Text="{Binding Name}"/>
 
-                        <StackPanel Orientation="Horizontal" Margin="10">
-                            <TextBlock Text="Имя: " FontWeight="Bold" Width="150"/>
-                            <TextBox x:Name="NameN" Width="420" Text="{Binding Name}"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10">
-                            <TextBlock Text="Отчество: " FontWeight="Bold" Width="150"/>
-                            <TextBox x:Name="Paternity" Width="420" Text="{Binding Paternity}"/>
-                        </StackPanel>
+                        <!-- Отчество -->
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Отчество:" FontWeight="Bold" Margin="5"/>
+                        <TextBox Grid.Row="4" Grid.Column="1" x:Name="Paternity" Margin="5" Text="{Binding Paternity}"/>
 
-                        <StackPanel Orientation="Horizontal" Margin="10">
-                            <TextBlock Text="Роль: " FontWeight="Bold" Width="150"/>
-                            <TextBox x:Name="Role" Width="420" Text="{Binding Role}" IsEnabled="False"/>
-                        </StackPanel>
+                        <!-- Роль -->
+                        <TextBlock Grid.Row="5" Grid.Column="0" Text="Роль:" FontWeight="Bold" Margin="5"/>
+                        <TextBox Grid.Row="5" Grid.Column="1" x:Name="Role" Margin="5" Text="{Binding Role}" IsEnabled="False"/>
 
-                        <StackPanel Orientation="Horizontal" Margin="10">
-                            <TextBlock Text="Дата рождения: " FontWeight="Bold" Width="150"/>
-                            <DatePicker x:Name="BirthDatePicker" Width="420" SelectedDate="{Binding DateBirth}"/>
-                        </StackPanel>
-                    </StackPanel>
+                        <!-- Дата рождения -->
+                        <TextBlock Grid.Row="6" Grid.Column="0" Text="Дата рождения:" FontWeight="Bold" Margin="5"/>
+                        <DatePicker Grid.Row="6" Grid.Column="1" x:Name="BirthDatePicker" Margin="5" SelectedDate="{Binding DateBirth}"/>
+                    </Grid>
                 </Border>
-                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left" Margin="50,10,0,10" Width="600" Height="30">
-                    <Button Content="Удалить" Width="300"  Click="Button_Click" Background="White"/>
-                    <Button Content="Сохранить" Width="300" Click="Button_Click_1" />
+
+                <!-- Кнопки -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 10">
+                    <Button Content="Удалить" Width="300" Click="Button_Click" Margin="5"/>
+                    <Button Content="Сохранить" Width="300" Click="Button_Click_1" Margin="5"/>
                 </StackPanel>
 
-                <Border  Grid.Row="4" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Top"  Width="600">
+                <!-- Занятия пользователя -->
+                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Top" Width="650" Margin="0 10">
                     <StackPanel>
                         <TextBlock Text="Занятия пользователя" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
                         <StackPanel Orientation="Horizontal" Margin="10">
-                            <TextBlock Text="Занятие 1: " FontWeight="Bold" Width="150"/>
+                            <TextBlock Text="Занятие 1:" FontWeight="Bold" Width="150"/>
                             <TextBlock Text="Математика" Width="420"/>
                         </StackPanel>
-                       
-                    </StackPanel>
-                </Border>
-                <Border  Grid.Row="4" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Top"  Width="600">
-                    <StackPanel>
-                        <TextBlock Text="Статус оплаты занятий" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
-                        <StackPanel Orientation="Horizontal" Margin="10">
-                            <TextBlock Text="Занятие 1: " FontWeight="Bold" Width="150"/>
-                            <TextBlock Text="Оплачено" Width="420"/>
-                        </StackPanel>
-                      
                     </StackPanel>
                 </Border>
 
+                <!-- Статус оплаты занятий -->
+                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Top" Width="650" Margin="0 10">
+                    <StackPanel>
+                        <TextBlock Text="Статус оплаты занятий" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
+                        <StackPanel Orientation="Horizontal" Margin="10">
+                            <TextBlock Text="Занятие 1:" FontWeight="Bold" Width="150"/>
+                            <TextBlock Text="Оплачено" Width="420"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
             </StackPanel>
         </ScrollViewer>
     </Grid>

@@ -32,13 +32,13 @@
             <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
             <Setter Property="Margin" Value="0 0 0 10"/>
         </Style>
+        
         <ControlTemplate x:Key="BaseButtonTemplate" TargetType="Button">
             <Border x:Name="border" 
             Background="{TemplateBinding Background}"
             BorderBrush="{TemplateBinding BorderBrush}"
             BorderThickness="{TemplateBinding BorderThickness}"
-            CornerRadius="4"
-            Padding="{TemplateBinding Padding}">
+            CornerRadius="4">
                 <ContentPresenter x:Name="contentPresenter"
                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -69,11 +69,7 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="15"/>
             <Setter Property="Margin" Value="10"/>
-            <!-- Увеличен отступ -->
-            <Setter Property="MinHeight" Value="50"/>
-            <!-- Увеличена минимальная высота -->
             <Setter Property="MinWidth" Value="120"/>
             <!-- Увеличена минимальная ширина -->
             <Setter Property="Cursor" Value="Hand"/>
@@ -89,7 +85,7 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Padding" Value="15 8"/>
+            <!--<Setter Property="Padding" Value="15 8"/>-->
         </Style>
 
         <!-- Акцентная кнопка -->
@@ -114,7 +110,6 @@
             <Setter Property="Background" Value="{StaticResource MainBackgroundBrush}"/>
             <Setter Property="BorderBrush" Value="{StaticResource ElementBackgroundBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="5"/>
             <Setter Property="MinHeight" Value="30"/>
         </Style>
 
@@ -148,7 +143,7 @@
             <Setter Property="Background" Value="#5950FF"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="8,4"/>
+            <!--<Setter Property="Padding" Value="8,4"/>-->
             <Setter Property="Margin" Value="2"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="Cursor" Value="Hand"/>
