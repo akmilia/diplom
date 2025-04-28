@@ -7,7 +7,7 @@
         xmlns:components="clr-namespace:diplom.Components"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="Новое занятие" Height="550" Width="700" Background="White" Closing="Window_Closing">
+        Title="Новое занятие" MinHeight="550" MinWidth="700" Background="White" Closing="Window_Closing">
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
         <Grid>
             <Grid.RowDefinitions>

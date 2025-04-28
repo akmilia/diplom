@@ -6,35 +6,47 @@
       xmlns:local="clr-namespace:diplom"
       xmlns:components="clr-namespace:diplom.Components"
       mc:Ignorable="d"
-      Title="Занятия" MinHeight="700" MinWidth="1240" Background="White">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+      Title="Занятия"  Background="White">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <components:Header Grid.Row="0" />
-        <TextBlock Text="Занятия" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="20" Grid.Row="1" />
+            <components:Header Grid.Row="0" />
+            <TextBlock Text="Занятия" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="20" Grid.Row="1" />
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="25 25 0 0" Grid.Row="2">
-            <Button Content="Добавить новое занятие" Click="Button_Click" />
-            <ComboBox SelectionChanged="TypeComboBox_SelectionChanged" x:Name="TypeComboBox" Width="200" DisplayMemberPath="Type1" />
-        </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="25 25 0 0" Grid.Row="2">
+                <Button Content="Добавить новое занятие" Click="Button_Click" Width="450"/>
+                <ComboBox SelectionChanged="TypeComboBox_SelectionChanged" x:Name="TypeComboBox" Width="450" DisplayMemberPath="Type1" />
+            </StackPanel>
 
-        <DataGrid ItemsSource="{Binding SubjectItems}" Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                  MouseDoubleClick="DataGrid_MouseDoubleClick" Name="table" Margin="25">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding subject_id}" Width="Auto" />
-                <DataGridTextColumn Header="Название" Binding="{Binding subject_name}" FontWeight="Bold" Width="*" />
-                <DataGridTextColumn Header="Описание" Binding="{Binding description}" Width="*" />
-                <DataGridTextColumn Header="ID Типа" Binding="{Binding type_id}" Width="Auto" />
-                <DataGridTextColumn Header="Тип" Binding="{Binding type_name}" Width="*" />
-            </DataGrid.Columns>
-            <DataGrid.InputBindings>
-                <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.OpenSubjectCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
-            </DataGrid.InputBindings>
-        </DataGrid>
-    </Grid>
+            <DataGrid ItemsSource="{Binding SubjectItems}" Grid.Row="3" MouseDoubleClick="DataGrid_MouseDoubleClick" Name="table">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding subject_id}" />
+                    <DataGridTextColumn Header="Название" Binding="{Binding subject_name}" FontWeight="Bold" />
+                    <DataGridTextColumn Header="Описание" Binding="{Binding description}" />
+                    <DataGridTextColumn Header="ID Типа" Binding="{Binding type_id}" />
+                    <DataGridTextColumn Header="Тип" Binding="{Binding type_name}" />
+                </DataGrid.Columns>
+                <DataGrid.InputBindings>
+                    <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.OpenSubjectCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+                </DataGrid.InputBindings>
+            </DataGrid>
+
+            <TextBlock Text="Группы, посещающие занятия" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="20" Grid.Row="4" />
+
+            <DataGrid ItemsSource="{Binding GroupsItems}" Grid.Row="5" Name="tableGroups">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Idgroups}" />
+                    <DataGridTextColumn Header="Название" Binding="{Binding Name}" FontWeight="Bold"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </ScrollViewer>
 </Page>

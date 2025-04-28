@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:diplom"
         mc:Ignorable="d"
-        Title="Авторизация" MinHeight="700" MinWidth="1240" Background="White"> 
+        Title="Авторизация"  Background="White"> 
     
     <Border  BorderThickness="1" CornerRadius="10" BorderBrush="Black" Padding="20" Margin="80">
         <Grid VerticalAlignment="Center">

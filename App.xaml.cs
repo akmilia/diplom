@@ -10,7 +10,9 @@ public partial class App : Application
         NavigationWindow window = new NavigationWindow
         {
             Source = new Uri("authorization.xaml", UriKind.Relative),
-            WindowState = WindowState.Maximized
+            WindowState = WindowState.Maximized,
+            MinHeight = 700,
+            MinWidth = 1200
         };
         window.Show();
     }

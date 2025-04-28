@@ -20,6 +20,7 @@ namespace diplom
             LoadSubjects();
             DataContext = this;
             LoadTypes();
+            LoadGroups();
         }
 
         private void LoadTypes()
@@ -33,6 +34,19 @@ namespace diplom
             catch
             {
                 MessageBox.Show("Не получилось загрузить типы");
+            }
+        }
+
+        private void LoadGroups()
+        {
+            try
+            {
+                List<Group> groups = db.Groups.ToList();
+                tableGroups.ItemsSource = groups;
+            }
+            catch
+            {
+                MessageBox.Show("Не получилось загрузить занятия");
             }
         }
 

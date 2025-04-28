@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:diplom"
       xmlns:components="clr-namespace:diplom.Components"
       mc:Ignorable="d"
-      Title="Пользователи" MinHeight="700" MinWidth="1240" Background="White">
+      Title="Пользователи" Background="White">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -19,20 +19,19 @@
         <TextBlock Text="Пользователи" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="20" Grid.Row="1" />
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10" Grid.Row="2">
-            <Button Content="Добавить новый аккаунт" Click="toAdd_Click" />
-            <ComboBox SelectionChanged="RoleComboBox_SelectionChanged" x:Name="RoleComboBox" Width="200" DisplayMemberPath="Name" />
-            <Button Content="Выгрузить в Excel" Click="Button_Click" />
+            <Button Content="Добавить новый аккаунт" Click="toAdd_Click" Width="300"/>
+            <ComboBox SelectionChanged="RoleComboBox_SelectionChanged" x:Name="RoleComboBox" Width="300" DisplayMemberPath="Name" />
+            <Button Content="Выгрузить в Excel" Click="Button_Click" Width="300"/>
             <TextBlock Text="Поиск по ФИО:" VerticalAlignment="Center" />
-            <TextBox x:Name="SearchTextBox" Width="550" TextChanged="SearchTextBox_TextChanged" />
+            <TextBox x:Name="SearchTextBox" Width="450" TextChanged="SearchTextBox_TextChanged" />
         </StackPanel>
 
-        <DataGrid Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
-                  MouseDoubleClick="table_MouseDoubleClick" Name="table" Margin="25">
+        <DataGrid Grid.Row="3" MouseDoubleClick="table_MouseDoubleClick" Name="table">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding idusers}" Width="Auto" />
-                <DataGridTextColumn Header="Логин" Binding="{Binding login}" FontWeight="Bold" Width="*" />
-                <DataGridTextColumn Header="ФИО" Binding="{Binding full_name}" Width="Auto" />
-                <DataGridTextColumn Header="Роль" Binding="{Binding user_role}" Width="*" />
+                <DataGridTextColumn Header="ID" Binding="{Binding idusers}" />
+                <DataGridTextColumn Header="Логин" Binding="{Binding login}" FontWeight="Bold" />
+                <DataGridTextColumn Header="ФИО" Binding="{Binding full_name}" />
+                <DataGridTextColumn Header="Роль" Binding="{Binding user_role}"/>
             </DataGrid.Columns>
             <DataGrid.InputBindings>
                 <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.OpenSubjectCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
