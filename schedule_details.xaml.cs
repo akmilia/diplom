@@ -29,7 +29,6 @@ namespace diplom
         {
             try
             {
-                // Получаем информацию о посещении, включая расписание и группу
                 var attendanceInfo = db.Attendances
                     .Include(a => a.IdscheduleNavigation)
                     .ThenInclude(s => s.GroupsIdgroupNavigation)

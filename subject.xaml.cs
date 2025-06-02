@@ -106,6 +106,7 @@ namespace diplom
                         db.Subjects.Remove(subjectToDelete);
                         db.SaveChanges();
                         MessageBox.Show("Занятие успешно удалено.");
+                        this.DialogResult = true;
                         this.Close();
                     }
                     else
@@ -143,6 +144,9 @@ namespace diplom
 
                     db.SaveChanges();
                     MessageBox.Show("Изменения успешно сохранены.");
+
+                    this.DialogResult = true;
+                    this.Close();
                 }
                 else
                 {

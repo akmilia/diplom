@@ -23,11 +23,11 @@
             </StackPanel>
 
             <Grid  Grid.Row="3">
-                <DataGrid Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Name="table" Margin="25" >
+                <DataGrid Grid.Row="3" Name="table" >
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID" Binding="{Binding IdUser}"  Width="Auto" />
                         <DataGridTextColumn Header="ФИО" Binding="{Binding FIO}" Width="Auto" />
-                        <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="*" />
+                        <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="Auto" />
                     </DataGrid.Columns>
                 </DataGrid>
 

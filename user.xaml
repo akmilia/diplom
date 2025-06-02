@@ -20,7 +20,6 @@
 
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <StackPanel>
-                <!-- Основная информация о пользователе -->
                 <Border BorderBrush="Black" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Center" VerticalAlignment="Top" Width="650" Margin="0 10">
                     <Grid Margin="10">
                         <Grid.ColumnDefinitions>

@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using diplom.Components;
+using MaterialDesignThemes.Wpf;
 
 namespace diplom
 {
@@ -11,6 +13,10 @@ namespace diplom
         public authorization()
         {
             InitializeComponent();
+            ShowsNavigationUI = false;
+
+            log.Text = Properties.Settings.Default.SavedLogin;
+            pas.Password = Properties.Settings.Default.SavedPassword;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -45,22 +51,29 @@ namespace diplom
                     return;
                 }
 
+                if (AuthenticateUser(LoginA, PasswordA))
+                {    
 
-                bool isAuthenticated = AuthenticateUser(LoginA, PasswordA);
+                    if (rememberMe.IsChecked == true)
+                    {
+                        Properties.Settings.Default.SavedLogin = LoginA;
+                        Properties.Settings.Default.SavedPassword = PasswordA;
+                        Properties.Settings.Default.Save();
+                    }
 
-                if (isAuthenticated)
-                {
+                    diplom.Components.NotificationService.ShowSnackbar("Вы успешно вошли!.");
+
                     NavigationWindow window = (NavigationWindow)Application.Current.MainWindow;
                     window.Navigate(new Uri("admin.xaml", UriKind.Relative));
                 }
                 else
                 {
-                    MessageBox.Show("Неверные логин или пароль.");
+                    MessageBox.Show("Пользователя с таким логином и паролем не существует.");
                 }
             }
             catch
             {
-                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
+                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.");
             }
         }
 

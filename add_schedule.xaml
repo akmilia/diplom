@@ -14,9 +14,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
-                <!-- Занимает всё свободное пространство -->
-                <RowDefinition Height="100"/>
-                <!-- Фиксированная высота для кнопок -->
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <components:HeaderSimple Grid.Row="0"></components:HeaderSimple>
@@ -74,8 +72,9 @@
                     <DatePicker Grid.Row="7" Grid.Column="1" x:Name="EndDatePicker" Margin="5"/>
                 </Grid>
             </Border>
+
             <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10" Width="600">
-                <Button Content="Отмена" Width="300" Click="Button_Click" Background="White"/>
+                <Button Content="Отмена" Width="300" IsCancel="True" Background="White"/>
                 <Button Content="Сохранить" Width="300" Click="SaveButton_Click"/>
             </StackPanel>
         </Grid>

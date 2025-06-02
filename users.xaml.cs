@@ -89,8 +89,11 @@ namespace diplom
                 if (usersh != null)
                 {
                     user userPage = new user(usersh);
-                    userPage.Closed += (s, args) => LoadUsers();
-                    userPage.Show();
+                    bool? dialogResult = userPage.ShowDialog();
+                    if (dialogResult == true)
+                    {
+                        LoadUsers();
+                    }
                 }
                 else
                 {
@@ -106,9 +109,12 @@ namespace diplom
 
         private void toAdd_Click(object sender, RoutedEventArgs e)
         {
-            add_user add_User = new add_user();
-            add_User.Closed += (s, args) => LoadUsers();
-            add_User.Show();
+            add_user add_user = new add_user();
+            bool? dialogResult = add_user.ShowDialog();
+            if (dialogResult == true)
+            {
+                LoadUsers();
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

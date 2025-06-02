@@ -64,17 +64,6 @@ namespace diplom
             }
         }
 
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            MessageBoxResult result = MessageBox.Show("Все несохраненные изменения будут утеряны. Закрыть окно?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.No)
-            {
-                e.Cancel = true;
-            }
-        }
-
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
 
@@ -102,7 +91,8 @@ namespace diplom
                 CreateAttendanceRecords(newSchedule, dayOfWeekNumber);
 
                 MessageBox.Show("Расписание успешно добавлено!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                Close();
+                this.DialogResult = true;
+                this.Close();
             }
             catch (Exception ex)
             {
@@ -194,9 +184,15 @@ namespace diplom
             throw new ArgumentException($"Некорректный день недели: {dayOfWeek}");
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            this.Close();
+            MessageBoxResult result = MessageBox.Show("Все несохраненные изменения будут утеряны. Закрыть окно?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.No)
+            {
+                e.Cancel = true;
+            }
         }
+
     }
 }

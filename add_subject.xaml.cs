@@ -139,6 +139,7 @@ namespace diplom
                         db.SaveChanges();
 
                         MessageBox.Show("Предмет добавлен успешно");
+                        this.DialogResult = true;
                         this.Close();
                     }
                     else
@@ -165,6 +166,7 @@ namespace diplom
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            this.DialogResult = false;
             this.Close();
         }
         public event PropertyChangedEventHandler PropertyChanged;

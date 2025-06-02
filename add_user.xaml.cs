@@ -166,6 +166,7 @@ namespace diplom
 
                     MessageBox.Show("Пользователь добавлен успешно!");
 
+                    this.DialogResult = true;
                     this.Close();
 
                 }
@@ -180,6 +181,7 @@ namespace diplom
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            this.DialogResult = false;
             this.Close();
         }
 

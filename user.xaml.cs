@@ -59,7 +59,6 @@ namespace diplom
             Paternity = curUser.Paternity;
             Birthdate = curUser.Birthdate;
 
-            // Загрузка групп пользователя
             LoadUserGroups();
 
             DataContext = this;
@@ -139,6 +138,7 @@ namespace diplom
                     db.Users.Remove(userToDelete);
                     db.SaveChanges();
                     MessageBox.Show("Пользователь успешно удален.");
+                    this.DialogResult = true; 
                     this.Close();
                 }
             }
@@ -168,6 +168,7 @@ namespace diplom
 
                         db.SaveChanges();
                         MessageBox.Show("Данные пользователя успешно обновлены.");
+                        this.DialogResult = true;
                         this.Close();
                     }
                 }

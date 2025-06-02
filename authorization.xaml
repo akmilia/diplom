@@ -3,10 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:diplom"
         mc:Ignorable="d"
-        Title="Авторизация"  Background="White"> 
-    
+        Title="Авторизация">
     <Border  BorderThickness="1" CornerRadius="10" BorderBrush="Black" Padding="20" Margin="80">
         <Grid VerticalAlignment="Center">
             <Grid Height="300">
@@ -22,9 +22,14 @@
                 <TextBox x:Name="log" Grid.Row="1" Style="{StaticResource TBAutoriz}"/>
                 <Label Content="Пароль:" Grid.Row="2" Style="{StaticResource LabelAutoriz}"/>
                 <PasswordBox x:Name="pas" Grid.Row="2" Style="{StaticResource PasAutoriz}"/>
-                
-                <Button Grid.Row="3" Content="Войти" Margin="50,10,0,10" Width="250" Height="40"  FontSize="20" 
-                 Style="{StaticResource MyButtonStyle}" Click="Button_Click"/>
+
+                <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <CheckBox x:Name="rememberMe"  Content="Запомнить меня" Margin="10" VerticalContentAlignment="Center"/>
+                    <Button Content="Войти" Margin="50,10,0,10" Width="250" Height="40"  FontSize="20" 
+                                               Style="{StaticResource MyButtonStyle}" Click="Button_Click"/>
+                </StackPanel>
+
+
             </Grid>
         </Grid>
     </Border>

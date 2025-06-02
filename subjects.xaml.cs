@@ -72,9 +72,14 @@ namespace diplom
         {
             try
             {
-                subjectsshow path = table.SelectedItem as subjectsshow;
-                subject Subject = new subject(path.subject_id);
-                Subject.Show();
+                subjectsshow path = table.SelectedItem as subjectsshow; 
+
+                subject subj = new subject(path.subject_id);
+                bool? dialogResult = subj.ShowDialog();
+                if (dialogResult == true)
+                {
+                    LoadSubjects();
+                }
             }
             catch
             {
@@ -87,9 +92,12 @@ namespace diplom
         {
             try
             {
-                add_subject add_Subject = new add_subject();
-                add_Subject.Closed += (s, args) => LoadSubjects();
-                add_Subject.Show();
+                add_subject add_subj = new add_subject();
+                bool? dialogResult = add_subj.ShowDialog();
+                if (dialogResult == true)
+                {
+                    LoadSubjects();
+                }
             }
             catch
             {

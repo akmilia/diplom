@@ -64,8 +64,7 @@ namespace diplom
 
             try
             {
-
-                return schedules
+               return schedules
               .Where(s => s.day_of_week.Equals(dayOfWeek, StringComparison.OrdinalIgnoreCase))
               .OrderBy(s => s.time)
               .Select(s => new ScheduleAttendanceItem
@@ -124,7 +123,6 @@ namespace diplom
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка при открытии занятия:\n{ex.Message}");
-                Debug.WriteLine($"Error opening attendance: {ex}");
             }
         }
 
@@ -177,7 +175,7 @@ namespace diplom
                     FileName = $"Посещаемость {groupName} {DateTime.Now:yyyy-MM-dd}.xlsx"
                 };
 
-                if (saveFileDialog.ShowDialog() == true) // В WPF используется bool? результат
+                if (saveFileDialog.ShowDialog() == true)
                 {
                     using (var package = new ExcelPackage())
                     {
@@ -213,8 +211,10 @@ namespace diplom
                                               db.Attendances.Any(a => a.Idattendance == bn.Idattendance &&
                                                                      a.Date.Date == date.Date &&
                                                                      groupSchedules.Select(s => s.Idschedule).Contains(a.Idschedule)));
-
-                                worksheet.Cells[row + 2, col + 5].Value = attendance ? "Присутствовал" : "Отсутствовал";
+                                if (attendance == null)
+                                    worksheet.Cells[row + 2, col + 5].Value = "Не указано";
+                                else
+                                    worksheet.Cells[row + 2, col + 5].Value = attendance ? "Присутствовал" : "Отсутствовал";
                             }
                         }
 
@@ -236,8 +236,11 @@ namespace diplom
         private void NewSchedule_Click(object sender, RoutedEventArgs e)
         {
             add_schedule add_sch = new add_schedule();
-            add_sch.Closed += (s, args) => LoadSchedule();
-            add_sch.Show();
+            bool? dialogResult = add_sch.ShowDialog();
+            if (dialogResult == true)
+            {
+                LoadSchedule();
+            }
         }
     }
 }
