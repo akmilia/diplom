@@ -138,7 +138,7 @@ namespace diplom
                     db.Users.Remove(userToDelete);
                     db.SaveChanges();
                     MessageBox.Show("Пользователь успешно удален.");
-                    this.DialogResult = true; 
+                    this.DialogResult = true;
                     this.Close();
                 }
             }

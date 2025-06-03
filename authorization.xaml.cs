@@ -2,8 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-using diplom.Components;
-using MaterialDesignThemes.Wpf;
+using ToastNotifications;
+using ToastNotifications.Messages;
 
 namespace diplom
 {
@@ -13,7 +13,8 @@ namespace diplom
         public authorization()
         {
             InitializeComponent();
-            ShowsNavigationUI = false;
+
+            this.ShowsNavigationUI = false;
 
             log.Text = Properties.Settings.Default.SavedLogin;
             pas.Password = Properties.Settings.Default.SavedPassword;
@@ -52,7 +53,7 @@ namespace diplom
                 }
 
                 if (AuthenticateUser(LoginA, PasswordA))
-                {    
+                {
 
                     if (rememberMe.IsChecked == true)
                     {
@@ -60,9 +61,7 @@ namespace diplom
                         Properties.Settings.Default.SavedPassword = PasswordA;
                         Properties.Settings.Default.Save();
                     }
-
-                    diplom.Components.NotificationService.ShowSnackbar("Вы успешно вошли!.");
-
+                    App.ShowToast("Данные сохранены", NotificationType.Success);
                     NavigationWindow window = (NavigationWindow)Application.Current.MainWindow;
                     window.Navigate(new Uri("admin.xaml", UriKind.Relative));
                 }

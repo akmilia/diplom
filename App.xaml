@@ -2,22 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
              xmlns:system="clr-namespace:System;assembly=System.Runtime" 
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:diplom">
     <Application.Resources>
-         <!--Настройка всех уведомлений и сообщений--> 
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-
-            <Style TargetType="materialDesign:DialogHost">
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="CloseOnClickAway" Value="True"/>
-            </Style> 
-            
-            <!-- Цвета -->
+        <!-- Цвета -->
         <Color x:Key="HeaderBackgroundColor">Gray</Color>
         <Color x:Key="MainBackgroundColor">White</Color>
         <Color x:Key="ElementBackgroundColor">LightGray</Color>
@@ -255,6 +242,5 @@
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="0,10,0,10"/>
         </Style>
-        </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -1,53 +1,89 @@
-﻿using diplom.Components;
+﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Navigation;
-using MaterialDesignThemes.Wpf;
-using System.Windows.Documents;
-using System.Windows.Media;
+using ToastNotifications;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Messages;
+using ToastNotifications.Position;
 
-namespace diplom;
-
-public partial class App : Application
+namespace diplom
 {
-    protected override void OnStartup(StartupEventArgs e)
+    public partial class App : Application
     {
-        var navWindow = new NavigationWindow
-        {
-            Source = new Uri("authorization.xaml", UriKind.Relative),
-            WindowState = WindowState.Maximized,
-            MinHeight = 700,
-            MinWidth = 1200,
-            WindowStartupLocation = WindowStartupLocation.CenterScreen
-        };
+        private static Notifier _notifier;
+        private static NavigationWindow _mainWindow;
 
-        // 2. Создаем Snackbar
-        var snackbar = new Snackbar
+        public static void ShowToast(string message, NotificationType type = NotificationType.Information)
         {
-            Name = "GlobalSnackbar",
-            HorizontalAlignment = HorizontalAlignment.Right,
-            VerticalAlignment = VerticalAlignment.Bottom,
-            Margin = new Thickness(20)
-        };
+            if (_notifier == null) return;
 
-        // 3. Создаем контейнер для контента
-        var contentContainer = new Grid();
-        contentContainer.Children.Add(snackbar);
-
-        // 4. Настраиваем визуальное дерево
-        navWindow.Loaded += (sender, args) =>
-        {
-            if (navWindow.Content is FrameworkElement content)
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                contentContainer.Children.Insert(0, content);
-                navWindow.Content = contentContainer;
-            }
-        };
+                // Явная проверка типа
+                if (type == NotificationType.Success)
+                {
+                    _notifier.ShowSuccess(message);
+                }
+                else if (type == NotificationType.Error)
+                {
+                    _notifier.ShowError(message);
+                }
+                else if (type == NotificationType.Warning)
+                {
+                    _notifier.ShowWarning(message);
+                }
+                else
+                {
+                    _notifier.ShowInformation(message);
+                }
+            });
+        }
 
-        // 5. Инициализация сервиса
-        NotificationService.Initialize(snackbar);
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
 
-        navWindow.Show();
+            _mainWindow = new NavigationWindow
+            {
+                Source = new Uri("authorization.xaml", UriKind.Relative),
+                WindowState = WindowState.Maximized,
+                MinHeight = 700,
+                MinWidth = 1200,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                ShowsNavigationUI = false
+            };
+
+            // Инициализация Notifier с явным указанием типа
+            _notifier = new Notifier(cfg =>
+            {
+                cfg.PositionProvider = new WindowPositionProvider(
+                    parentWindow: _mainWindow,
+                    corner: Corner.BottomRight,
+                    offsetX: 10,
+                    offsetY: 10);
+
+                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                    notificationLifetime: TimeSpan.FromSeconds(3),
+                    maximumNotificationCount: MaximumNotificationCount.FromCount(3));
+
+                cfg.Dispatcher = Application.Current.Dispatcher;
+            });
+
+            _mainWindow.Show();
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            _notifier?.Dispose();
+            base.OnExit(e);
+        }
+    }
+
+    public enum NotificationType
+    {
+        Success,
+        Error,
+        Warning,
+        Information
     }
 }
-

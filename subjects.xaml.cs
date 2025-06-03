@@ -72,7 +72,7 @@ namespace diplom
         {
             try
             {
-                subjectsshow path = table.SelectedItem as subjectsshow; 
+                subjectsshow path = table.SelectedItem as subjectsshow;
 
                 subject subj = new subject(path.subject_id);
                 bool? dialogResult = subj.ShowDialog();

@@ -12,7 +12,7 @@ namespace diplom.Components
             _snackbar = snackbar;
         }
 
-        public static void ShowSnackbar(string message)
+        public static void ShowSnackbar(string message, bool isError = false)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
@@ -24,6 +24,9 @@ namespace diplom.Components
                     false,
                     true,
                     TimeSpan.FromSeconds(3));
+
+                // Для отладки
+                System.Diagnostics.Debug.WriteLine($"Snackbar shown: {message}");
             });
         }
     }

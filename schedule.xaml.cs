@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using OfficeOpenXml;
-using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -64,23 +63,23 @@ namespace diplom
 
             try
             {
-               return schedules
-              .Where(s => s.day_of_week.Equals(dayOfWeek, StringComparison.OrdinalIgnoreCase))
-              .OrderBy(s => s.time)
-              .Select(s => new ScheduleAttendanceItem
-              {
-                  IdSchedule = s.idschedule,
-                  Time = s.time.ToString(@"hh\:mm"),
-                  Subject = s.subject_name,
-                  Teacher = s.teacher,
-                  Cabinet = s.cabinet.ToString(),
-                  Dates = db.Attendances
-                      .Where(a => a.Idschedule == s.idschedule)
-                      .OrderBy(a => a.Date)
-                      .Select(a => a.Date)
-                      .ToList()
-              })
-              .ToList();
+                return schedules
+               .Where(s => s.day_of_week.Equals(dayOfWeek, StringComparison.OrdinalIgnoreCase))
+               .OrderBy(s => s.time)
+               .Select(s => new ScheduleAttendanceItem
+               {
+                   IdSchedule = s.idschedule,
+                   Time = s.time.ToString(@"hh\:mm"),
+                   Subject = s.subject_name,
+                   Teacher = s.teacher,
+                   Cabinet = s.cabinet.ToString(),
+                   Dates = db.Attendances
+                       .Where(a => a.Idschedule == s.idschedule)
+                       .OrderBy(a => a.Date)
+                       .Select(a => a.Date)
+                       .ToList()
+               })
+               .ToList();
             }
             catch (Exception ex)
             {
