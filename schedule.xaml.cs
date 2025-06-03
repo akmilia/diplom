@@ -12,8 +12,11 @@ namespace diplom
     {
         private DiplomSchoolContext db = new DiplomSchoolContext();
         public schedule()
-        {
+        { 
             InitializeComponent();
+            this.ShowsNavigationUI = true; 
+
+
             Loaded += Schedule_Loaded;
         }
 
@@ -81,9 +84,9 @@ namespace diplom
                })
                .ToList();
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show($"error {ex}");
+                MessageBox.Show($"error ");
                 return null;
             }
 
@@ -220,8 +223,8 @@ namespace diplom
                         // Автонастройка ширины столбцов
                         worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
-                        // Сохраняем файл
-                        package.SaveAs(new FileInfo(saveFileDialog.FileName));
+                        package.SaveAs(new FileInfo(saveFileDialog.FileName)); 
+
                         MessageBox.Show($"Файл успешно сохранен: {saveFileDialog.FileName}");
                     }
                 }

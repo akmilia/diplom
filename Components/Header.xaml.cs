@@ -76,7 +76,14 @@ namespace diplom.Components
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            this.CloseWindow();
+
+            MessageBoxResult result = MessageBox.Show("Уверены, что хотите закрыть приложение ?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result != MessageBoxResult.No)
+            {
+                this.CloseWindow();
+            }
+           
         }
     }
 }

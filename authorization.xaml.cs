@@ -1,15 +1,17 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-using ToastNotifications;
-using ToastNotifications.Messages;
+using Notification.Wpf; 
 
 namespace diplom
 {
 
     public partial class authorization : Page
     {
+
+        public string LoginA, PasswordA; 
         public authorization()
         {
             InitializeComponent();
@@ -25,43 +27,20 @@ namespace diplom
 
             try
             {
-                MessageBoxButton btn = MessageBoxButton.OK;
-                MessageBoxImage ico = MessageBoxImage.Information;
+               
+                LoginA = log.Text;
+                PasswordA = pas.Password;
 
-                string LoginA = log.Text;
-                string PasswordA = pas.Password;
-
-                if (string.IsNullOrWhiteSpace(log.Text) || string.IsNullOrWhiteSpace(pas.Password))
-                {
-                    MessageBox.Show("Все поля обязательны для ввода.");
-                    log.Text = "";
-                    pas.Password = "";
-                    return;
-                }
-                if (!Regex.IsMatch(LoginA, "^[A-za-z]{5,15}$"))
-                {
-                    MessageBox.Show("Пожалуйста,введите логин повторно!", "Уведомление", btn, ico);
-                    log.Text = "";
-                    return;
-                }
-
-                if (!Regex.IsMatch(PasswordA, "^(?=.*[a-z])(?=.*\\d)[a-zA-Z\\d]{5,15}$"))
-                {
-                    MessageBox.Show("Пожалуйста, введите пароль правильно!", "Уведомление", btn, ico);
-                    pas.Password = "";
-                    return;
-                }
+                Validate(); 
+               
 
                 if (AuthenticateUser(LoginA, PasswordA))
                 {
 
-                    if (rememberMe.IsChecked == true)
-                    {
-                        Properties.Settings.Default.SavedLogin = LoginA;
-                        Properties.Settings.Default.SavedPassword = PasswordA;
-                        Properties.Settings.Default.Save();
-                    }
-                    App.ShowToast("Данные сохранены", NotificationType.Success);
+                    PropertiesSave(); 
+                    App.ShowToast("Вход выполнен успешно!");
+
+
                     NavigationWindow window = (NavigationWindow)Application.Current.MainWindow;
                     window.Navigate(new Uri("admin.xaml", UriKind.Relative));
                 }
@@ -76,13 +55,68 @@ namespace diplom
             }
         }
 
-        private bool AuthenticateUser(string login, string password)
+        private void PropertiesSave()
         {
-            using (DiplomSchoolContext db = new DiplomSchoolContext())
+            if (rememberMe.IsChecked == true)
             {
-                var user = db.Users.FirstOrDefault(u => u.Login == login && u.Password == password);
+                Properties.Settings.Default.SavedLogin = LoginA;
+                Properties.Settings.Default.SavedPassword = PasswordA;
+                Properties.Settings.Default.Save();
 
-                return user != null;
+                App.ShowToast("Данные для входа сохранены.");
+            }
+            else
+            {
+                Properties.Settings.Default.SavedLogin = null;
+                Properties.Settings.Default.SavedPassword = null;
+                Properties.Settings.Default.Save();
+            }
+        } 
+
+        private void Validate()
+        {
+            MessageBoxButton btn = MessageBoxButton.OK;
+            MessageBoxImage ico = MessageBoxImage.Information;
+ 
+
+            if (string.IsNullOrWhiteSpace(LoginA) || string.IsNullOrWhiteSpace(PasswordA))
+            {
+                MessageBox.Show("Все поля обязательны для ввода.", "Уведомление", btn, ico);
+                log.Text = "";
+                pas.Password = "";
+                return;
+            }
+            if (!Regex.IsMatch(LoginA, "^[A-za-z]{5,15}$"))
+            {
+                MessageBox.Show("Пожалуйста,введите логин повторно!", "Уведомление", btn, ico);
+                log.Text = "";
+                return;
+            }
+
+            if (!Regex.IsMatch(PasswordA, "^(?=.*[a-z])(?=.*\\d)[a-zA-Z\\d]{5,15}$"))
+            {
+                MessageBox.Show("Пожалуйста, введите пароль правильно!", "Уведомление", btn, ico);
+                pas.Password = "";
+                return;
+            }
+        }
+
+        private bool AuthenticateUser(string login, string password)
+        {   
+
+            try
+            {
+                using (DiplomSchoolContext db = new DiplomSchoolContext())
+                {
+                    var user = db.Users.FirstOrDefault(u => u.Login == login && u.Password == password);
+
+                    return user != null;
+                }
+            }
+            catch (Npgsql.NpgsqlException ex)
+    {
+                MessageBox.Show($"Ошибка БД: {ex.Message}\nПроверьте подключение к PostgreSQL.");
+                return false;
             }
         }
     }

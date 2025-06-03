@@ -1,41 +1,28 @@
-﻿using System;
+﻿using Notification.Wpf;
+using Notification.Wpf.Controls;
+using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Navigation;
-using ToastNotifications;
-using ToastNotifications.Lifetime;
-using ToastNotifications.Messages;
-using ToastNotifications.Position;
 
 namespace diplom
 {
     public partial class App : Application
     {
-        private static Notifier _notifier;
-        private static NavigationWindow _mainWindow;
+        private static readonly NotificationManager _notifier = new();
 
-        public static void ShowToast(string message, NotificationType type = NotificationType.Information)
+        public static void ShowToast(string message, bool isError = false)
         {
-            if (_notifier == null) return;
-
             Application.Current.Dispatcher.Invoke(() =>
             {
-                // Явная проверка типа
-                if (type == NotificationType.Success)
-                {
-                    _notifier.ShowSuccess(message);
-                }
-                else if (type == NotificationType.Error)
-                {
-                    _notifier.ShowError(message);
-                }
-                else if (type == NotificationType.Warning)
-                {
-                    _notifier.ShowWarning(message);
-                }
-                else
-                {
-                    _notifier.ShowInformation(message);
-                }
+                _notifier.Show(
+                    new NotificationContent
+                    {
+                        Title = "Уведомление",
+                        Message = message,
+                        Type = isError ? NotificationType.Error : NotificationType.Information
+                    },
+                    expirationTime: TimeSpan.FromSeconds(3));
             });
         }
 
@@ -43,47 +30,16 @@ namespace diplom
         {
             base.OnStartup(e);
 
-            _mainWindow = new NavigationWindow
+            var mainWindow = new NavigationWindow
             {
                 Source = new Uri("authorization.xaml", UriKind.Relative),
                 WindowState = WindowState.Maximized,
                 MinHeight = 700,
                 MinWidth = 1200,
                 WindowStartupLocation = WindowStartupLocation.CenterScreen,
-                ShowsNavigationUI = false
+                ShowsNavigationUI = true
             };
-
-            // Инициализация Notifier с явным указанием типа
-            _notifier = new Notifier(cfg =>
-            {
-                cfg.PositionProvider = new WindowPositionProvider(
-                    parentWindow: _mainWindow,
-                    corner: Corner.BottomRight,
-                    offsetX: 10,
-                    offsetY: 10);
-
-                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
-                    notificationLifetime: TimeSpan.FromSeconds(3),
-                    maximumNotificationCount: MaximumNotificationCount.FromCount(3));
-
-                cfg.Dispatcher = Application.Current.Dispatcher;
-            });
-
-            _mainWindow.Show();
+            mainWindow.Show();
         }
-
-        protected override void OnExit(ExitEventArgs e)
-        {
-            _notifier?.Dispose();
-            base.OnExit(e);
-        }
-    }
-
-    public enum NotificationType
-    {
-        Success,
-        Error,
-        Warning,
-        Information
     }
 }

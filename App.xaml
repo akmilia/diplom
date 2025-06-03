@@ -2,6 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
              xmlns:system="clr-namespace:System;assembly=System.Runtime" 
+                     xmlns:notifications="clr-namespace:Notification.Wpf;assembly=Notification.Wpf" 
+        xmlns:controls="clr-namespace:Notification.Wpf.Controls;assembly=Notification.Wpf"
              xmlns:local="clr-namespace:diplom">
     <Application.Resources>
         <!-- Цвета -->
@@ -26,6 +28,11 @@
         <Style TargetType="Page">
             <Setter Property="Background" Value="{StaticResource MainBackgroundBrush}"/>
             <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
+        </Style>
+
+        <Style TargetType="controls:NotificationArea">
+            <Setter Property="Position" Value="BottomRight"/>
+            <Setter Property="MaxItems" Value="3"/>
         </Style>
 
         <Style x:Key="HeaderTextStyle" TargetType="TextBlock">

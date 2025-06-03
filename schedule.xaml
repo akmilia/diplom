@@ -2,7 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:notifications="clr-namespace:Notification.Wpf;assembly=Notification.Wpf" 
+        xmlns:controls="clr-namespace:Notification.Wpf.Controls;assembly=Notification.Wpf"
         xmlns:local="clr-namespace:diplom"
         xmlns:components="clr-namespace:diplom.Components" 
         mc:Ignorable="d"
@@ -312,5 +314,9 @@
                 </Border>
             </StackPanel>
         </ScrollViewer>
+ 
+        <controls:NotificationArea Name="WindowNotificationArea" 
+             Position="BottomRight"
+             MaxItems="3"/>
     </Grid>
 </Page>

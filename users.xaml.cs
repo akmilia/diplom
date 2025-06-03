@@ -19,6 +19,8 @@ namespace diplom
         public users()
         {
             InitializeComponent();
+            this.ShowsNavigationUI = true; 
+
             LoadTypes();
             LoadUsers();
         }

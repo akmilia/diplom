@@ -3,8 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
-        xmlns:local="clr-namespace:diplom"
+        xmlns:notifications="clr-namespace:Notification.Wpf;assembly=Notification.Wpf" 
+        xmlns:controls="clr-namespace:Notification.Wpf.Controls;assembly=Notification.Wpf"
+        xmlns:local="clr-namespace:diplom" 
         mc:Ignorable="d"
         Title="Авторизация">
     <Border  BorderThickness="1" CornerRadius="10" BorderBrush="Black" Padding="20" Margin="80">
@@ -29,7 +30,7 @@
                                                Style="{StaticResource MyButtonStyle}" Click="Button_Click"/>
                 </StackPanel>
             </Grid>
-
+            <controls:NotificationArea Name="WindowNotificationArea" />
         </Grid>
     </Border>
 </Page>

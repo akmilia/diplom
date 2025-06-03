@@ -15,7 +15,7 @@ namespace diplom
         public subjects()
         {
             InitializeComponent();
-
+            this.ShowsNavigationUI = true;
 
             LoadSubjects();
             DataContext = this;
