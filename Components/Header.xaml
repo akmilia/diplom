@@ -17,12 +17,12 @@
         <TextBlock Text="НОВАЯ ШКОЛА" FontSize="20" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" Margin="10,0,0,0" />
 
         <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" >
-            <Button Content="Расписание" Click="Button_Click" Style="{StaticResource TransparentButtonStyle}" Foreground="White" Margin="10"/>
-            <Button Content="Занятия" Click="Button_Click_1" Style="{StaticResource TransparentButtonStyle}"  Foreground="White" Margin="10"/>
-            <Button Content="Пользователи" Click="Button_Click_2" Style="{StaticResource TransparentButtonStyle}"  Foreground="White" Margin="10"/>
+            <Button Content="Расписание" Click="Button_Click" Style="{StaticResource TransparentButtonStyle}" Foreground="White" FontSize="24" Margin="10"/>
+            <Button Content="Занятия" Click="Button_Click_1" Style="{StaticResource TransparentButtonStyle}"  Foreground="White" FontSize="24" Margin="10"/>
+            <Button Content="Пользователи" Click="Button_Click_2" Style="{StaticResource TransparentButtonStyle}"  Foreground="White" FontSize="24" Margin="10"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0">
             <Button Style="{StaticResource TransparentButtonStyle}"  Click="ImageClick">
                 <Image Source="/Components/profile.png " Width="50" Height="auto"/> 
             </Button>

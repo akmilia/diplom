@@ -1,7 +1,9 @@
 ﻿using diplom.Models;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using Window = System.Windows.Window;
 
 namespace diplom
 {
@@ -93,9 +95,15 @@ namespace diplom
                 TypeComboBox.DisplayMemberPath = "Type1";
                 TypeComboBox.SelectedValuePath = "Id";
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Не получилось загрузить типы");
+                MessageBox.Show(
+                        "Не получилось загрузить типы",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
             }
         }
 
@@ -138,25 +146,38 @@ namespace diplom
                         db.Groups.Add(group);
                         db.SaveChanges();
 
-                        MessageBox.Show("Предмет добавлен успешно");
+                        App.ShowToast("Предмет добавлен успешно");
                         this.DialogResult = true;
                         this.Close();
                     }
                     else
                     {
-                        MessageBox.Show("Тип не выбран");
+                        MessageBox.Show(
+                        "Тип не был выбран.",
+                        "Уведомление",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning
+                    );
+
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Произошла ошибка: {ex.Message}");
+
+                    MessageBox.Show(
+                         "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                         "Ошибка",
+                         MessageBoxButton.OK,
+                         MessageBoxImage.Error
+                     );
+                    Debug.WriteLine($"Ошибка: {ex.Message}");
                 }
             }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Все несохраненные изменения будут утеряны. Закрыть окно?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult result = System.Windows.MessageBox.Show("Все несохраненные изменения будут утеряны. Закрыть окно?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.No)
             {
@@ -164,11 +185,6 @@ namespace diplom
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = false;
-            this.Close();
-        }
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -226,7 +242,7 @@ namespace diplom
 
         public string Error
         {
-            get { return null; } // Can be implemented to aggregate errors, if needed
+            get { return null; }
         }
     }
 }

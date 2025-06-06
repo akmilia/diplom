@@ -4,11 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:notifications="clr-namespace:Notification.Wpf;assembly=Notification.Wpf" 
-        xmlns:controls="clr-namespace:Notification.Wpf.Controls;assembly=Notification.Wpf"
+        xmlns:controls="clr-namespace:Notification.Wpf.Controls;assembly=Notification.Wpf" 
         xmlns:local="clr-namespace:diplom"
         xmlns:components="clr-namespace:diplom.Components" 
         mc:Ignorable="d"
-        Title="Занятия"  Background="White" Loaded="Schedule_Loaded">
+        Title="Занятия" Loaded="Schedule_Loaded" Background="White">
     <Page.Resources>
         <Style x:Key="ScheduleExpanderStyle" TargetType="Expander">
             <Setter Property="Background" Value="White"/>
@@ -57,16 +57,11 @@
         <components:Header Grid.Row="0"/>
 
         <!-- Заголовок -->
-        <TextBlock Text="Расписание" 
-                 Grid.Row="1"
-                 FontSize="24" 
-                 FontWeight="Bold" 
-                 HorizontalAlignment="Center" 
-                 Margin="0,20,0,10"/>
+        <TextBlock Text="Расписание" Grid.Row="1" Style="{StaticResource HeaderTextStyle}"/>
 
-        <StackPanel  Margin="20" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <ComboBox x:Name="GroupComboBox" DisplayMemberPath="Name"  Width="450" />
-            <Button Content="Экспорт в Excel" Click="ExportToExcel_Click"  Width="450" />
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <ComboBox x:Name="GroupComboBox" DisplayMemberPath="Name" Width="450"/>
+            <Button Content="Выгрузить в Excel" Click="ExportToExcel_Click"  Width="450" />
             <Button Content="Добавление нового занятия" Click="NewSchedule_Click"  Width="450" />
         </StackPanel>
 

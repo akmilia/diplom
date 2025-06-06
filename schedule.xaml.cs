@@ -2,19 +2,21 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using OfficeOpenXml;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace diplom
 {
+
     public partial class schedule : Page
     {
         private DiplomSchoolContext db = new DiplomSchoolContext();
         public schedule()
-        { 
+        {
             InitializeComponent();
-            this.ShowsNavigationUI = true; 
+            this.ShowsNavigationUI = true;
 
 
             Loaded += Schedule_Loaded;
@@ -23,7 +25,10 @@ namespace diplom
         private void Schedule_Loaded(object sender, RoutedEventArgs e)
         {
             LoadSchedule();
+
+
             GroupComboBox.ItemsSource = db.Groups.ToList();
+            GroupComboBox.SelectedItem = 3;
         }
 
         public class ScheduleAttendanceItem
@@ -57,7 +62,13 @@ namespace diplom
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка загрузки расписания: {ex.Message}");
+                MessageBox.Show(
+                        "Не получилось загрузить занятия.",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
             }
         }
 
@@ -84,10 +95,17 @@ namespace diplom
                })
                .ToList();
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show($"error ");
+                MessageBox.Show(
+                        "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
                 return null;
+
             }
 
         }
@@ -97,15 +115,9 @@ namespace diplom
             if (!(sender is Button button) || !(button.DataContext is DateTime selectedDate))
                 return;
 
-            var scheduleItem = button.Tag as ScheduleAttendanceItem;
-            if (scheduleItem == null)
-            {
-                MessageBox.Show("Ошибка: информация о занятии не найдена");
-                return;
-            }
-
             try
             {
+                var scheduleItem = button.Tag as ScheduleAttendanceItem;
                 var searchDate = selectedDate.Date;
 
                 var attendance = db.Attendances
@@ -115,7 +127,12 @@ namespace diplom
 
                 if (attendance == null)
                 {
-                    MessageBox.Show($"Занятие '{scheduleItem.Subject}' на {searchDate:dd.MM.yyyy} не найдено");
+                    MessageBox.Show(
+                        $"Занятие '{scheduleItem.Subject}' на {searchDate:dd.MM.yyyy} не найдено",
+                        "Уведомление",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning
+                    );
                     return;
                 }
 
@@ -124,7 +141,13 @@ namespace diplom
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при открытии занятия:\n{ex.Message}");
+                MessageBox.Show(
+                        "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
             }
         }
 
@@ -137,8 +160,12 @@ namespace diplom
                 var selectedGroup = GroupComboBox.SelectedItem as Models.Group;
                 if (selectedGroup == null)
                 {
-                    MessageBox.Show("Выберите группу для экспорта");
-                    return;
+                    MessageBox.Show(
+                         "Пожалуйста, вначале выберите группу для экспорта.",
+                         "Уведомление",
+                         MessageBoxButton.OK,
+                         MessageBoxImage.Warning
+                     );
                 }
                 var groupName = selectedGroup.Name;
 
@@ -148,9 +175,14 @@ namespace diplom
                     .Where(s => s.GroupsIdgroupNavigation.Name == groupName)
                     .ToList();
 
-                if (!groupSchedules.Any())
+                if (groupSchedules != null)
                 {
-                    MessageBox.Show("Не найдены занятия для выбранной группы");
+                    MessageBox.Show(
+                        "Не найдены занятия для выбранной группы",
+                        "Уведомление",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning
+                    );
                     return;
                 }
 
@@ -213,25 +245,29 @@ namespace diplom
                                               db.Attendances.Any(a => a.Idattendance == bn.Idattendance &&
                                                                      a.Date.Date == date.Date &&
                                                                      groupSchedules.Select(s => s.Idschedule).Contains(a.Idschedule)));
-                                if (attendance == null)
-                                    worksheet.Cells[row + 2, col + 5].Value = "Не указано";
-                                else
-                                    worksheet.Cells[row + 2, col + 5].Value = attendance ? "Присутствовал" : "Отсутствовал";
+                                worksheet.Cells[row + 2, col + 5].Value = attendance != null ? (attendance == true ? "Присутствовал" : "Отсутствовал") : "Не отмечено";
+
                             }
                         }
 
                         // Автонастройка ширины столбцов
                         worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
-                        package.SaveAs(new FileInfo(saveFileDialog.FileName)); 
+                        package.SaveAs(new FileInfo(saveFileDialog.FileName));
 
-                        MessageBox.Show($"Файл успешно сохранен: {saveFileDialog.FileName}");
+                        App.ShowToast($"Файл успешно сохранен: {saveFileDialog.FileName}");
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при экспорте в Excel: {ex.Message}");
+                MessageBox.Show(
+                        "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using diplom.Models;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
 
@@ -71,7 +72,6 @@ namespace diplom
                 .Select(gu => gu.GroupsIdgroupsNavigation)
                 .ToList();
 
-            // Привязка данных к UI (нужно добавить соответствующий элемент в XAML)
             SubjectList.ItemsSource = UserGroups;
         }
 
@@ -132,19 +132,41 @@ namespace diplom
         {
             try
             {
-                var userToDelete = db.Users.FirstOrDefault(u => u.Idusers == curUser.Idusers);
-                if (userToDelete != null)
+
+                if (MessageBox.Show("Вы уверены, что хотите удалить пользователя? Это может привести к необратимым потерям данных. ", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.No)
                 {
-                    db.Users.Remove(userToDelete);
-                    db.SaveChanges();
-                    MessageBox.Show("Пользователь успешно удален.");
-                    this.DialogResult = true;
-                    this.Close();
+                    var userToDelete = db.Users.FirstOrDefault(u => u.Idusers == curUser.Idusers);
+                    if (userToDelete != null)
+                    {
+                        db.Users.Remove(userToDelete);
+                        db.SaveChanges();
+
+                        App.ShowToast("Пользователь успешно удален.");
+                        this.DialogResult = true;
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show(
+                      "Не получилось найти данного пользователя.",
+                      "Уведомление",
+                      MessageBoxButton.OK,
+                      MessageBoxImage.Warning
+                         );
+                    }
                 }
+
+
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Возникла неизвестная ошибка. Пожалуйста, попробуйте позднее");
+                MessageBox.Show(
+                       "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                       "Ошибка",
+                       MessageBoxButton.OK,
+                       MessageBoxImage.Error
+                   );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
             }
         }
 
@@ -167,19 +189,32 @@ namespace diplom
                         userToUpdate.Birthdate = Birthdate;
 
                         db.SaveChanges();
-                        MessageBox.Show("Данные пользователя успешно обновлены.");
+
+
+                        App.ShowToast("Данные пользователя успешно обновлены.");
                         this.DialogResult = true;
                         this.Close();
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Ошибка при обновлении пользователя: {ex.Message}");
+                    MessageBox.Show(
+                       "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                       "Ошибка",
+                       MessageBoxButton.OK,
+                       MessageBoxImage.Error
+                   );
+                    Debug.WriteLine($"Ошибка: {ex.Message}");
                 }
             }
             else
             {
-                MessageBox.Show("Пожалуйста, исправьте ошибки в форме перед сохранением.");
+                MessageBox.Show(
+                      "Пожалуйста, заполните все данные корректно!.",
+                      "Уведомление",
+                      MessageBoxButton.OK,
+                      MessageBoxImage.Warning
+                  );
             }
         }
     }

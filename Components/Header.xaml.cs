@@ -28,7 +28,12 @@ namespace diplom.Components
             }
             catch
             {
-                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
+                MessageBox.Show(
+                         "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                         "Ошибка",
+                         MessageBoxButton.OK,
+                         MessageBoxImage.Error
+                     );
             }
 
         }
@@ -42,7 +47,12 @@ namespace diplom.Components
             }
             catch
             {
-                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
+                MessageBox.Show(
+                        "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
             }
 
         }
@@ -56,7 +66,12 @@ namespace diplom.Components
             }
             catch
             {
-                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
+                MessageBox.Show(
+                        "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
             }
         }
 
@@ -69,7 +84,12 @@ namespace diplom.Components
             }
             catch
             {
-                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
+                MessageBox.Show(
+                        "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
             }
 
         }
@@ -83,7 +103,7 @@ namespace diplom.Components
             {
                 this.CloseWindow();
             }
-           
+
         }
     }
 }

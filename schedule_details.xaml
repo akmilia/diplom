@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:diplom"
         xmlns:components="clr-namespace:diplom.Components" 
         mc:Ignorable="d"
-        Title="Посещаемость" MinHeight="500" MinWidth="700" Closing="Window_Closing" Background="White">
+        Title="Посещаемость" Closing="Window_Closing" Background="White">
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
         <Grid>
             <Grid.RowDefinitions>
@@ -16,7 +16,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <components:HeaderSimple Grid.Row="0"></components:HeaderSimple>
-            <TextBlock Text="Посещаемость" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="20" Grid.Row="1"/>
+            <TextBlock Text="Посещаемость" Style="{StaticResource HeaderTextStyle}" Grid.Row="1"/>
             <StackPanel Grid.Row="2" Orientation="Horizontal">
                 <TextBlock Text="Занятие : " Name="Attend" FontSize="18" Width="250" Margin="20" />
                 <TextBlock Text="Группа : " Name="Group" FontSize="18" Width="250" Margin="20"/>

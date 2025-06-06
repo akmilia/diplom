@@ -9,6 +9,21 @@
       xmlns:components="clr-namespace:diplom.Components"
       mc:Ignorable="d"
       Title="Пользователи" Background="White">
+    <Page.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Foreground" Value="Gray"/>
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="False">
+                    <Setter Property="Text" Value="Иванов Иван ..."/>
+                    <Setter Property="Foreground" Value="Gray"/>
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Text" Value=""/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -18,14 +33,14 @@
         </Grid.RowDefinitions>
 
         <components:Header Grid.Row="0" />
-        <TextBlock Text="Пользователи" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="20" Grid.Row="1" />
+        <TextBlock Text="Пользователи" Style="{StaticResource HeaderTextStyle}" Grid.Row="1" />
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10" Grid.Row="2">
-            <Button Content="Добавить новый аккаунт" Click="toAdd_Click" Width="300"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="2">
             <ComboBox SelectionChanged="RoleComboBox_SelectionChanged" x:Name="RoleComboBox" Width="300" DisplayMemberPath="Name" />
+            <Label Margin="0" Content="Поиск по ФИО:"/>
+            <TextBox x:Name="SearchTextBox" Width="450" TextChanged="SearchTextBox_TextChanged" VerticalContentAlignment="Center" />
+            <Button Content="Добавить новый аккаунт" Click="toAdd_Click" Width="300"/>
             <Button Content="Выгрузить в Excel" Click="Button_Click" Width="300"/>
-            <TextBlock Text="Поиск по ФИО:" VerticalAlignment="Center" />
-            <TextBox x:Name="SearchTextBox" Width="450" TextChanged="SearchTextBox_TextChanged" />
         </StackPanel>
 
         <DataGrid Grid.Row="3" MouseDoubleClick="table_MouseDoubleClick" Name="table">

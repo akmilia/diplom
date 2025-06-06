@@ -1,6 +1,7 @@
 ﻿using diplom.Models;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -10,7 +11,7 @@ namespace diplom
     public partial class subject : Window, IDataErrorInfo
     {
 
-        public string Error => null; // Не используется в простом случае
+        public string Error => null;
 
         public string this[string columnName]
         {
@@ -56,30 +57,28 @@ namespace diplom
 
             try
             {
-                if (constID != 0)
-                {
-                    constS = db.SubjectShowItems
-                       .FromSqlRaw($"SELECT * FROM subjectsshow WHERE subject_id = {constID}")
-                       .FirstOrDefault();
+                constS = db.SubjectShowItems
+                   .FromSqlRaw($"SELECT * FROM subjectsshow WHERE subject_id = {constID}")
+                   .FirstOrDefault();
 
-                    if (constS != null)
-                    {
-                        Id.Text = constS.subject_id.ToString();
-                        name.Text = constS.subject_name;
-                        description.Text = constS.description;
-                        IdType.Text = constS.type_id.ToString();
-                        type.Text = constS.type_name;
-                    }
-                }
-                else
+                if (constS != null)
                 {
-                    MessageBox.Show("Идентификатор предмета не задан.");
+                    Id.Text = constS.subject_id.ToString();
+                    name.Text = constS.subject_name;
+                    description.Text = constS.description;
+                    IdType.Text = constS.type_id.ToString();
+                    type.Text = constS.type_name;
                 }
-
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Не передалось");
+                MessageBox.Show(
+                       "Не получилось загрузить занятие.",
+                       "Ошибка",
+                       MessageBoxButton.OK,
+                       MessageBoxImage.Error
+                   );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
             }
 
         }
@@ -98,26 +97,39 @@ namespace diplom
         {
             try
             {
-                if (MessageBox.Show("Вы уверены, что хотите удалить занятие?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.No)
+                if (MessageBox.Show("Вы уверены, что хотите удалить занятие? Это может привести к необратимым потерям данных. ", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.No)
                 {
                     var subjectToDelete = db.Subjects.Find(constS.subject_id);
                     if (subjectToDelete != null)
                     {
                         db.Subjects.Remove(subjectToDelete);
                         db.SaveChanges();
-                        MessageBox.Show("Занятие успешно удалено.");
+
+                        App.ShowToast("Занятие успешно удалено!");
                         this.DialogResult = true;
                         this.Close();
                     }
                     else
                     {
-                        MessageBox.Show("Занятие не найдено.");
+                        MessageBox.Show(
+                       "Не получилось найти данное занятие.",
+                       "Ошибка",
+                       MessageBoxButton.OK,
+                       MessageBoxImage.Error
+                   );
+
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Возникла ошибка. Попробуйте позднее");
+                MessageBox.Show(
+                        "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
             }
 
         }
@@ -130,7 +142,12 @@ namespace diplom
 
             if (string.IsNullOrEmpty(this["Name"]) == false || string.IsNullOrEmpty(this["Description"]) == false)
             {
-                MessageBox.Show("Пожалуйста, исправьте ошибки в форме.");
+                MessageBox.Show(
+                       "Все обязательные поля должны быть заполнены!",
+                       "Уведомление",
+                       MessageBoxButton.OK,
+                       MessageBoxImage.Warning
+                   );
                 return;
             }
 
@@ -143,8 +160,8 @@ namespace diplom
                     subjectToUpdate.Description = description.Text;
 
                     db.SaveChanges();
-                    MessageBox.Show("Изменения успешно сохранены.");
 
+                    App.ShowToast("Изменения успешно сохранены.");
                     this.DialogResult = true;
                     this.Close();
                 }
@@ -153,9 +170,15 @@ namespace diplom
                     MessageBox.Show("Занятие не найдено.");
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Возникла ошибка. Попробуйте позднее");
+                MessageBox.Show(
+                       "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                       "Ошибка",
+                       MessageBoxButton.OK,
+                       MessageBoxImage.Error
+                   );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
             }
         }
     }

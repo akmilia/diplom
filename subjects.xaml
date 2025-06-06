@@ -8,7 +8,7 @@
       xmlns:local="clr-namespace:diplom"
       xmlns:components="clr-namespace:diplom.Components"
       mc:Ignorable="d"
-      Title="Занятия"  Background="White">
+      Title="Занятия" Background="White">
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
         <Grid>
             <Grid.RowDefinitions>
@@ -21,11 +21,12 @@
             </Grid.RowDefinitions>
 
             <components:Header Grid.Row="0" />
-            <TextBlock Text="Занятия" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="20" Grid.Row="1" />
+            <TextBlock Text="Занятия" Style="{StaticResource HeaderTextStyle}" Grid.Row="1" />
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="25 25 0 0" Grid.Row="2">
-                <Button Content="Добавить новое занятие" Click="Button_Click" Width="450"/>
-                <ComboBox SelectionChanged="TypeComboBox_SelectionChanged" x:Name="TypeComboBox" Width="450" DisplayMemberPath="Type1" />
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                <ComboBox SelectionChanged="TypeComboBox_SelectionChanged" x:Name="TypeComboBox" Width="300" DisplayMemberPath="Type1" />
+                <Button Content="Добавить новое занятие" Click="Button_Click" Width="300"/>
+                <Button Content="Выгрузить в Excel" Name="ExportToExcel"  Click="ExportToExcel_Click" Width="300" />
             </StackPanel>
 
             <DataGrid ItemsSource="{Binding SubjectItems}" Grid.Row="3" MouseDoubleClick="DataGrid_MouseDoubleClick" Name="table">
@@ -41,7 +42,7 @@
                 </DataGrid.InputBindings>
             </DataGrid>
 
-            <TextBlock Text="Группы, посещающие занятия" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="20" Grid.Row="4" />
+            <TextBlock Text="Группы, посещающие занятия" Style="{StaticResource HeaderTextStyle}" Grid.Row="4" />
 
             <DataGrid ItemsSource="{Binding GroupsItems}" Grid.Row="5" Name="tableGroups">
                 <DataGrid.Columns>

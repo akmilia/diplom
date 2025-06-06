@@ -3,10 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using OfficeOpenXml;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
+using LicenseContext = OfficeOpenXml.LicenseContext;
 
 namespace diplom
 {
@@ -14,12 +18,13 @@ namespace diplom
     {
         public ObservableCollection<usersshow> UsersItems { get; set; } = new ObservableCollection<usersshow>();
         public DiplomSchoolContext db = new DiplomSchoolContext();
-        public List<usersshow> userFromView;
+        private int? _selectedRoleId;
+        private ICollectionView _usersView;
 
         public users()
         {
             InitializeComponent();
-            this.ShowsNavigationUI = true; 
+            this.ShowsNavigationUI = true;
 
             LoadTypes();
             LoadUsers();
@@ -29,56 +34,93 @@ namespace diplom
         {
             try
             {
-                List<Role> types = [.. db.Roles];
+                List<Role> types = db.Roles.ToList();
                 RoleComboBox.ItemsSource = types;
                 RoleComboBox.DisplayMemberPath = "Name";
+
+                RoleComboBox.SelectedIndex = 3;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Возникла проблема с загрузкой ролей");
+                MessageBox.Show(
+                       "Не получилось загрузить роли",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
             }
-        }
-        private void RoleComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            try
-            {
-                if (RoleComboBox.SelectedItem != null)
-                {
-
-                    Role selType = RoleComboBox.SelectedItem as Role;
-
-                    if (selType.Idroles == 0)
-                    {
-                        table.ItemsSource = userFromView;
-                    }
-                    else
-                    {
-                        table.ItemsSource = userFromView.Where(s => s.idroles == selType.Idroles).ToList();
-                    }
-
-                    table.Items.Refresh();
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
-            }
-
         }
 
         private void LoadUsers()
         {
             try
             {
-                table.Items.Clear();
-                userFromView = [.. db.userShowItems.FromSqlRaw("select * from usersshow")];
-                table.ItemsSource = userFromView;
+                var usersList = db.userShowItems.FromSqlRaw("select * from usersshow").ToList();
+
+                UsersItems.Clear();
+                foreach (var user in usersList)
+                {
+                    UsersItems.Add(user);
+                }
+
+                if (_usersView == null)
+                {
+                    _usersView = CollectionViewSource.GetDefaultView(UsersItems);
+                    table.ItemsSource = _usersView;
+                }
+                else
+                {
+                    _usersView.Refresh();
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
+                MessageBox.Show(
+                        "Не получилось загрузить пользователей",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
             }
         }
+
+        private void ApplyFilters()
+        {
+            string searchText = SearchTextBox.Text.Trim().ToLower();
+
+            if (_usersView == null)
+                return;
+
+            _usersView.Filter = obj =>
+            {
+                if (obj is usersshow user)
+                {
+                    bool matchesRole = !_selectedRoleId.HasValue || user.idroles == _selectedRoleId.Value;
+                    bool matchesSearch = string.IsNullOrEmpty(searchText) || (user.full_name != null && user.full_name.ToLower().Contains(searchText));
+                    return matchesRole && matchesSearch;
+                }
+                return false;
+            };
+
+            _usersView.Refresh();
+        }
+
+        private void RoleComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (RoleComboBox.SelectedItem is Role selType)
+            {
+                _selectedRoleId = selType.Idroles == 0 ? null : selType.Idroles;
+                ApplyFilters();
+            }
+        }
+
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ApplyFilters();
+        }
+
 
         private void table_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -99,13 +141,24 @@ namespace diplom
                 }
                 else
                 {
-                    MessageBox.Show("Пользователь не найден.");
+                    MessageBox.Show(
+                        "Не найден данный пользователь.",
+                        "Уведомление",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning
+                    );
                 }
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Возникла ошибка: {ex.Message}. Попробуйте позднее");
+                MessageBox.Show(
+                         "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                         "Ошибка",
+                         MessageBoxButton.OK,
+                         MessageBoxImage.Error
+                     );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
             }
         }
 
@@ -123,74 +176,81 @@ namespace diplom
         {
             try
             {
-                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
-                using (ExcelPackage excelPackage = new ExcelPackage())
+                // Подготовка данных для экспорта
+                var exportData = new List<dynamic>();
+                foreach (usersshow user in _usersView)
                 {
-                    ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("UsersReport");
-
-                    worksheet.Cells[1, 1].Value = "ID";
-                    worksheet.Cells[1, 2].Value = "Логин";
-                    worksheet.Cells[1, 3].Value = "Пароль";
-                    worksheet.Cells[1, 4].Value = "ФИО";
-                    worksheet.Cells[1, 5].Value = "Роль";
-
-                    List<usersshow> list = (table.ItemsSource as IEnumerable<object>).Cast<usersshow>().ToList();
-
-                    for (int i = 0; i < list.Count; i++)
+                    exportData.Add(new
                     {
-                        worksheet.Cells[i + 2, 1].Value = list[i].idusers;
-                        worksheet.Cells[i + 2, 2].Value = list[i].login;
-                        worksheet.Cells[i + 2, 3].Value = list[i].password;
-                        worksheet.Cells[i + 2, 4].Value = list[i].full_name;
-                        worksheet.Cells[i + 2, 5].Value = list[i].user_role;
-                    }
+                        ID = user.idusers,
+                        Логин = user.login,
+                        ФИО = user.full_name,
+                        Роль = user.user_role
+                    });
+                }
 
-                    SaveFileDialog saveFileDialog = new SaveFileDialog
+                if (!exportData.Any())
+                {
+                    App.ShowToast("Нет данных для экспорта");
+                    return;
+                }
+
+                // Настройка диалога сохранения
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    FileName = $"Пользователи_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.xlsx",
+                    Filter = "Excel файлы (*.xlsx)|*.xlsx",
+                    DefaultExt = ".xlsx"
+                };
+
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    using (var package = new ExcelPackage())
                     {
-                        FileName = "UsersReport.xlsx",
-                        DefaultExt = ".xlsx",
-                        Filter = "Excel Files|*.xlsx"
-                    };
+                        var worksheet = package.Workbook.Worksheets.Add("Пользователи");
 
+                        // Заголовки
+                        worksheet.Cells[1, 1].Value = "ID";
+                        worksheet.Cells[1, 2].Value = "Логин";
+                        worksheet.Cells[1, 3].Value = "ФИО";
+                        worksheet.Cells[1, 4].Value = "Роль";
 
-                    if (saveFileDialog.ShowDialog() == true)
-                    {
-                        FileInfo fileInfo = new FileInfo(saveFileDialog.FileName);
-                        excelPackage.SaveAs(fileInfo);
-                        MessageBox.Show("Данные успешно выгружены в Excel файл.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                        // Данные
+                        int row = 2;
+                        foreach (var item in exportData)
+                        {
+                            worksheet.Cells[row, 1].Value = item.ID;
+                            worksheet.Cells[row, 2].Value = item.Логин;
+                            worksheet.Cells[row, 3].Value = item.ФИО;
+                            worksheet.Cells[row, 4].Value = item.Роль;
+                            row++;
+                        }
+
+                        // Автоподбор ширины столбцов
+                        worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                        // Сохранение файла
+                        package.SaveAs(new FileInfo(saveFileDialog.FileName));
+                        App.ShowToast($"Файл успешно сохранен: {saveFileDialog.FileName}");
+
+                        // Открытие файла после сохранения
+                        Process.Start(new ProcessStartInfo(saveFileDialog.FileName) { UseShellExecute = true });
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при выгрузке данных в Excel: {ex.Message}");
+                MessageBox.Show(
+                        "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
             }
         }
 
-        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            try
-            {
-                string searchText = SearchTextBox.Text.Trim().ToLower();
-
-                if (string.IsNullOrEmpty(searchText))
-                {
-                    table.ItemsSource = UsersItems;
-                }
-                else
-                {
-                    var filteredUsers = userFromView
-                        .Where(u => u.full_name.ToLower().Contains(searchText))
-                        .ToList();
-
-                    table.ItemsSource = filteredUsers;
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
-            }
-
-        }
     }
 }
+

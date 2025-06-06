@@ -1,5 +1,6 @@
 ﻿using diplom.Models;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -126,7 +127,13 @@ namespace diplom
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Проблема загрузки типов: {ex.Message}");
+                MessageBox.Show(
+                       "Не получилось загрузить роли.",
+                       "Ошибка",
+                       MessageBoxButton.OK,
+                       MessageBoxImage.Error
+                   );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
             }
         }
         private void Add_subject_Loaded(object sender, RoutedEventArgs e)
@@ -164,8 +171,7 @@ namespace diplom
                     db.Users.Add(newUser);
                     db.SaveChanges();
 
-                    MessageBox.Show("Пользователь добавлен успешно!");
-
+                    App.ShowToast("Пользователь добавлен успешно");
                     this.DialogResult = true;
                     this.Close();
 
@@ -173,18 +179,22 @@ namespace diplom
 
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Не получилось создать новый аккаунт {ex.Message}");
+                    MessageBox.Show(
+                        "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                    Debug.WriteLine($"Ошибка: {ex.Message}");
                 }
             }
-            else MessageBox.Show("Вся обязательные поля должны быть заполнены");
+            MessageBox.Show(
+                       "Вся обязательные поля должны быть заполнены!",
+                       "Уведомление",
+                       MessageBoxButton.OK,
+                       MessageBoxImage.Warning
+                   );
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = false;
-            this.Close();
-        }
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Все несохраненные изменения будут утеряны. Закрыть окно?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -213,17 +223,17 @@ namespace diplom
                     case "NameN":
                     case "Login":
                     case "Password":
-                        if (string.IsNullOrEmpty((string)GetValue(columnName)))
+                        if (string.IsNullOrEmpty(GetValue(columnName)))
                         {
                             error = "Поле обязательно для заполнения.";
                         }
-                        else if (((string)GetValue(columnName)).Length > 150)
+                        else if (GetValue(columnName).Length > 150)
                         {
                             error = "Поле не должно превышать 150 символов.";
                         }
                         break;
                     case "Paternity":
-                        if (!string.IsNullOrEmpty((string)GetValue(columnName)) && ((string)GetValue(columnName)).Length > 150)
+                        if (!string.IsNullOrEmpty(GetValue(columnName)) && GetValue(columnName).Length > 150)
                         {
                             error = "Поле не должно превышать 150 символов.";
                         }
@@ -245,7 +255,7 @@ namespace diplom
             get { return null; }
         }
 
-        private object GetValue(string propertyName)
+        private string? GetValue(string propertyName)
         {
             switch (propertyName)
             {
@@ -259,9 +269,5 @@ namespace diplom
             }
         }
 
-        private DateOnly? ConvertToDateOnly(DateTime? dateTime)
-        {
-            return dateTime.HasValue ? DateOnly.FromDateTime(dateTime.Value) : null;
-        }
     }
 }

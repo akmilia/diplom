@@ -1,9 +1,8 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-using Notification.Wpf; 
 
 namespace diplom
 {
@@ -11,7 +10,7 @@ namespace diplom
     public partial class authorization : Page
     {
 
-        public string LoginA, PasswordA; 
+        public string LoginA, PasswordA;
         public authorization()
         {
             InitializeComponent();
@@ -27,17 +26,17 @@ namespace diplom
 
             try
             {
-               
+
                 LoginA = log.Text;
                 PasswordA = pas.Password;
 
-                Validate(); 
-               
+                Validate();
+
 
                 if (AuthenticateUser(LoginA, PasswordA))
                 {
 
-                    PropertiesSave(); 
+                    PropertiesSave();
                     App.ShowToast("Вход выполнен успешно!");
 
 
@@ -49,9 +48,15 @@ namespace diplom
                     MessageBox.Show("Пользователя с таким логином и паролем не существует.");
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.");
+                MessageBox.Show(
+                        "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
             }
         }
 
@@ -71,13 +76,13 @@ namespace diplom
                 Properties.Settings.Default.SavedPassword = null;
                 Properties.Settings.Default.Save();
             }
-        } 
+        }
 
         private void Validate()
         {
             MessageBoxButton btn = MessageBoxButton.OK;
             MessageBoxImage ico = MessageBoxImage.Information;
- 
+
 
             if (string.IsNullOrWhiteSpace(LoginA) || string.IsNullOrWhiteSpace(PasswordA))
             {
@@ -102,7 +107,7 @@ namespace diplom
         }
 
         private bool AuthenticateUser(string login, string password)
-        {   
+        {
 
             try
             {
@@ -113,9 +118,15 @@ namespace diplom
                     return user != null;
                 }
             }
-            catch (Npgsql.NpgsqlException ex)
-    {
-                MessageBox.Show($"Ошибка БД: {ex.Message}\nПроверьте подключение к PostgreSQL.");
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                        "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
                 return false;
             }
         }

@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:diplom"   
         xmlns:components="clr-namespace:diplom.Components" 
         mc:Ignorable="d"
-        Title="Админ"  Background="White">
+        Title="Админ" Background="White">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -16,8 +16,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <components:Header Grid.Row="0"></components:Header>
-        <StackPanel Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="20">
-            <TextBlock x:Name="GreetingTextBlock" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20" />
+        <StackPanel Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" >
+            <TextBlock x:Name="GreetingTextBlock" Style="{StaticResource HeaderTextStyle}" />
 
             <TextBlock Text="Новая школа - это платформа для эффективного обучения. Эта страница проходная."
                        TextWrapping="Wrap"
@@ -31,31 +31,6 @@
             <Image Source="/Images/girl.png" Width="400"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="20" >
-            <StackPanel Margin="10">
-                <TextBlock Text="Официально" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" />
-                <TextBlock Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud."
-                           TextWrapping="Wrap"
-                           MaxWidth="300"
-                           TextAlignment="Center" />
-            </StackPanel>
-
-            <StackPanel Margin="10">
-                <TextBlock Text="Просто" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" />
-                <TextBlock Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam."
-                           TextWrapping="Wrap"
-                           MaxWidth="300"
-                           TextAlignment="Center" />
-            </StackPanel>
-
-            <StackPanel Margin="10">
-                <TextBlock Text="Доступно везде и онлайн" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" />
-                <TextBlock Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliquat occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                           TextWrapping="Wrap"
-                           MaxWidth="300"
-                           TextAlignment="Center" />
-            </StackPanel>
-        </StackPanel>
         <controls:NotificationArea Name="WindowNotificationArea" />
     </Grid>
 </Page>

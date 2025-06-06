@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:diplom"
         xmlns:components="clr-namespace:diplom.Components"
         mc:Ignorable="d"
-        Title="Пользователь" MinHeight="600" MinWidth="700" Closing="Window_Closing" Background="White">
+        Title="Пользователь" MinHeight="600" Closing="Window_Closing" Background="White">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <components:HeaderSimple Grid.Row="0"></components:HeaderSimple>
-        <TextBlock Text="Пользователь" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 20 0 20" Grid.Row="1"/>
+        <TextBlock Text="Пользователь" Style="{StaticResource HeaderTextStyle}" Grid.Row="1"/>
 
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <StackPanel>
@@ -87,7 +87,7 @@
                 </Border>
 
                 <!-- Кнопки -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 10">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
                     <Button Content="Удалить" Width="300" Click="Button_Click" Margin="5"/>
                     <Button Content="Сохранить" Width="300" Click="Button_Click_1" Margin="5"/>
                 </StackPanel>

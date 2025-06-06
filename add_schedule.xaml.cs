@@ -1,8 +1,11 @@
 ﻿using diplom.Models;
+using System.Diagnostics;
 using System.Windows;
+using MessageBox = System.Windows.MessageBox;
+
 namespace diplom
 {
-    public partial class add_schedule : Window
+    public partial class add_schedule : System.Windows.Window
     {
         private DiplomSchoolContext db = new();
         private static readonly Dictionary<string, int> DayOfWeekMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
@@ -60,7 +63,14 @@ namespace diplom
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                         "Не получилось загрузить данные.",
+                         "Ошибка",
+                         MessageBoxButton.OK,
+                         MessageBoxImage.Error
+                     );
+                return;
+                Debug.WriteLine($"Ошибка: {ex.Message}");
             }
         }
 
@@ -72,15 +82,18 @@ namespace diplom
                 if (!ValidateInputs())
                     return;
                 var startTime = StartTimePicker.Value.Value.TimeOfDay;
-                //var dayOfWeekNumber = DayOfWeekToNumber(DayOfWeekComboBox.SelectedItem.ToString()); 
                 var dayOfWeekNumber = (int)DayOfWeekComboBox.SelectedValue;
                 var cabinetId = (int)CabinetComboBox.SelectedValue;
                 var teacherId = (int)TeacherComboBox.SelectedValue;
 
                 if (CheckScheduleConflict(dayOfWeekNumber, cabinetId, startTime))
                 {
-                    MessageBox.Show("Выбранное время занято для данного кабинета или преподавателя!",
-                        "Конфликт расписания", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show(
+                          "Выбранное время занято для данного кабинета или преподавателя!",
+                          "Уведомление",
+                          MessageBoxButton.OK,
+                          MessageBoxImage.Warning
+                      );
                     return;
                 }
 
@@ -90,13 +103,19 @@ namespace diplom
 
                 CreateAttendanceRecords(newSchedule, dayOfWeekNumber);
 
-                MessageBox.Show("Расписание успешно добавлено!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                App.ShowToast("Расписание успешно добавлено!.");
                 this.DialogResult = true;
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при сохранении: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                       "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                       "Ошибка",
+                       MessageBoxButton.OK,
+                       MessageBoxImage.Error
+                   );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
             }
         }
         private bool ValidateInputs()
@@ -110,7 +129,12 @@ namespace diplom
                 StartDatePicker.SelectedDate == null ||
                 EndDatePicker.SelectedDate == null)
             {
-                MessageBox.Show("Заполните все обязательные поля!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                         "Заполните все обязательные поля!",
+                         "Уведомление",
+                         MessageBoxButton.OK,
+                         MessageBoxImage.Warning
+                     );
                 return false;
             }
             return true;
@@ -150,7 +174,7 @@ namespace diplom
 
             while (currentDate <= endDate)
             {
-                if ((int)currentDate.DayOfWeek + 1 == dayOfWeekNumber) // +1 для соответствия вашей нумерации
+                if ((int)currentDate.DayOfWeek + 1 == dayOfWeekNumber)
                 {
                     var attendance = new Attendance
                     {
@@ -174,16 +198,6 @@ namespace diplom
                 currentDate = currentDate.AddDays(1);
             }
         }
-        private static int DayOfWeekToNumber(string dayOfWeek)
-        {
-            if (DayOfWeekMap.TryGetValue(dayOfWeek, out int dayNumber))
-            {
-                return dayNumber;
-            }
-
-            throw new ArgumentException($"Некорректный день недели: {dayOfWeek}");
-        }
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Все несохраненные изменения будут утеряны. Закрыть окно?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question);

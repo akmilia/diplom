@@ -2,56 +2,160 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
              xmlns:system="clr-namespace:System;assembly=System.Runtime" 
-                     xmlns:notifications="clr-namespace:Notification.Wpf;assembly=Notification.Wpf" 
-        xmlns:controls="clr-namespace:Notification.Wpf.Controls;assembly=Notification.Wpf"
+             xmlns:notifications="clr-namespace:Notification.Wpf;assembly=Notification.Wpf" 
+             xmlns:controls="clr-namespace:Notification.Wpf.Controls;assembly=Notification.Wpf"   
+             xmlns:hc="clr-namespace:HandyControl.Controls;assembly=HandyControl"
+             xmlns:hcc="https://handyorg.github.io/handycontrol" 
+             xmlns:hcHelper="clr-namespace:HandyControl.Tools;assembly=HandyControl"
+             xmlns:components="clr-namespace:diplom.Components" 
              xmlns:local="clr-namespace:diplom">
+    
     <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <hcc:ThemeResources/>
+                <hcc:Theme/>
+               
+            </ResourceDictionary.MergedDictionaries>
+       
+        <components:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
         <!-- Цвета -->
         <Color x:Key="HeaderBackgroundColor">Gray</Color>
         <Color x:Key="MainBackgroundColor">White</Color>
         <Color x:Key="ElementBackgroundColor">LightGray</Color>
         <Color x:Key="AccentColor">#5950FF</Color>
+        <Color x:Key="SecondAccentColor">#7b68ee</Color>
         <Color x:Key="PrimaryTextColor">Black</Color>
 
         <!-- Кисти -->
         <SolidColorBrush x:Key="MainBackgroundBrush" Color="{StaticResource MainBackgroundColor}"/>
         <SolidColorBrush x:Key="ElementBackgroundBrush" Color="{StaticResource ElementBackgroundColor}"/>
         <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
+        <SolidColorBrush x:Key="SecondAccentBrush" Color="{StaticResource SecondAccentColor}"/>
         <SolidColorBrush x:Key="PrimaryTextBrush" Color="{StaticResource PrimaryTextColor}"/>
 
         <!-- Шрифты -->
         <FontFamily x:Key="MainFont">Arial</FontFamily>
-        <Style TargetType="Window">
-            <Setter Property="Background" Value="{StaticResource MainBackgroundBrush}"/>
-            <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
-        </Style>
+        
+        <!-- Глобальные настройки страниц, окон и расположения --> 
+        
         <Style TargetType="Page">
             <Setter Property="Background" Value="{StaticResource MainBackgroundBrush}"/>
             <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
         </Style>
 
+        <Style TargetType="Window">
+            <Setter Property="Background" Value="{StaticResource MainBackgroundBrush}"/>
+            <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
+            <Setter Property="MinHeight" Value="500"/>
+            <Setter Property="MinWidth" Value="700"/>
+        </Style>
+
+        <Style TargetType="StackPanel">
+            <Setter Property="Margin" Value="12" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <!-- Уведомления и сообщения -->
         <Style TargetType="controls:NotificationArea">
             <Setter Property="Position" Value="BottomRight"/>
             <Setter Property="MaxItems" Value="3"/>
         </Style>
 
-        <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="24"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
-            <Setter Property="Margin" Value="0 0 0 10"/>
+            <!-- Стиль для MessageBox -->
+        <Style x:Key="MessageBoxCustom" TargetType="hc:MessageBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="BorderBrush" Value="#5950FF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Width" Value="400"/>
+            <Setter Property="MinHeight" Value="150"/>
+            <Setter Property="Padding" Value="20"/>
         </Style>
 
+        <!-- Дополнительный стиль для кнопок MessageBox -->
+        <Style TargetType="Button" x:Key="MessageBoxButtonStyle" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#5950FF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="5,0"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="MinWidth" Value="80"/> 
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#7b68ee"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+            <!-- Иконки для MessageBox -->
+        <BitmapImage x:Key="WarningGeometry" UriSource="Images/warning.png"/>
+        <BitmapImage x:Key="ErrorGeometry" UriSource="Images/error.png"/>
+        <BitmapImage x:Key="SuccessGeometry" UriSource="Images/success.png"/>
+
+            <!-- Иконки для MessageBox (Geometry версия) -->
+            <!--<PathGeometry x:Key="WarningGeometry">
+                <PathFigure StartPoint="10,0">
+                    <LineSegment Point="0,20"/>
+                    <LineSegment Point="20,20"/>
+                    <LineSegment Point="10,0"/>
+                </PathFigure>
+            </PathGeometry>
+
+            <PathGeometry x:Key="ErrorGeometry">
+                <PathFigure StartPoint="10,0">
+                    <LineSegment Point="0,10"/>
+                    <LineSegment Point="10,20"/>
+                    <LineSegment Point="20,10"/>
+                    <LineSegment Point="10,0"/>
+                </PathFigure>
+            </PathGeometry>
+
+            <PathGeometry x:Key="SuccessGeometry">
+                <PathFigure StartPoint="0,10">
+                    <LineSegment Point="5,15"/>
+                    <LineSegment Point="15,5"/>
+                </PathFigure>
+            </PathGeometry>-->
+            <!-- АВТОРИЗАЦИЯ  -->
+        <Style TargetType="Border" x:Key="RoundBut">
+            <Setter Property="CornerRadius" Value="8"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,10,0,0" />
+        </Style>
+        <Style x:Key="LabelAutoriz" TargetType="Label">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style x:Key="TBAutoriz" TargetType="TextBox">
+            <Setter Property="Margin" Value="120,0,10,0"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Height" Value="32"/>
+        </Style>
+        <Style x:Key="PasAutoriz" TargetType="PasswordBox">
+            <Setter Property="Margin" Value="120,0,10,0"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Height" Value="32"/>
+        </Style>
+
+
+        <!-- Прочие компоненты -->
+      
         <ControlTemplate x:Key="BaseButtonTemplate" TargetType="Button">
             <Border x:Name="border" 
             Background="{TemplateBinding Background}"
             BorderBrush="{TemplateBinding BorderBrush}"
-            BorderThickness="{TemplateBinding BorderThickness}"
+            BorderThickness="{TemplateBinding BorderThickness}" 
             CornerRadius="4">
                 <ContentPresenter x:Name="contentPresenter"
                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                          TextBlock.FontSize="{TemplateBinding FontSize}"
+                          TextBlock.FontSize="18"
                           TextBlock.FontFamily="{TemplateBinding FontFamily}"
                           TextBlock.Foreground="{TemplateBinding Foreground}"/>
             </Border>
@@ -72,14 +176,15 @@
         <Style TargetType="Button">
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontFamily" Value="Arial"/>
-            <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
-            <Setter Property="Background" Value="{StaticResource ElementBackgroundBrush}"/>
-            <Setter Property="BorderBrush" Value="DarkGray"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="{StaticResource SecondAccentBrush}"/>
+            <Setter Property="BorderBrush" Value="White"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Margin" Value="5"/>
             <Setter Property="MinWidth" Value="120"/>
+            <Setter Property="MinHeight" Value="30"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template" Value="{StaticResource BaseButtonTemplate}"/>
         </Style>
@@ -107,12 +212,39 @@
             <Setter Property="FontFamily" Value="Arial"/>
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style> 
+        
+        <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+            <Setter Property="Margin" Value="0,20,0,20"/>
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" /> 
+        </Style>
+
+        <!-- Стиль для текстовых заголовков -->
+        <Style TargetType="Label">
+            <Setter Property="FontFamily" Value="Arial"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Margin" Value="20" /> 
         </Style>
 
         <!-- Стиль для текстовых полей -->
         <Style TargetType="TextBox">
             <Setter Property="FontFamily" Value="Arial"/>
-            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontSize" Value="18"/> 
+            
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/> 
+            
             <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
             <Setter Property="Background" Value="{StaticResource MainBackgroundBrush}"/>
             <Setter Property="BorderBrush" Value="{StaticResource ElementBackgroundBrush}"/>
@@ -120,31 +252,7 @@
             <Setter Property="MinHeight" Value="30"/>
         </Style>
 
-        <Style TargetType="Border" x:Key="RoundBut"> 
-            <Setter Property="CornerRadius" Value="8"></Setter>
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="0,10,0,0" />
-        </Style>
-        <Style x:Key="LabelAutoriz" TargetType="Label">
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-        </Style>
-        <Style x:Key="TBAutoriz" TargetType="TextBox">
-            <Setter Property="Margin" Value="120,0,10,0"/>
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Height" Value="32"/>
-        </Style>
-        <Style x:Key="PasAutoriz" TargetType="PasswordBox">
-            <Setter Property="Margin" Value="120,0,10,0"/>
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Height" Value="32"/>
-        </Style>
-
+       
         <Style x:Key="DateButtonStyle" TargetType="Button">
             <Setter Property="FontFamily" Value="Arial"/>
             <Setter Property="Background" Value="#5950FF"/>
@@ -229,7 +337,16 @@
             <Setter Property="HeadersVisibility" Value="Column"/>
             <Setter Property="Margin" Value="25"/>
             <Setter Property="MinWidth" Value="600"/>
-            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+
+
+        <Style TargetType="ComboBox">
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="18"/>
         </Style>
 
         <Style x:Key="DayContainerStyle" TargetType="Border">
@@ -243,11 +360,12 @@
 
         <Style x:Key="DayHeaderStyle" TargetType="TextBlock">
             <Setter Property="FontFamily" Value="Arial"/>
-            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="0,10,0,10"/>
         </Style>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

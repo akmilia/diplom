@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using System.Windows;
 
 
@@ -48,7 +49,13 @@ namespace diplom
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при загрузке данных: {ex.Message}");
+                MessageBox.Show(
+                        "Не получилось загрузить данные о посещаемости.",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
             }
         }
 
@@ -73,7 +80,12 @@ namespace diplom
 
                 if (scheduleId == 0)
                 {
-                    MessageBox.Show("Не найдено расписание для данного занятия");
+                    MessageBox.Show(
+                        "Не найдено расписание для данного занятия",
+                        "Уведомление",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning
+                    );
                     return new List<AttendanceViewModel>();
                 }
 
@@ -94,9 +106,15 @@ namespace diplom
 
                 return query.ToList();
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Возникла неизвестная проблема. Пожалуйста, попробуйте позднее");
+                MessageBox.Show(
+                        "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
                 return null;
             }
         }
