@@ -278,31 +278,34 @@ namespace diplom
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage())
             {
-                // Экспорт предметов
-                var subjectsSheet = package.Workbook.Worksheets.Add("Предметы");
+                // Get filtered subjects from the current view
+                var filteredSubjects = SubjectView.Cast<subjectsshow>().ToList();
+
+                // Экспорт отфильтрованных предметов
+                var subjectsSheet = package.Workbook.Worksheets.Add("Занятия");
                 subjectsSheet.Cells[1, 1].Value = "ID";
                 subjectsSheet.Cells[1, 2].Value = "Название";
                 subjectsSheet.Cells[1, 3].Value = "Описание";
                 subjectsSheet.Cells[1, 4].Value = "ID типа";
                 subjectsSheet.Cells[1, 5].Value = "Тип";
 
-                if (SubjectItems.Count > 0)
+                if (filteredSubjects.Count > 0)
                 {
-                    for (int i = 0; i < SubjectItems.Count; i++)
+                    for (int i = 0; i < filteredSubjects.Count; i++)
                     {
-                        subjectsSheet.Cells[i + 2, 1].Value = SubjectItems[i].subject_id;
-                        subjectsSheet.Cells[i + 2, 2].Value = SubjectItems[i].subject_name;
-                        subjectsSheet.Cells[i + 2, 3].Value = SubjectItems[i].description;
-                        subjectsSheet.Cells[i + 2, 4].Value = SubjectItems[i].type_id;
-                        subjectsSheet.Cells[i + 2, 5].Value = SubjectItems[i].type_name;
+                        subjectsSheet.Cells[i + 2, 1].Value = filteredSubjects[i].subject_id;
+                        subjectsSheet.Cells[i + 2, 2].Value = filteredSubjects[i].subject_name;
+                        subjectsSheet.Cells[i + 2, 3].Value = filteredSubjects[i].description;
+                        subjectsSheet.Cells[i + 2, 4].Value = filteredSubjects[i].type_id;
+                        subjectsSheet.Cells[i + 2, 5].Value = filteredSubjects[i].type_name;
                     }
                 }
                 else
                 {
-                    subjectsSheet.Cells[2, 1].Value = "Нет данных о предметах";
+                    subjectsSheet.Cells[2, 1].Value = "Нет данных о занятиях";
                 }
 
-                // Экспорт групп
+                // Экспорт групп (всех, как было)
                 var groupsSheet = package.Workbook.Worksheets.Add("Группы");
                 groupsSheet.Cells[1, 1].Value = "ID";
                 groupsSheet.Cells[1, 2].Value = "Название";
@@ -325,6 +328,21 @@ namespace diplom
                 // Автонастройка ширины столбцов
                 subjectsSheet.Cells[subjectsSheet.Dimension.Address].AutoFitColumns();
                 groupsSheet.Cells[groupsSheet.Dimension.Address].AutoFitColumns();
+
+                // Добавим форматирование для заголовков
+                using (var headerCells = subjectsSheet.Cells["A1:E1"])
+                {
+                    headerCells.Style.Font.Bold = true;
+                    headerCells.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    headerCells.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                }
+
+                using (var headerCells = groupsSheet.Cells["A1:B1"])
+                {
+                    headerCells.Style.Font.Bold = true;
+                    headerCells.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    headerCells.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                }
 
                 package.SaveAs(new FileInfo(filePath));
             }

@@ -15,6 +15,8 @@ namespace diplom
         private string _groupName;
         private diplom.Models.Type _selectedType;
         private List<diplom.Models.Type> _types;
+        private bool _isSaved = false; 
+
         public string SubjectName
         {
             get { return _subjectName; }
@@ -118,12 +120,14 @@ namespace diplom
                     var lastSubject = db.Subjects.OrderByDescending(s => s.Idsubjects).FirstOrDefault();
                     int newSubjectId = lastSubject != null ? lastSubject.Idsubjects + 1 : 1;
 
+                    var lastGroup = db.Groups.OrderByDescending(s => s.Idgroups).FirstOrDefault();
+                    int newGroupId = lastGroup != null ? lastGroup.Idgroups + 1 : 1;
+
                     if (TypeComboBox.SelectedItem is diplom.Models.Type selectedType)
                     {
 
                         Subject newSubject = new Subject
                         {
-
                             Idsubjects = newSubjectId,
                             Name = SubjectNameTextBox.Text,
                             Description = DescriptionTextBox.Text,
@@ -133,19 +137,20 @@ namespace diplom
                         {
                             types_id = selectedType.Id,
                             subjects_idsubjects = newSubjectId
-
                         };
 
                         Group group = new Group
                         {
+                            Idgroups = newGroupId,
                             Name = GroupNameTextBox.Text
-                        };
+                        }; 
 
                         db.Subjects.Add(newSubject);
                         db.TypesSubjects.Add(typesSubject);
                         db.Groups.Add(group);
                         db.SaveChanges();
 
+                        _isSaved = true;
                         App.ShowToast("Предмет добавлен успешно");
                         this.DialogResult = true;
                         this.Close();
@@ -177,6 +182,9 @@ namespace diplom
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (_isSaved)
+                return; 
+
             MessageBoxResult result = System.Windows.MessageBox.Show("Все несохраненные изменения будут утеряны. Закрыть окно?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.No)
@@ -244,7 +252,5 @@ namespace diplom
         {
             get { return null; }
         }
-
-      
     }
 }

@@ -36,7 +36,7 @@
 
                     <!-- Название занятия -->
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Название занятия:" Style="{StaticResource AddTextStyle}"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="SubjectNameTextBox"
+                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="SubjectNameTextBox" MinWidth="200"
                              Text="{Binding SubjectName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
                         <TextBox.ToolTip>
                             <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
@@ -45,7 +45,8 @@
 
                     <!-- Описание -->
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Описание:" Style="{StaticResource AddTextStyle}"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="DescriptionTextBox" TextWrapping="Wrap" AcceptsReturn="True" Height="80"
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="DescriptionTextBox" 
+                             TextWrapping="Wrap" AcceptsReturn="True" Height="80" MinWidth="200"
                              Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
                         <TextBox.ToolTip>
                             <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
@@ -55,7 +56,7 @@
                     <!-- Тип занятия -->
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Тип занятия:" Style="{StaticResource AddTextStyle}"/>
                     <ComboBox Grid.Row="2" Grid.Column="1" x:Name="TypeComboBox" DisplayMemberPath="Type1" SelectedValuePath="Id"
-                              ItemsSource="{Binding Types}"
+                              ItemsSource="{Binding Types}" MinWidth="200"
                               SelectedItem="{Binding SelectedType, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
                         <ComboBox.ToolTip>
                             <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
@@ -64,7 +65,7 @@
 
                     <!-- Название группы -->
                     <TextBlock Grid.Row="3" Grid.Column="0" Text="Название группы:" Style="{StaticResource AddTextStyle}"/>
-                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="GroupNameTextBox"
+                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="GroupNameTextBox" MinWidth="200"
                              Text="{Binding GroupName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
                         <TextBox.ToolTip>
                             <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>

@@ -7,6 +7,7 @@ namespace diplom
 {
     public partial class add_schedule : System.Windows.Window
     {
+        private bool _isSaved = false; 
         private DiplomSchoolContext db = new();
         private static readonly Dictionary<string, int> DayOfWeekMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
         {
@@ -63,6 +64,7 @@ namespace diplom
             }
             catch (Exception ex)
             {
+                Debug.WriteLine($"Ошибка: {ex.Message}");
                 MessageBox.Show(
                          "Не получилось загрузить данные.",
                          "Ошибка",
@@ -70,7 +72,7 @@ namespace diplom
                          MessageBoxImage.Error
                      );
                 return;
-                Debug.WriteLine($"Ошибка: {ex.Message}");
+               
             }
         }
 
@@ -81,6 +83,7 @@ namespace diplom
             {
                 if (!ValidateInputs())
                     return;
+
                 var startTime = StartTimePicker.Value.Value.TimeOfDay;
                 var dayOfWeekNumber = (int)DayOfWeekComboBox.SelectedValue;
                 var cabinetId = (int)CabinetComboBox.SelectedValue;
@@ -88,24 +91,39 @@ namespace diplom
 
                 if (CheckScheduleConflict(dayOfWeekNumber, cabinetId, startTime))
                 {
-                    MessageBox.Show(
-                          "Выбранное время занято для данного кабинета или преподавателя!",
-                          "Уведомление",
-                          MessageBoxButton.OK,
-                          MessageBoxImage.Warning
-                      );
+                    MessageBox.Show("Выбранное время занято для данного кабинета или преподавателя!",
+                                  "Уведомление",
+                                  MessageBoxButton.OK,
+                                  MessageBoxImage.Warning);
                     return;
                 }
 
-                var newSchedule = CreateNewSchedule(teacherId, startTime, dayOfWeekNumber);
-                db.Schedules.Add(newSchedule);
-                db.SaveChanges();
+                using (var transaction = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var newSchedule = CreateNewSchedule(teacherId, startTime, dayOfWeekNumber);
+                        db.Schedules.Add(newSchedule);
+                        db.SaveChanges();
 
-                CreateAttendanceRecords(newSchedule, dayOfWeekNumber);
+                        CreateAttendanceRecords(newSchedule, dayOfWeekNumber);
+                        transaction.Commit();
 
-                App.ShowToast("Расписание успешно добавлено!.");
-                this.DialogResult = true;
-                this.Close();
+                        App.ShowToast("Расписание успешно добавлено!");
+                        _isSaved = true; 
+                        this.DialogResult = true;
+                        this.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        MessageBox.Show($"Ошибка при сохранении: {ex.InnerException?.Message ?? ex.Message}",
+                                      "Ошибка",
+                                      MessageBoxButton.OK,
+                                      MessageBoxImage.Error);
+                        Debug.WriteLine($"Ошибка: {ex.ToString()}");
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -151,8 +169,10 @@ namespace diplom
 
         private Schedule CreateNewSchedule(int teacherId, TimeSpan startTime, int dayOfWeekNumber)
         {
+            int nextId = db.Schedules.Any() ? db.Schedules.Max(s => s.Idschedule) + 1 : 1;
             return new Schedule
             {
+                Idschedule = nextId,
                 UsersIdusers = teacherId,
                 Time = startTime,
                 SubjectsIdsubjects = (int)SubjectComboBox.SelectedValue,
@@ -162,44 +182,66 @@ namespace diplom
             };
         }
         private void CreateAttendanceRecords(Schedule schedule, int dayOfWeekNumber)
-        {
-            var currentDate = StartDatePicker.SelectedDate.Value;
-            var endDate = EndDatePicker.SelectedDate.Value;
-            var groupId = schedule.GroupsIdgroup;
+        {  
 
-            var studentIds = db.GroupsUsers
-                .Where(gu => gu.GroupsIdgroups == groupId)
-                .Select(gu => gu.UsersIdusers)
-                .ToList();
-
-            while (currentDate <= endDate)
+            try
             {
-                if ((int)currentDate.DayOfWeek + 1 == dayOfWeekNumber)
+                var currentDate = StartDatePicker.SelectedDate.Value;
+                var endDate = EndDatePicker.SelectedDate.Value;
+                var groupId = schedule.GroupsIdgroup;
+
+                // Adjust for .NET DayOfWeek (0=Sunday) vs your mapping (1=Monday)
+                int targetDayOfWeek = dayOfWeekNumber % 7;
+
+                var studentIds = db.GroupsUsers
+                    .Where(gu => gu.GroupsIdgroups == groupId)
+                    .Select(gu => gu.UsersIdusers)
+                    .ToList();
+
+                while (currentDate <= endDate)
                 {
-                    var attendance = new Attendance
+                    if ((int)currentDate.DayOfWeek == targetDayOfWeek - 1)
                     {
-                        Idschedule = schedule.Idschedule,
-                        Date = currentDate
-                    };
-
-                    db.Attendances.Add(attendance);
-                    db.SaveChanges();
-
-                    foreach (var studentId in studentIds)
-                    {
-                        db.BilNebils.Add(new BilNebil
+                        var attendance = new Attendance
                         {
-                            Idattendance = attendance.Idattendance,
-                            Iduser = studentId,
-                            Status = null
-                        });
+                            Idschedule = schedule.Idschedule,
+                            Date = currentDate
+                        };
+
+                        db.Attendances.Add(attendance);
+                        db.SaveChanges();
+
+                        foreach (var studentId in studentIds)
+                        {
+                            db.BilNebils.Add(new BilNebil
+                            {
+                                Idattendance = attendance.Idattendance,
+                                Iduser = studentId,
+                                Status = null
+                            });
+                        }
+                        db.SaveChanges();
                     }
+                    currentDate = currentDate.AddDays(1);
                 }
-                currentDate = currentDate.AddDays(1);
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                       "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                       "Ошибка",
+                       MessageBoxButton.OK,
+                       MessageBoxImage.Error
+                   );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
+            }
+           
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (_isSaved)
+                return; 
+
             MessageBoxResult result = MessageBox.Show("Все несохраненные изменения будут утеряны. Закрыть окно?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.No)

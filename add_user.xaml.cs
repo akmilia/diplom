@@ -17,8 +17,7 @@ namespace diplom
         private string _password;
         private Role _selectedRole;
         private bool _isSaving;
-        //private List<Role> _roles;
-
+        private bool _isSaved = false; 
         public string Surname
         {
             get => _surname;
@@ -54,12 +53,6 @@ namespace diplom
             get => _selectedRole;
             set { _selectedRole = value; OnPropertyChanged(); }
         }
-
-        //public List<Role> Roles
-        //{
-        //    get => _roles;
-        //    set { _roles = value; OnPropertyChanged(); }
-        //} 
 
         public bool IsSaving { get => _isSaving; set { _isSaving = value; OnPropertyChanged(); } }
 
@@ -113,7 +106,7 @@ namespace diplom
             {
                 IsSaving = true;
                 UpdateBindings();
-                // Проверка валидации
+                
                 if (HasValidationErrors())
                 {
                     MessageBox.Show(
@@ -124,26 +117,8 @@ namespace diplom
 
                     return;
                 }
-
-                //using (var db = new DiplomSchoolContext())
-                //{
-                //    var newUser = new User
-                //    {
-                //        Surname = Surname,
-                //        Name = NameN,
-                //        Paternity = string.IsNullOrWhiteSpace(Paternity) ? null : Paternity,
-                //        Birthdate = BirthDatePicker.SelectedDate.HasValue
-                //        ? DateOnly.FromDateTime(BirthDatePicker.SelectedDate.Value)
-                //        : null,
-                //        Login = Login,
-                //        Password = Password,
-                //        RolesIdroles = SelectedRole.Idroles
-                //    };
-
-                //db.Users.Add(newUser);
-                //db.SaveChanges(); 
-
                 await SaveUserAsync();
+                _isSaved = true;
 
                 App.ShowToast("Пользователь добавлен успешно");
                     DialogResult = true;
@@ -252,6 +227,8 @@ namespace diplom
         }; 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (_isSaved)
+                return;
             MessageBoxResult result = MessageBox.Show("Все несохраненные изменения будут утеряны. Закрыть окно?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.No)
