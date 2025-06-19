@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
@@ -17,8 +18,6 @@ namespace diplom
         {
             InitializeComponent();
             this.ShowsNavigationUI = true;
-
-
             Loaded += Schedule_Loaded;
         }
 
@@ -26,9 +25,7 @@ namespace diplom
         {
             LoadSchedule();
 
-
             GroupComboBox.ItemsSource = db.Groups.ToList();
-            GroupComboBox.SelectedItem = 3;
         }
 
         public class ScheduleAttendanceItem
@@ -105,7 +102,6 @@ namespace diplom
                     );
                 Debug.WriteLine($"Ошибка: {ex.Message}");
                 return null;
-
             }
 
         }
@@ -135,8 +131,8 @@ namespace diplom
                     );
                     return;
                 }
-
                 var detailsWindow = new schedule_details(attendance.Idattendance);
+                detailsWindow.Style = (Style)Application.Current.Resources["ModalWindowStyle"];
                 detailsWindow.ShowDialog();
             }
             catch (Exception ex)
@@ -157,7 +153,7 @@ namespace diplom
 
             try
             {
-                var selectedGroup = GroupComboBox.SelectedItem as Models.Group;
+                var selectedGroup = GroupComboBox.SelectedItem as Group;
                 if (selectedGroup == null)
                 {
                     MessageBox.Show(
@@ -166,19 +162,20 @@ namespace diplom
                          MessageBoxButton.OK,
                          MessageBoxImage.Warning
                      );
+                    return;
                 }
+
                 var groupName = selectedGroup.Name;
 
                 // Получаем все занятия для этой группы
                 var groupSchedules = db.Schedules
-                    .Include(s => s.GroupsIdgroupNavigation)
-                    .Where(s => s.GroupsIdgroupNavigation.Name == groupName)
+                    .Where(s => s.GroupsIdgroup == selectedGroup.Idgroups)
                     .ToList();
 
-                if (groupSchedules != null)
+                if (groupSchedules.Count == 0)
                 {
                     MessageBox.Show(
-                        "Не найдены занятия для выбранной группы",
+                        $"Не найдены занятия для группы '{groupName}'",
                         "Уведомление",
                         MessageBoxButton.OK,
                         MessageBoxImage.Warning
@@ -189,9 +186,22 @@ namespace diplom
                 // Получаем всех студентов группы
                 var groupStudents = db.GroupsUsers
                     .Include(gu => gu.UsersIdusersNavigation)
-                    .Where(gu => gu.GroupsIdgroups == groupSchedules.First().GroupsIdgroup)
+                    .Where(gu => gu.GroupsIdgroups == selectedGroup.Idgroups)
                     .Select(gu => gu.UsersIdusersNavigation)
+                    .OrderBy(s => s.Surname)
+                    .ThenBy(s => s.Name)
                     .ToList();
+
+                if (groupStudents.Count == 0)
+                {
+                    MessageBox.Show(
+                        $"В группе '{groupName}' нет студентов",
+                        "Уведомление",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning
+                    );
+                    return;
+                }
 
                 // Получаем все даты занятий (первые 30)
                 var allDates = db.Attendances
@@ -202,11 +212,24 @@ namespace diplom
                     .Take(30)
                     .ToList();
 
-                // Создаем диалог сохранения файла (WPF версия)
+                if (allDates.Count == 0)
+                {
+                    MessageBox.Show(
+                        $"Для группы '{groupName}' нет запланированных занятий",
+                        "Уведомление",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning
+                    );
+                    return;
+                }
+
+
+                string sName = $"Посещаемость {(GroupComboBox.SelectedItem as Group)?.Name} {DateTime.Now:yyyy-MM-dd_HH-mm-ss}.xlsx";
+
                 var saveFileDialog = new SaveFileDialog
                 {
                     Filter = "Excel files (*.xlsx)|*.xlsx",
-                    FileName = $"Посещаемость {groupName} {DateTime.Now:yyyy-MM-dd}.xlsx"
+                    FileName = sName
                 };
 
                 if (saveFileDialog.ShowDialog() == true)
@@ -216,7 +239,7 @@ namespace diplom
                         var worksheet = package.Workbook.Worksheets.Add("Посещаемость");
 
                         // Заголовки
-                        worksheet.Cells[1, 1].Value = "ID";
+                        worksheet.Cells[1, 1].Value = "№";
                         worksheet.Cells[1, 2].Value = "Фамилия";
                         worksheet.Cells[1, 3].Value = "Имя";
                         worksheet.Cells[1, 4].Value = "Отчество";
@@ -231,31 +254,40 @@ namespace diplom
                         for (int row = 0; row < groupStudents.Count; row++)
                         {
                             var student = groupStudents[row];
-                            worksheet.Cells[row + 2, 1].Value = student.Idusers;
+                            worksheet.Cells[row + 2, 1].Value = row + 1;
                             worksheet.Cells[row + 2, 2].Value = student.Surname;
                             worksheet.Cells[row + 2, 3].Value = student.Name;
-                            worksheet.Cells[row + 2, 4].Value = student.Paternity;
+                            worksheet.Cells[row + 2, 4].Value = student.Paternity ?? string.Empty;
 
                             // Статусы посещения
                             for (int col = 0; col < allDates.Count; col++)
                             {
                                 var date = allDates[col];
                                 var attendance = db.BilNebils
-                                    .Any(bn => bn.Iduser == student.Idusers &&
+                                    .FirstOrDefault(bn => bn.Iduser == student.Idusers &&
                                               db.Attendances.Any(a => a.Idattendance == bn.Idattendance &&
                                                                      a.Date.Date == date.Date &&
                                                                      groupSchedules.Select(s => s.Idschedule).Contains(a.Idschedule)));
-                                worksheet.Cells[row + 2, col + 5].Value = attendance != null ? (attendance == true ? "Присутствовал" : "Отсутствовал") : "Не отмечено";
 
+                                worksheet.Cells[row + 2, col + 5].Value = attendance != null ?
+                                    ((bool)attendance.Status ? "Присутствовал" : "Отсутствовал") :
+                                    "Не отмечено";
                             }
+                        }
+
+                        // Форматирование заголовков
+                        using (var range = worksheet.Cells[1, 1, 1, 4 + allDates.Count])
+                        {
+                            range.Style.Font.Bold = true;
+                            range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
                         }
 
                         // Автонастройка ширины столбцов
                         worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
                         package.SaveAs(new FileInfo(saveFileDialog.FileName));
-
-                        App.ShowToast($"Файл успешно сохранен: {saveFileDialog.FileName}");
+                        App.ShowToast($"Файл успешно сохранен: {sName}");
                     }
                 }
             }
@@ -274,6 +306,7 @@ namespace diplom
         private void NewSchedule_Click(object sender, RoutedEventArgs e)
         {
             add_schedule add_sch = new add_schedule();
+            add_sch.Style = (Style)Application.Current.Resources["ModalWindowStyle"];
             bool? dialogResult = add_sch.ShowDialog();
             if (dialogResult == true)
             {

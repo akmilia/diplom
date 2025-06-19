@@ -14,7 +14,7 @@ public partial class DiplomSchoolContext : DbContext
     {
     }
     public DbSet<subjectsshow> SubjectShowItems { get; set; }
-    public DbSet<usersshow> userShowItems { get; set; }
+    public DbSet<usersshow> UserShowItems { get; set; }
     public DbSet<scheduleshow> schedulesShow { get; set; }
 
     public DbSet<schedule_with_attendance> attendanceShow { get; set; }
@@ -68,6 +68,11 @@ public partial class DiplomSchoolContext : DbContext
         modelBuilder.Entity<schedule_with_attendance>().ToView("schedule_with_attendance");
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<usersshow>().ToView("usersshow");
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<subjectsshow>().ToView("subjectsshow");
+        base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<BilNebil>(entity =>
         {

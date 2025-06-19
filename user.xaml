@@ -16,74 +16,91 @@
         </Grid.RowDefinitions>
 
         <components:HeaderSimple Grid.Row="0"></components:HeaderSimple>
-        <TextBlock Text="Пользователь" Style="{StaticResource HeaderTextStyle}" Grid.Row="1"/>
+        <TextBlock Text="Редактирование пользователя" Style="{StaticResource HeaderTextStyle}" Grid.Row="1"/>
 
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <StackPanel>
-                <Border BorderBrush="Black" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Center" VerticalAlignment="Top" Width="650" Margin="0 10">
-                    <Grid Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                <!-- Основная информация -->
+                <Border  BorderThickness="1" CornerRadius="5" BorderBrush="Black"
+                        HorizontalAlignment="Center" VerticalAlignment="Top" Width="650" Margin="10,5">
+                    <StackPanel>
+                        <TextBlock Text="Основная информация" FontWeight="Bold" Margin="10,5"/>
 
-                        <!-- Логин -->
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Логин:" FontWeight="Bold" Margin="5"/>
-                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="LoginTextBox" Margin="5" Text="{Binding curUser.login, Mode=OneWay}" IsEnabled="False"/>
+                        <Grid Margin="10,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                        <!-- Пароль -->
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Пароль:" FontWeight="Bold" Margin="5"/>
-                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="PasswordTextBox" Margin="5" 
-                                 Text="{Binding Password, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-                            <TextBox.ToolTip>
-                                <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
-                            </TextBox.ToolTip>
-                        </TextBox>
+                            <!-- ID пользователя -->
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="ID пользователя:" FontWeight="Bold" Margin="5"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding curUser.Idusers}" IsEnabled="False" Margin="5"/>
 
-                        <!-- Фамилия -->
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Фамилия:" FontWeight="Bold" Margin="5"/>
-                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="SurnameTextBox" Margin="5" 
-                                 Text="{Binding Surname, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-                            <TextBox.ToolTip>
-                                <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
-                            </TextBox.ToolTip>
-                        </TextBox>
+                            <!-- Роль -->
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Роль:" FontWeight="Bold" Margin="5"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding UserRole, Mode=OneWay}" IsEnabled="False" Margin="5"/>
 
-                        <!-- Имя -->
-                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Имя:" FontWeight="Bold" Margin="5"/>
-                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="NameTextBox" Margin="5" 
-                                 Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-                            <TextBox.ToolTip>
-                                <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
-                            </TextBox.ToolTip>
-                        </TextBox>
+                            <!-- Логин -->
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Логин:" FontWeight="Bold" Margin="5"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Login, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                                     Margin="5" ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}"/>
 
-                        <!-- Отчество -->
-                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Отчество:" FontWeight="Bold" Margin="5"/>
-                        <TextBox Grid.Row="4" Grid.Column="1" x:Name="PaternityTextBox" Margin="5" 
-                                 Text="{Binding Paternity, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-                            <TextBox.ToolTip>
-                                <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
-                            </TextBox.ToolTip>
-                        </TextBox>
+                            <!-- Пароль -->
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Пароль:" FontWeight="Bold" Margin="5"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                                     Margin="5" ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
 
-                        <!-- Роль -->
-                        <TextBlock Grid.Row="5" Grid.Column="0" Text="Роль:" FontWeight="Bold" Margin="5"/>
-                        <TextBox Grid.Row="5" Grid.Column="1" x:Name="RoleTextBox" Margin="5" Text="{Binding curUser.user_role}" IsEnabled="False"/>
+                <!-- Персональные данные -->
+                <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5"  
+                        HorizontalAlignment="Center" VerticalAlignment="Top" Width="650" Margin="10,5">
+                    <StackPanel>
+                        <TextBlock Text="Персональные данные" FontWeight="Bold" Margin="10,5"/>
 
-                        <!-- Дата рождения -->
-                        <TextBlock Grid.Row="6" Grid.Column="0" Text="Дата рождения:" FontWeight="Bold" Margin="5"/>
-                        <DatePicker Grid.Row="6" Grid.Column="1" x:Name="BirthDatePicker" Margin="5" SelectedDate="{Binding Birthdate}"/>
-                    </Grid>
+                        <Grid Margin="10,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Фамилия -->
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Фамилия:" FontWeight="Bold" Margin="5"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Surname, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                                     Margin="5" ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}"/>
+
+                            <!-- Имя -->
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Имя:" FontWeight="Bold" Margin="5"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Name1, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                                     Margin="5" ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}"/>
+
+                            <!-- Отчество -->
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Отчество:" FontWeight="Bold" Margin="5"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Paternity, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                                     Margin="5" ToolTip="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource Self}}"/>
+
+                            <!-- Дата рождения -->
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Дата рождения:" FontWeight="Bold" Margin="5"/>
+                            <DatePicker Grid.Row="3" Grid.Column="1" SelectedDate="{Binding Birthdate}" Margin="5"/>
+
+                            <!-- Пустая строка для отступа -->
+                            <Rectangle Grid.Row="4" Height="10" Fill="Transparent"/>
+                        </Grid>
+                    </StackPanel>
                 </Border>
 
                 <!-- Кнопки -->
@@ -96,9 +113,13 @@
                 <Border BorderBrush="Black" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Center" VerticalAlignment="Top" Width="650" Margin="0 10">
                     <StackPanel>
                         <TextBlock Text="Занятия пользователя" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
-                        <ListBox x:Name="SubjectList" Height="150" Margin="10" DisplayMemberPath="Name"/>
+                        <ListBox x:Name="SubjectList" Height="150" Margin="10" DisplayMemberPath="."/>
                     </StackPanel>
                 </Border>
+                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Width="600">
+                    <Button Content="Удалить" Width="300" Name="DeleteSubject" Click="DeleteSubject_Click" Margin="300 5 5 5"/>
+                </StackPanel>
 
                 <!-- Статус оплаты занятий -->
                 <Border BorderBrush="Black" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Center" VerticalAlignment="Top" Width="650" Margin="0 10 0 20">

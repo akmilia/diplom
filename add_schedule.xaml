@@ -26,9 +26,7 @@
                 <Grid Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
-                        <!-- Для названий -->
-                        <ColumnDefinition Width="*"/>
-                        <!-- Для полей ввода -->
+                        <ColumnDefinition Width="*"  MinWidth="300"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -42,41 +40,41 @@
                     </Grid.RowDefinitions>
 
                     <!-- Кабинет -->
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Кабинет:" FontWeight="Bold" Margin="5"/>
-                    <ComboBox Grid.Row="0" Grid.Column="1" x:Name="CabinetComboBox" Margin="5"/>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Кабинет:" Style="{StaticResource AddTextStyle}"/>
+                    <ComboBox Grid.Row="0" Grid.Column="1" x:Name="CabinetComboBox" />
 
                     <!-- Преподаватель -->
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Преподаватель:" FontWeight="Bold" Margin="5"/>
-                    <ComboBox Grid.Row="1" Grid.Column="1" x:Name="TeacherComboBox" Margin="5"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Преподаватель:" Style="{StaticResource AddTextStyle}"/>
+                    <ComboBox Grid.Row="1" Grid.Column="1" x:Name="TeacherComboBox" />
 
                     <!-- Предмет -->
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Предмет:" FontWeight="Bold" Margin="5"/>
-                    <ComboBox Grid.Row="2" Grid.Column="1" x:Name="SubjectComboBox" Margin="5"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Предмет:" Style="{StaticResource AddTextStyle}"/>
+                    <ComboBox Grid.Row="2" Grid.Column="1" x:Name="SubjectComboBox" />
 
                     <!-- Группа -->
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Группа:" FontWeight="Bold" Margin="5"/>
-                    <ComboBox Grid.Row="3" Grid.Column="1" x:Name="GroupComboBox" Margin="5"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Группа:" Style="{StaticResource AddTextStyle}"/>
+                    <ComboBox Grid.Row="3" Grid.Column="1" x:Name="GroupComboBox"/>
 
                     <!-- День недели -->
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="День недели:" FontWeight="Bold" Margin="5"/>
-                    <ComboBox Grid.Row="4" Grid.Column="1" x:Name="DayOfWeekComboBox" Margin="5"/>
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="День недели:" Style="{StaticResource AddTextStyle}"/>
+                    <ComboBox Grid.Row="4" Grid.Column="1" x:Name="DayOfWeekComboBox" />
 
                     <!-- Время начала -->
-                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Время начала:" FontWeight="Bold" Margin="5"/>
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Время начала:" Style="{StaticResource AddTextStyle}"/>
                     <xctk:TimePicker Grid.Row="5" Grid.Column="1" x:Name="StartTimePicker" Format="ShortTime" TimeInterval="00:30:00" Margin="5"/>
 
                     <!-- Дата начала -->
-                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Дата начала:" FontWeight="Bold" Margin="5"/>
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Дата начала:" Style="{StaticResource AddTextStyle}"/>
                     <DatePicker Grid.Row="6" Grid.Column="1" x:Name="StartDatePicker" Margin="5"/>
 
                     <!-- Дата окончания -->
-                    <TextBlock Grid.Row="7" Grid.Column="0" Text="Дата окончания:" FontWeight="Bold" Margin="5"/>
+                    <TextBlock Grid.Row="7" Grid.Column="0" Text="Дата окончания:" Style="{StaticResource AddTextStyle}"/>
                     <DatePicker Grid.Row="7" Grid.Column="1" x:Name="EndDatePicker" Margin="5"/>
                 </Grid>
             </Border>
 
             <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Width="600">
-                <Button Content="Отмена" Width="300" IsCancel="True" Background="White"/>
+                <Button Content="Отмена" Width="300" IsCancel="True" Background="White" BorderBrush="Black" BorderThickness="1" />
                 <Button Content="Сохранить" Width="300" Click="SaveButton_Click"/>
             </StackPanel >
             <controls:NotificationArea Name="WindowNotificationArea" />

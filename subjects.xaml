@@ -8,7 +8,7 @@
       xmlns:local="clr-namespace:diplom"
       xmlns:components="clr-namespace:diplom.Components"
       mc:Ignorable="d"
-      Title="Занятия" Background="White">
+      Title="Занятия" Background="White" Loaded="OnPageLoaded">
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
         <Grid>
             <Grid.RowDefinitions>
@@ -29,7 +29,7 @@
                 <Button Content="Выгрузить в Excel" Name="ExportToExcel"  Click="ExportToExcel_Click" Width="300" />
             </StackPanel>
 
-            <DataGrid ItemsSource="{Binding SubjectItems}" Grid.Row="3" MouseDoubleClick="DataGrid_MouseDoubleClick" Name="table">
+            <DataGrid ItemsSource="{Binding SubjectItems}" IsReadOnly="True" Grid.Row="3" MouseDoubleClick="DataGrid_MouseDoubleClick" Name="table">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding subject_id}" />
                     <DataGridTextColumn Header="Название" Binding="{Binding subject_name}" FontWeight="Bold" />
@@ -44,7 +44,7 @@
 
             <TextBlock Text="Группы, посещающие занятия" Style="{StaticResource HeaderTextStyle}" Grid.Row="4" />
 
-            <DataGrid ItemsSource="{Binding GroupsItems}" Grid.Row="5" Name="tableGroups">
+            <DataGrid ItemsSource="{Binding GroupsItems}" IsReadOnly="True" Grid.Row="5" Name="tableGroups">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Idgroups}" />
                     <DataGridTextColumn Header="Название" Binding="{Binding Name}" FontWeight="Bold"/>

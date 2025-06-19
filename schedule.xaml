@@ -73,9 +73,9 @@
             
             <StackPanel Orientation="Horizontal"
                       HorizontalAlignment="Center"
-                      VerticalAlignment="Top">
+                      VerticalAlignment="Top" Margin="2">
                 
-                <Border Style="{StaticResource DayContainerStyle}">
+                <Border Style="{StaticResource DayContainerStyle}" VerticalAlignment="Top">
                     <StackPanel>
                         <TextBlock Text="Понедельник" Style="{StaticResource DayHeaderStyle}"/>
                         <ListBox x:Name="MondayListBox" Style="{StaticResource DayListBoxStyle}">

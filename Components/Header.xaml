@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:diplom.Components"
              mc:Ignorable="d" 
-             MinWidth="1240" Height="70" HorizontalAlignment="Stretch">
+             MinWidth="1240" Height="75" HorizontalAlignment="Stretch">
     <Grid Background="Gray" Opacity="0.85">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>

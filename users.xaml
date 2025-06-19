@@ -6,9 +6,9 @@
       xmlns:notifications="clr-namespace:Notification.Wpf;assembly=Notification.Wpf" 
       xmlns:controls="clr-namespace:Notification.Wpf.Controls;assembly=Notification.Wpf" 
       xmlns:local="clr-namespace:diplom"
-      xmlns:components="clr-namespace:diplom.Components"
+      xmlns:components="clr-namespace:diplom.Components"  
       mc:Ignorable="d"
-      Title="Пользователи" Background="White">
+      Title="Пользователи" Background="White" Loaded="OnPageLoaded">
     <Page.Resources>
         <Style TargetType="TextBox">
             <Setter Property="Foreground" Value="Gray"/>
@@ -36,14 +36,15 @@
         <TextBlock Text="Пользователи" Style="{StaticResource HeaderTextStyle}" Grid.Row="1" />
 
         <StackPanel Orientation="Horizontal" Grid.Row="2">
-            <ComboBox SelectionChanged="RoleComboBox_SelectionChanged" x:Name="RoleComboBox" Width="300" DisplayMemberPath="Name" />
+            <ComboBox SelectionChanged="RoleComboBox_SelectionChanged" x:Name="RoleComboBox" Width="300" />
+
             <Label Margin="0" Content="Поиск по ФИО:"/>
             <TextBox x:Name="SearchTextBox" Width="450" TextChanged="SearchTextBox_TextChanged" VerticalContentAlignment="Center" />
             <Button Content="Добавить новый аккаунт" Click="toAdd_Click" Width="300"/>
             <Button Content="Выгрузить в Excel" Click="Button_Click" Width="300"/>
         </StackPanel>
 
-        <DataGrid Grid.Row="3" MouseDoubleClick="table_MouseDoubleClick" Name="table">
+        <DataGrid Grid.Row="3" MouseDoubleClick="table_MouseDoubleClick" Name="table" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding idusers}" />
                 <DataGridTextColumn Header="Логин" Binding="{Binding login}" FontWeight="Bold" />

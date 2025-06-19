@@ -24,8 +24,8 @@
             <Border Grid.Row="2" BorderBrush="Black" CornerRadius="10" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="650">
                 <Grid Margin="10">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto" MinWidth="120"/>
+                        <ColumnDefinition Width="*" MinWidth="300"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -35,8 +35,8 @@
                     </Grid.RowDefinitions>
 
                     <!-- Название занятия -->
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Название занятия:" FontWeight="Black" Margin="5"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="SubjectNameTextBox" Margin="5"
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Название занятия:" Style="{StaticResource AddTextStyle}"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="SubjectNameTextBox"
                              Text="{Binding SubjectName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
                         <TextBox.ToolTip>
                             <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
@@ -44,8 +44,8 @@
                     </TextBox>
 
                     <!-- Описание -->
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Описание:" FontWeight="Black" Margin="5"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="DescriptionTextBox" TextWrapping="Wrap" AcceptsReturn="True" Height="80" Margin="5"
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Описание:" Style="{StaticResource AddTextStyle}"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="DescriptionTextBox" TextWrapping="Wrap" AcceptsReturn="True" Height="80"
                              Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
                         <TextBox.ToolTip>
                             <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
@@ -53,8 +53,8 @@
                     </TextBox>
 
                     <!-- Тип занятия -->
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Тип занятия:" FontWeight="Black" Margin="5"/>
-                    <ComboBox Grid.Row="2" Grid.Column="1" x:Name="TypeComboBox" DisplayMemberPath="Type1" SelectedValuePath="Id" Margin="5"
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Тип занятия:" Style="{StaticResource AddTextStyle}"/>
+                    <ComboBox Grid.Row="2" Grid.Column="1" x:Name="TypeComboBox" DisplayMemberPath="Type1" SelectedValuePath="Id"
                               ItemsSource="{Binding Types}"
                               SelectedItem="{Binding SelectedType, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
                         <ComboBox.ToolTip>
@@ -63,8 +63,8 @@
                     </ComboBox>
 
                     <!-- Название группы -->
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Название группы:" FontWeight="Black" Margin="5"/>
-                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="GroupNameTextBox" Margin="5"
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Название группы:" Style="{StaticResource AddTextStyle}"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="GroupNameTextBox"
                              Text="{Binding GroupName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
                         <TextBox.ToolTip>
                             <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
@@ -74,7 +74,7 @@
             </Border>
 
             <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Width="600">
-                <Button Content="Отмена" Width="300" IsCancel="True" Background="Transparent"/>
+                <Button Content="Отмена" Width="300" IsCancel="True" Background="Transparent" BorderBrush="Black" BorderThickness="1"/>
                 <Button Content="Сохранить" Width="300" Click="SaveButton_Click"/>
             </StackPanel>
             <controls:NotificationArea Name="WindowNotificationArea" />

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:diplom"
         xmlns:components="clr-namespace:diplom.Components"
         mc:Ignorable="d"
-        Title="Новый аккаунт" Closing="Window_Closing" Background="White">
+        Title="Новый аккаунт" Closing="Window_Closing" Background="White" Loaded="OnPageLoaded">
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
         <Grid>
             <Grid.RowDefinitions>
@@ -19,11 +19,12 @@
             <components:HeaderSimple Grid.Row="0"></components:HeaderSimple>
             <TextBlock Text="Добавить новый аккаунт" Style="{StaticResource HeaderTextStyle}" Grid.Row="1"/>
 
-            <Border Grid.Row="2" BorderBrush="Black" CornerRadius="10" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="650">
+            <Border Grid.Row="2" BorderBrush="Black" CornerRadius="10" BorderThickness="1" 
+                    HorizontalAlignment="Center" VerticalAlignment="Center" Width="650">
                 <Grid Margin="10">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto" MinWidth="120"/>
+                        <ColumnDefinition Width="*" MinWidth="300"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -35,68 +36,100 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Фамилия -->
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Фамилия:" FontWeight="Black" Margin="5"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="surname" Margin="5"
-                             Text="{Binding Surname, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-                        <TextBox.ToolTip>
-                            <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
-                        </TextBox.ToolTip>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Фамилия:" Style="{StaticResource AddTextStyle}"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="surname" MinWidth="200"
+                         Text="{Binding Surname, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+                        <Validation.ErrorTemplate>
+                            <ControlTemplate>
+                                <StackPanel>
+                                    <AdornedElementPlaceholder/>
+                                    <TextBlock Text="{Binding [0].ErrorContent}" Foreground="Red" Margin="5,0"/>
+                                </StackPanel>
+                            </ControlTemplate>
+                        </Validation.ErrorTemplate>
                     </TextBox>
 
                     <!-- Имя -->
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Имя:" FontWeight="Black" Margin="5"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="NameU" Margin="5"
-                             Text="{Binding NameN, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-                        <TextBox.ToolTip>
-                            <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
-                        </TextBox.ToolTip>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Имя:" Style="{StaticResource AddTextStyle}"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="NameU" MinWidth="200"
+                         Text="{Binding NameN, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+                        <Validation.ErrorTemplate>
+                            <ControlTemplate>
+                                <StackPanel>
+                                    <AdornedElementPlaceholder/>
+                                    <TextBlock Text="{Binding [0].ErrorContent}" Foreground="Red" Margin="5,0"/>
+                                </StackPanel>
+                            </ControlTemplate>
+                        </Validation.ErrorTemplate>
                     </TextBox>
 
                     <!-- Отчество -->
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Отчество:" FontWeight="Black" Margin="5"/>
-                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="paternity" Margin="5"
-                             Text="{Binding Paternity, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-                        <TextBox.ToolTip>
-                            <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
-                        </TextBox.ToolTip>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Отчество:" Style="{StaticResource AddTextStyle}"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="paternity" MinWidth="200"
+                         Text="{Binding Paternity, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+                        <Validation.ErrorTemplate>
+                            <ControlTemplate>
+                                <StackPanel>
+                                    <AdornedElementPlaceholder/>
+                                    <TextBlock Text="{Binding [0].ErrorContent}" Foreground="Red" Margin="5,0"/>
+                                </StackPanel>
+                            </ControlTemplate>
+                        </Validation.ErrorTemplate>
                     </TextBox>
 
                     <!-- Логин -->
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Логин:" FontWeight="Black" Margin="5"/>
-                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="login" Margin="5"
-                             Text="{Binding Login, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-                        <TextBox.ToolTip>
-                            <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
-                        </TextBox.ToolTip>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Логин:" Style="{StaticResource AddTextStyle}"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="login" MinWidth="200"
+                         Text="{Binding Login, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+                        <Validation.ErrorTemplate>
+                            <ControlTemplate>
+                                <StackPanel>
+                                    <AdornedElementPlaceholder/>
+                                    <TextBlock Text="{Binding [0].ErrorContent}" Foreground="Red" Margin="5,0"/>
+                                </StackPanel>
+                            </ControlTemplate>
+                        </Validation.ErrorTemplate>
                     </TextBox>
 
                     <!-- Пароль -->
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Пароль:" FontWeight="Black" Margin="5"/>
-                    <TextBox Grid.Row="4" Grid.Column="1" x:Name="password" Margin="5"
-                             Text="{Binding Password, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-                        <TextBox.ToolTip>
-                            <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
-                        </TextBox.ToolTip>
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Пароль:" Style="{StaticResource AddTextStyle}"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" x:Name="password" MinWidth="200"
+                         Text="{Binding Password, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+                        <Validation.ErrorTemplate>
+                            <ControlTemplate>
+                                <StackPanel>
+                                    <AdornedElementPlaceholder/>
+                                    <TextBlock Text="{Binding [0].ErrorContent}" Foreground="Red" Margin="5,0"/>
+                                </StackPanel>
+                            </ControlTemplate>
+                        </Validation.ErrorTemplate>
                     </TextBox>
 
                     <!-- Дата рождения -->
-                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Дата рождения:" FontWeight="Black" Margin="5"/>
-                    <DatePicker Grid.Row="5" Grid.Column="1" x:Name="BirthDatePicker" Margin="5"/>
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Дата рождения:" Style="{StaticResource AddTextStyle}"/>
+                    <DatePicker Grid.Row="5" Grid.Column="1" x:Name="BirthDatePicker" HorizontalAlignment="Left" Width="200"/>
 
                     <!-- Роль -->
-                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Роль:" FontWeight="Black" Margin="5"/>
-                    <ComboBox Grid.Row="6" Grid.Column="1" x:Name="RoleComboBox" DisplayMemberPath="Name" SelectedValuePath="Idroles" Margin="5"
-                              ItemsSource="{Binding Roles}" SelectedItem="{Binding SelectedRole, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-                        <ComboBox.ToolTip>
-                            <Binding Path="(Validation.Errors)[0].ErrorContent" RelativeSource="{RelativeSource Self}"/>
-                        </ComboBox.ToolTip>
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Роль:" Style="{StaticResource AddTextStyle}"/>
+                    <ComboBox Grid.Row="6" Grid.Column="1" x:Name="RoleComboBox" MinWidth="200"
+                          DisplayMemberPath="Name" 
+                          SelectedValuePath="Idroles"
+                          ItemsSource="{Binding rolesList}" 
+                          SelectedItem="{Binding SelectedRole, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+                        <Validation.ErrorTemplate>
+                            <ControlTemplate>
+                                <StackPanel>
+                                    <AdornedElementPlaceholder/>
+                                    <TextBlock Text="{Binding [0].ErrorContent}" Foreground="Red" Margin="5,0"/>
+                                </StackPanel>
+                            </ControlTemplate>
+                        </Validation.ErrorTemplate>
                     </ComboBox>
                 </Grid>
             </Border>
 
             <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Width="600">
-                <Button Content="Отмена" Width="300" IsCancel="True" Background="White"/>
+                <Button Content="Отмена" Width="300" IsCancel="True" Background="White" BorderBrush="Black" BorderThickness="1"/>
                 <Button Content="Сохранить" Width="300" Click="SaveButton_Click"/>
             </StackPanel>
         </Grid>

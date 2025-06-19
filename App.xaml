@@ -37,9 +37,16 @@
         <!-- Шрифты -->
         <FontFamily x:Key="MainFont">Arial</FontFamily>
         
-        <!-- Глобальные настройки страниц, окон и расположения --> 
-        
-        <Style TargetType="Page">
+        <!-- Глобальные настройки страниц, окон и расположения -->
+
+        <Style x:Key="ModalWindowStyle" TargetType="Window" BasedOn="{StaticResource {x:Type Window}}">
+            <Setter Property="MinHeight" Value="500"/>
+            <Setter Property="MinWidth" Value="700"/>
+            <Setter Property="Background" Value="{StaticResource MainBackgroundBrush}"/>
+            <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
+        </Style> 
+            
+            <Style TargetType="Page">
             <Setter Property="Background" Value="{StaticResource MainBackgroundBrush}"/>
             <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
         </Style>
@@ -74,49 +81,20 @@
         </Style>
 
         <!-- Дополнительный стиль для кнопок MessageBox -->
-        <Style TargetType="Button" x:Key="MessageBoxButtonStyle" BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="Background" Value="#5950FF"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Margin" Value="5,0"/>
-            <Setter Property="Padding" Value="10,5"/>
-            <Setter Property="MinWidth" Value="80"/> 
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#7b68ee"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+            <Style TargetType="Button" x:Key="MessageBoxButtonStyle" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="Background" Value="#5950FF"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Margin" Value="5,0"/>
+                <Setter Property="Padding" Value="10,5"/>
+                <Setter Property="MinWidth" Value="80"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#7b68ee"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
 
-            <!-- Иконки для MessageBox -->
-        <BitmapImage x:Key="WarningGeometry" UriSource="Images/warning.png"/>
-        <BitmapImage x:Key="ErrorGeometry" UriSource="Images/error.png"/>
-        <BitmapImage x:Key="SuccessGeometry" UriSource="Images/success.png"/>
-
-            <!-- Иконки для MessageBox (Geometry версия) -->
-            <!--<PathGeometry x:Key="WarningGeometry">
-                <PathFigure StartPoint="10,0">
-                    <LineSegment Point="0,20"/>
-                    <LineSegment Point="20,20"/>
-                    <LineSegment Point="10,0"/>
-                </PathFigure>
-            </PathGeometry>
-
-            <PathGeometry x:Key="ErrorGeometry">
-                <PathFigure StartPoint="10,0">
-                    <LineSegment Point="0,10"/>
-                    <LineSegment Point="10,20"/>
-                    <LineSegment Point="20,10"/>
-                    <LineSegment Point="10,0"/>
-                </PathFigure>
-            </PathGeometry>
-
-            <PathGeometry x:Key="SuccessGeometry">
-                <PathFigure StartPoint="0,10">
-                    <LineSegment Point="5,15"/>
-                    <LineSegment Point="15,5"/>
-                </PathFigure>
-            </PathGeometry>-->
             <!-- АВТОРИЗАЦИЯ  -->
         <Style TargetType="Border" x:Key="RoundBut">
             <Setter Property="CornerRadius" Value="8"></Setter>
@@ -134,7 +112,8 @@
             <Setter Property="Margin" Value="120,0,10,0"/>
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Height" Value="32"/>
+            <Setter Property="Height" Value="32"/> 
+            
         </Style>
         <Style x:Key="PasAutoriz" TargetType="PasswordBox">
             <Setter Property="Margin" Value="120,0,10,0"/>
@@ -193,14 +172,14 @@
             <Setter Property="Foreground" Value="White" />
         </Style>
 
-        <!-- Стиль для прозрачных кнопок -->
+            <!-- Стиль для прозрачных кнопок -->
         <Style x:Key="TransparentButtonStyle" BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="Foreground" Value="White"/>
         </Style>
 
-        <!-- Акцентная кнопка -->
+            <!-- Акцентная кнопка -->
         <Style x:Key="AccentButtonStyle" BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
             <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
             <Setter Property="Foreground" Value="White"/>
@@ -213,9 +192,20 @@
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
             <Setter Property="VerticalAlignment" Value="Center" />
-        </Style> 
-        
-        <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+        </Style>
+
+        <Style x:Key="AddTextStyle" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Arial"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="MinWidth" Value="120" />
+            
+        </Style>
+
+            <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="24"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
@@ -243,8 +233,9 @@
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/> 
-            
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+
             <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
             <Setter Property="Background" Value="{StaticResource MainBackgroundBrush}"/>
             <Setter Property="BorderBrush" Value="{StaticResource ElementBackgroundBrush}"/>
@@ -347,6 +338,7 @@
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Margin" Value="5"/>
         </Style>
 
         <Style x:Key="DayContainerStyle" TargetType="Border">

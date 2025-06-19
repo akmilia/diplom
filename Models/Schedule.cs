@@ -8,7 +8,7 @@ public partial class Schedule
 
     public int SubjectsIdsubjects { get; set; }
 
-    public int UsersIdusers { get; set; }
+    public int? UsersIdusers { get; set; }
 
     public int CabinetsIdcabinet { get; set; }
 

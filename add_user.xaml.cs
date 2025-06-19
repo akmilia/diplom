@@ -1,129 +1,94 @@
 ﻿using diplom.Models;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using Microsoft.EntityFrameworkCore;
 using System.Windows.Controls;
 namespace diplom
 {
-    public partial class add_user : Window, INotifyPropertyChanged, IDataErrorInfo
+    public partial class add_user : Window, INotifyPropertyChanged
     {
         private string _surname;
         private string _nameN;
         private string _paternity;
-
         private string _login;
         private string _password;
         private Role _selectedRole;
-        private List<Role> _roles;
+        private bool _isSaving;
+        //private List<Role> _roles;
 
         public string Surname
         {
-            get { return _surname; }
-            set
-            {
-                if (_surname != value)
-                {
-                    _surname = value;
-                    OnPropertyChanged();
-                }
-            }
+            get => _surname;
+            set { _surname = value; OnPropertyChanged(); }
         }
 
         public string NameN
         {
-            get { return _nameN; }
-            set
-            {
-                if (_nameN != value)
-                {
-                    _nameN = value;
-                    OnPropertyChanged();
-                }
-            }
+            get => _nameN;
+            set { _nameN = value; OnPropertyChanged(); }
         }
 
         public string Paternity
         {
-            get { return _paternity; }
-            set
-            {
-                if (_paternity != value)
-                {
-                    _paternity = value;
-                    OnPropertyChanged();
-                }
-            }
+            get => _paternity;
+            set { _paternity = value; OnPropertyChanged(); }
         }
-
 
         public string Login
         {
-            get { return _login; }
-            set
-            {
-                if (_login != value)
-                {
-                    _login = value;
-                    OnPropertyChanged();
-                }
-            }
+            get => _login;
+            set { _login = value; OnPropertyChanged(); }
         }
 
         public string Password
         {
-            get { return _password; }
-            set
-            {
-                if (_password != value)
-                {
-                    _password = value;
-                    OnPropertyChanged();
-                }
-            }
+            get => _password;
+            set { _password = value; OnPropertyChanged(); }
         }
 
         public Role SelectedRole
         {
-            get { return _selectedRole; }
-            set
-            {
-                if (_selectedRole != value)
-                {
-                    _selectedRole = value;
-                    OnPropertyChanged();
-                }
-            }
+            get => _selectedRole;
+            set { _selectedRole = value; OnPropertyChanged(); }
         }
 
-        public List<Role> Roles
-        {
-            get { return _roles; }
-            set
-            {
-                _roles = value;
-                OnPropertyChanged();
-            }
-        }
+        //public List<Role> Roles
+        //{
+        //    get => _roles;
+        //    set { _roles = value; OnPropertyChanged(); }
+        //} 
 
-        private DiplomSchoolContext db = new();
+        public bool IsSaving { get => _isSaving; set { _isSaving = value; OnPropertyChanged(); } }
+
+        private DiplomSchoolContext db = new DiplomSchoolContext();
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public add_user()
         {
             InitializeComponent();
             DataContext = this;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
-            LoadRoles();
-            Loaded += Add_subject_Loaded;
+            Loaded += OnPageLoaded;
         }
-        private void LoadRoles()
+
+        private async void OnPageLoaded(object sender, RoutedEventArgs e)
         {
             try
             {
-                List<Role> types = [.. db.Roles.Where(u => u.Idroles != 0)];
+                using (var db = new DiplomSchoolContext())
+                {
+                    List<Role> rolesList = await db.Roles
+                        .Where(r => r.Idroles != 0)
+                        .OrderBy(r => r.Name)
+                        .ToListAsync();
 
-                RoleComboBox.ItemsSource = types;
-                RoleComboBox.DisplayMemberPath = "Name";
+                    RoleComboBox.ItemsSource = rolesList;
+                }
             }
             catch (Exception ex)
             {
@@ -134,78 +99,120 @@ namespace diplom
                        MessageBoxImage.Error
                    );
                 Debug.WriteLine($"Ошибка: {ex.Message}");
-            }
-        }
-        private void Add_subject_Loaded(object sender, RoutedEventArgs e)
-        {
+            } 
             BirthDatePicker.DisplayDateStart = DateTime.Now.AddYears(-100);
             BirthDatePicker.DisplayDateEnd = DateTime.Now;
-            BirthDatePicker.SelectedDate = DateTime.Now.AddYears(-20);
-        }
+            BirthDatePicker.SelectedDate = DateTime.Now.AddYears(-6);
+        } 
 
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-
-            surname.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
-            NameU.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
-
-            if (string.IsNullOrEmpty(this["Surname"]) && string.IsNullOrEmpty(this["NameN"]) && string.IsNullOrEmpty(this["Login"]) && string.IsNullOrEmpty(this["Password"]) && SelectedRole != null)
+            if (IsSaving) return;
+        
+            try
             {
-
-                try
-                {
-                    var test = db.Users.OrderByDescending(s => s.Idusers).FirstOrDefault();
-
-                    User newUser = new User
-                    {
-                        Idusers = test != null ? test.Idusers + 1 : 1,
-                        Surname = Surname,
-                        Name = NameN,
-                        Paternity = Paternity,
-                        Birthdate = BirthDatePicker.SelectedDate.HasValue ? DateOnly.FromDateTime(BirthDatePicker.SelectedDate.Value) : null,
-                        Login = Login,
-                        Password = Password,
-                        RolesIdroles = SelectedRole.Idroles
-                    };
-
-                    db.Users.Add(newUser);
-                    db.SaveChanges();
-
-                    App.ShowToast("Пользователь добавлен успешно");
-                    this.DialogResult = true;
-                    this.Close();
-
-                }
-
-                catch (Exception ex)
+                IsSaving = true;
+                UpdateBindings();
+                // Проверка валидации
+                if (HasValidationErrors())
                 {
                     MessageBox.Show(
-                        "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
-                        "Ошибка",
+                        "Пожалуйста, заполните все обязательные поля правильно!",
+                        "Ошибка валидации",
                         MessageBoxButton.OK,
-                        MessageBoxImage.Error
-                    );
-                    Debug.WriteLine($"Ошибка: {ex.Message}");
+                        MessageBoxImage.Warning);
+
+                    return;
                 }
-            }
-            MessageBox.Show(
-                       "Вся обязательные поля должны быть заполнены!",
-                       "Уведомление",
-                       MessageBoxButton.OK,
-                       MessageBoxImage.Warning
-                   );
-        }
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            MessageBoxResult result = MessageBox.Show("Все несохраненные изменения будут утеряны. Закрыть окно?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-            if (result == MessageBoxResult.No)
+                //using (var db = new DiplomSchoolContext())
+                //{
+                //    var newUser = new User
+                //    {
+                //        Surname = Surname,
+                //        Name = NameN,
+                //        Paternity = string.IsNullOrWhiteSpace(Paternity) ? null : Paternity,
+                //        Birthdate = BirthDatePicker.SelectedDate.HasValue
+                //        ? DateOnly.FromDateTime(BirthDatePicker.SelectedDate.Value)
+                //        : null,
+                //        Login = Login,
+                //        Password = Password,
+                //        RolesIdroles = SelectedRole.Idroles
+                //    };
+
+                //db.Users.Add(newUser);
+                //db.SaveChanges(); 
+
+                await SaveUserAsync();
+
+                App.ShowToast("Пользователь добавлен успешно");
+                    DialogResult = true;
+                    Close();
+                //}
+            }
+            catch (Exception ex)
             {
-                e.Cancel = true;
+                MessageBox.Show(
+                    "Возникла неизвестная проблема. Пожалуйста, попробуйте позднее.",
+                    "Ошибка",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
+                Debug.WriteLine($"Ошибка: {ex.Message}");
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        private bool HasValidationErrors()
+        {
+            return !string.IsNullOrEmpty(this["Surname"]) ||
+                   !string.IsNullOrEmpty(this["NameN"]) ||
+                   !string.IsNullOrEmpty(this["Login"]) ||
+                   !string.IsNullOrEmpty(this["Password"]) ||
+                   !string.IsNullOrEmpty(this["SelectedRole"]);
+        }
+
+
+        private async System.Threading.Tasks.Task SaveUserAsync()
+        {
+            using (var db = new DiplomSchoolContext())
+            {
+                bool loginExists = await db.Users.AnyAsync(u => u.Login == Login);
+                if (loginExists)
+                {
+                    MessageBox.Show("Этот логин уже занят");
+                    return;
+                }
+
+                int maxId = await db.Users.MaxAsync(u => (int?)u.Idusers) ?? 0; 
+
+                var newUser = new User
+                {
+                    Idusers = maxId + 1,
+                    Surname = Surname,
+                    Name = NameN,
+                    Paternity = string.IsNullOrWhiteSpace(Paternity) ? null : Paternity,
+                    Birthdate = BirthDatePicker.SelectedDate.HasValue
+                        ? DateOnly.FromDateTime(BirthDatePicker.SelectedDate.Value)
+                        : null,
+                    Login = Login,
+                    Password = Password,
+                    RolesIdroles = SelectedRole.Idroles
+                };
+
+                await db.Users.AddAsync(newUser);
+                await db.SaveChangesAsync();
+            }
+        } 
+
+        private void UpdateBindings()
+        {
+            surname.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            NameU.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            paternity.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            login.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            password.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            RoleComboBox.GetBindingExpression(ComboBox.SelectedItemProperty)?.UpdateSource();
+        }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -216,58 +223,43 @@ namespace diplom
         {
             get
             {
-                string error = string.Empty;
-                switch (columnName)
-                {
-                    case "Surname":
-                    case "NameN":
-                    case "Login":
-                    case "Password":
-                        if (string.IsNullOrEmpty(GetValue(columnName)))
-                        {
-                            error = "Поле обязательно для заполнения.";
-                        }
-                        else if (GetValue(columnName).Length > 150)
-                        {
-                            error = "Поле не должно превышать 150 символов.";
-                        }
-                        break;
-                    case "Paternity":
-                        if (!string.IsNullOrEmpty(GetValue(columnName)) && GetValue(columnName).Length > 150)
-                        {
-                            error = "Поле не должно превышать 150 символов.";
-                        }
-                        break;
+                string value = GetValue(columnName);
 
-                    case "SelectedRole":
-                        if (SelectedRole == null)
-                        {
-                            error = "Роль обязательна для выбора.";
-                        }
-                        break;
-                }
-                return error;
+                if (string.IsNullOrWhiteSpace(value) &&
+                   (columnName == "Surname" || columnName == "NameN" ||
+                    columnName == "Login" || columnName == "Password"))
+                    return "Обязательное поле";
+
+                if (!string.IsNullOrWhiteSpace(value) && value.Length > 50)
+                    return "Максимум 50 символов";
+
+                if (columnName == "SelectedRole" && SelectedRole == null)
+                    return "Выберите роль"; 
+
+
+
+                return null;
             }
         }
-
-        public string Error
+        private string GetValue(string propertyName) => propertyName switch
         {
-            get { return null; }
-        }
-
-        private string? GetValue(string propertyName)
+            "Surname" => Surname,
+            "NameN" => NameN,
+            "Paternity" => Paternity,
+            "Login" => Login,
+            "Password" => Password,
+            _ => null
+        }; 
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            switch (propertyName)
+            MessageBoxResult result = MessageBox.Show("Все несохраненные изменения будут утеряны. Закрыть окно?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.No)
             {
-                case "Surname": return Surname;
-                case "NameN": return NameN;
-                case "Paternity": return Paternity;
-                case "Login": return Login;
-                case "Password": return Password;
-
-                default: return null;
+                e.Cancel = true;
             }
         }
 
+       
     }
 }
